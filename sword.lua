@@ -116,6 +116,6 @@ function Sword:onMousePressed()
   end
 end
 
-core.event.connect("mousepressed", world, Sword, "onMousePressed")
+core.events.mousepressed:connect(world, Sword, "onMousePressed")
 
 return Sword

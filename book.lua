@@ -31,6 +31,6 @@ function Book:onKeyPressed()
   end
 end
 
-core.event.connect("keypressed", world, Book, "onKeyPressed")
+core.events.keypressed:connect(world, Book, "onKeyPressed")
 
 return Book

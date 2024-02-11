@@ -1,7 +1,7 @@
 love.graphics.setDefaultFilter("nearest", "nearest")
 
 core = require("core")
-core.event.defineLoveEvents()
+core.defineLoveEvents()
 class = core.class
 WorldObj = core.WorldObj
 
@@ -25,7 +25,7 @@ core.viewport.new("gui",     screenWidth, screenHeight)
 core.viewport.setBgColor("default", 0, 0.25, 0.25, 1)
 core.viewport.setBgColor("gui", 0, 0, 0, 0)
 
-core.event.define("gui")
+core.events.gui = core.Event()
 
 physicsWorld = core.physics.PhysicsWorld(128, 128)
 world = core.World(physicsWorld)
@@ -50,7 +50,7 @@ function love.draw()
   end)
 
   core.viewport.drawTo("gui", function()
-    core.event.call("gui")
+    core.events.gui:call()
     luiScene:render()
   end)
 

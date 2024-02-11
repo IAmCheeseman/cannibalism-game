@@ -16,9 +16,30 @@ core.Timer        = require(cwd .. ".timer")
 core.StateMachine = require(cwd .. ".statemachine")
 core.Sprite       = require(cwd .. ".sprite")
 core.World        = require(cwd .. ".world")
+core.Event        = require(cwd .. ".event")
 core.GameObj      = objs.GameObj
 core.WorldObj     = objs.WorldObj
 
 require(cwd .. ".stringf")
+
+core.events = {}
+
+function core.defineLoveEvents()
+  local loveEvents = {
+    "directorydropped", "displayrotated", "filedropped", "focus", "mousefocus",
+    "resize", "visible", "keypressed", "keyreleased", "textedited", "textinput",
+    "mousemoved", "mousepressed", "mousereleased", "wheelmoved", "gamepadaxis",
+    "gamepadpressed", "gamepadreleased", "joystickadded", "joystickaxis",
+    "joystickhat", "joystickpressed", "joystickreleased", "joystickremoved",
+    "touchmoved", "touchpressed", "touchreleased"
+  }
+
+  for _, callback in ipairs(loveEvents) do
+    core.events[callback] = core.Event()
+    love[callback] = function(...)
+      core.events[callback]:call(...)
+    end
+  end
+end
 
 return core

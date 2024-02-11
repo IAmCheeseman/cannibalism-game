@@ -34,12 +34,4 @@ function PhysicsWorld:draw()
   love.graphics.setColor(1, 1, 1)
 end
 
-event.on("loveEventsMade", function()
-  event.on("keypressed", function(key, _, isRepeat)
-    if key == "f1" and not isRepeat then
-      draw = not draw
-    end
-  end)
-end)
-
 return PhysicsWorld
