@@ -39,6 +39,12 @@ function Theme:outline(x, y, w, h)
   love.graphics.rectangle("line", x, y, w, h)
 end
 
+function Theme:line(...)
+  self:applyLineTheme()
+  self:applyColor("bgColor")
+  love.graphics.line(...)
+end
+
 function Theme:text(...)
   self:applyColor("fgColor")
   self:applyFont()

@@ -71,6 +71,21 @@ function Sprite:setAnimOverCallback(bind, callback)
   self.animOverBind = bind
 end
 
+function Sprite:getDimensions()
+  local width, height = self.image:getDimensions()
+  return width / self.xframes, height / self.yframes
+end
+
+function Sprite:getWidth()
+  local width, _ = self:getDimensions()
+  return width
+end
+
+function Sprite:getHeight()
+  local _, height = self:getDimensions()
+  return height
+end
+
 function Sprite:_setupAnimation(animationConfig)
   self.xframes = animationConfig.xframes
   self.yframes = animationConfig.yframes

@@ -1,4 +1,5 @@
 local Sword = require("sword")
+local SpeechBubble = require("speechbubble")
 
 local Player = class(WorldObj)
 
