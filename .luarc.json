@@ -1,0 +1,11 @@
+{
+  "diagnostics.disable": [
+    "lowercase-global"
+  ],
+  "diagnostics.globals": [
+    "love"
+  ],
+  "workspace.library": "${3rd}/love2d/library",
+  "workspace.userThirdParty": ["~/.config/lua-language-server/addons"],
+  "runtime.version": "LuaJIT",
+}
