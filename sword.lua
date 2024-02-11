@@ -1,4 +1,11 @@
+local itemManager = require("itemmanager")
+
 local Sword = class(WorldObj)
+
+itemManager.define(
+  "sword", Sword,
+  core.Sprite("assets/sword_slot.png"),
+  core.Sprite("assets/sword_slot.png"))
 
 function Sword:init(anchor)
   self:base("init")
