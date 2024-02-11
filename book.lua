@@ -10,7 +10,7 @@ function Book:init()
 
   self.sprite = core.Sprite("assets/book.png")
   self.bookGui = BookGui(false, self.sprite)
-  luiScene:addElement(self.bookGui)
+  self.bookOpen = false
 end
 
 function Book:update()
@@ -19,6 +19,19 @@ function Book:update()
   local book = image:center(window)
   self.bookGui:setView(book)
 end
+
+function Book:onKeyPressed()
+  if core.input.isPressed("toggleBook") then
+    self.bookOpen = not self.bookOpen
+    if self.bookOpen then
+      luiScene:addElement(self.bookGui)
+    else
+      luiScene:removeElement(self.bookGui)
+    end
+  end
+end
+
+core.event.connect("keypressed", world, Book, "onKeyPressed")
 
 -- function Book:gui()
 -- end

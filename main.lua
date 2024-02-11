@@ -16,6 +16,7 @@ core.input.addKey("up", "w")
 core.input.addKey("left", "a")
 core.input.addKey("down", "s")
 core.input.addKey("right", "d")
+core.input.addKey("toggleBook", "tab")
 core.input.addMouse("useWeapon", 1)
 core.input.addMouse("useTome", 2)
 
