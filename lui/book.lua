@@ -1,5 +1,6 @@
 local kirigami = require("lib.kirigami")
 local LUI = require("lib.LUI")
+local theme = require("lui.defaulttheme")
 
 local Label = require("lui.label")
 local ProgressBar = require("lui.progressbar")
@@ -8,7 +9,6 @@ local Book = LUI.Element()
 
 function Book:init(sprite)
   self.sprite = sprite
-
 
   self.emotionBarEmpty = love.graphics.newImage("assets/emotionbarempty.png")
   self.emotionBarFull = love.graphics.newImage("assets/emotionbarfull.png")
@@ -44,15 +44,15 @@ function Book:init(sprite)
   }
 
   for i, trait in ipairs(self.traits) do
-    self.traits[i] = Label(self, trait)
+    self.traits[i] = Label(self, trait, theme)
   end
 
   for _, bar in ipairs(self.emotions) do
     bar.value = love.math.random()
   end
 
-  self.leftTitle = Label(self, "emotions", font)
-  self.rightTitle = Label(self, "traits", font)
+  self.leftTitle = Label(self, "emotions", theme)
+  self.rightTitle = Label(self, "traits", theme)
 end
 
 function Book:onRender(region)
