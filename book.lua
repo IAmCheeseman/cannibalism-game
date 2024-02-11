@@ -33,9 +33,4 @@ end
 
 core.event.connect("keypressed", world, Book, "onKeyPressed")
 
--- function Book:gui()
--- end
---
--- core.event.connect("gui", world, Book, "gui")
-
 return Book

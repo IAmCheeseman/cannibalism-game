@@ -9,7 +9,6 @@ local Book = LUI.Element()
 function Book:init(sprite)
   self.sprite = sprite
 
-  local font = love.graphics.newImageFont("assets/font.png", " abcdefghijklmnopqrstuvwxyz0123456789.!?'\",")
 
   self.emotionBarEmpty = love.graphics.newImage("assets/emotionbarempty.png")
   self.emotionBarFull = love.graphics.newImage("assets/emotionbarfull.png")
