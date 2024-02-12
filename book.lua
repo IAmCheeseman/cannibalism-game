@@ -1,15 +1,19 @@
 local kirigami = require("lib.kirigami")
 local LUI = require("lib.LUI")
 
+local itemManager = require("itemmanager")
+local Inventory = require("inventory")
 local BookGui = require("lui.book")
 
 local Book = class(WorldObj)
+local inventory = Inventory(4)
+inventory:addItem(itemManager.create("sword"))
 
 function Book:init()
   self:base("init")
 
   self.sprite = core.Sprite("assets/book.png")
-  self.bookGui = BookGui(false, self.sprite)
+  self.bookGui = BookGui(false, self.sprite, inventory)
   self.bookOpen = false
 end
 

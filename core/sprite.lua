@@ -73,7 +73,10 @@ end
 
 function Sprite:getDimensions()
   local width, height = self.image:getDimensions()
-  return width / self.xframes, height / self.yframes
+  if self.xframes and self.yframes then
+    return width / self.xframes, height / self.yframes
+  end
+  return width, height
 end
 
 function Sprite:getWidth()

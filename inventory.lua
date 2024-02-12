@@ -10,7 +10,7 @@ function Inventory:slotExists(at)
 end
 
 function Inventory:isSlotEmpty(at)
-  return self.items[at] ~= nil
+  return self.items[at] == nil
 end
 
 function Inventory:ensureSlotIsValid(at)
