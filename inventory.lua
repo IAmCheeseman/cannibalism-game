@@ -3,6 +3,14 @@ local Inventory = class()
 function Inventory:init(size)
   self.size = size
   self.items = {}
+  self.equipSlots = {}
+end
+
+function Inventory:addEquipSlot(name, checkFn)
+  self.equipSlots[name] = {
+    item = nil,
+    checkFn = checkFn,
+  }
 end
 
 function Inventory:slotExists(at)
@@ -22,6 +30,22 @@ end
 function Inventory:getItem(at)
   self:ensureSlotIsValid(at)
   return self.items[at]
+end
+
+function Inventory:setEquipSlot(slotName, item)
+  local slot = self.equipSlots[slotName]
+  if not slot then
+    error("Equip slot '" .. slotName .. "' does not exist.")
+  end
+
+  if not slot.checkFn(item) then
+    return false
+  end
+
+  local oldItem = slot.item
+  slot.item = item
+
+  return true, oldItem
 end
 
 function Inventory:setSlot(at, item)

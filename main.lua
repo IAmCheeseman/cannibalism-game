@@ -33,6 +33,25 @@ world = core.World(physicsWorld)
 local Player = require("player")
 local Book = require("book")
 
+local tileSet = require("core.tiling.tileset")("assets/grass.png", 16, 16)
+local tileMap = require("core.tiling.tilemap")(128)
+
+tileMap:addTileSet(tileSet, "grass")
+
+local positions = {}
+for _=1, 15 do
+  local x = love.math.random(2, 12)
+  local y = love.math.random(2, 12)
+  table.insert(positions, x)
+  table.insert(positions, y)
+  tileMap:setCell(x, y, "grass")
+end
+
+for i=1, #positions, 2 do
+  local x, y = positions[i], positions[i + 1]
+  tileMap:updateAutotile(x, y)
+end
+
 function love.load()
   world:add(Player())
   world:add(Book())
@@ -44,8 +63,7 @@ end
 
 function love.draw()
   core.viewport.drawTo("default", function()
-    love.graphics.setColor(1, 0, 0.5)
-    love.graphics.circle("fill", 0, 0, 16)
+    tileMap:draw()
     world:draw()
   end)
 

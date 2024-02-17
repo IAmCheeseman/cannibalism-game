@@ -1,9 +1,5 @@
-local kirigami = require("lib.kirigami")
 local LUI = require("lib.LUI")
-local theme = require("lui.defaulttheme")
 
-local Label = require("lui.label")
-local ProgressBar = require("lui.progressbar")
 local EmotionsPage = require("lui.bookemotionpage")
 local InventoryPage = require("lui.bookinventorypage")
 

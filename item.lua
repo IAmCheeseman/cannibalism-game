@@ -1,14 +1,13 @@
 local Item = class(WorldObj)
 
-function Item:init(id, slotSprite, sprite)
-  local ssWidth, ssHeight = slotSprite:getDimensions()
-  if ssWidth ~= 16 or ssHeight ~= 16 then
-    error("slot sprite must be 16x16")
-  end
-
+function Item:init(id, item)
   self.id = id
-  self.slotSprite = slotSprite
-  self.sprite = sprite
+  self.slotSprite = item.slotSprite
+  self.sprite = item.sprite
+
+  for k, v in pairs(item.traits) do
+    self[k] = v
+  end
 end
 
 return Item

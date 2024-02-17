@@ -8,6 +8,13 @@ local BookGui = require("lui.book")
 local Book = class(WorldObj)
 local inventory = Inventory(4)
 inventory:addItem(itemManager.create("sword"))
+inventory:addEquipSlot("weapon", function(item)
+  return item.isWeapon
+end)
+
+inventory:addEquipSlot("tome", function(item)
+  return item.isTome
+end)
 
 function Book:init()
   self:base("init")
