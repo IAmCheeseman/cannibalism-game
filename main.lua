@@ -36,12 +36,16 @@ local Book = require("book")
 local tileSet = require("core.tiling.tileset")("assets/grass.png", 16, 16)
 local tileMap = require("core.tiling.tilemap")(128)
 
+tileMap:addLayer("grass", 1)
+tileMap:addLayer("stone", 1)
+
 tileMap:addTileSet(tileSet, "grass")
 
 local positions = {}
-for _=1, 15 do
-  local x = love.math.random(2, 12)
-  local y = love.math.random(2, 12)
+local w = 100
+for _=1, w*w/2 do
+  local x = love.math.random(2, w)
+  local y = love.math.random(2, w)
   table.insert(positions, x)
   table.insert(positions, y)
   tileMap:setCell(x, y, "grass")
@@ -49,7 +53,7 @@ end
 
 for i=1, #positions, 2 do
   local x, y = positions[i], positions[i + 1]
-  tileMap:updateAutotile(x, y)
+  tileMap:updateAutotile(x, y, "grass")
 end
 
 function love.load()
@@ -70,6 +74,7 @@ function love.draw()
   core.viewport.drawTo("gui", function()
     core.events.gui:call()
     luiScene:render()
+    love.graphics.print(love.timer.getFPS(), 0, 0)
   end)
 
   love.graphics.setColor(1, 1, 1, 1)

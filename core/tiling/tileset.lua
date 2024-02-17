@@ -5,24 +5,6 @@ local TileSet = class()
 
 local globalTileIds = {}
 
-local function convertToBitMap(string)
-  return string
-  -- local value = 0
-  -- for i=1, #string do
-  --   local char = string:sub(i, i)
-  --   if char == "q" then
-  --     value = value + 1
-  --   elseif char == "e" then
-  --     value = value + 2
-  --   elseif char == "d" then
-  --     value = value + 4
-  --   elseif char == "a" then
-  --     value = value + 8
-  --   end
-  -- end
-  -- return value
-end
-
 function TileSet:init(path, tileWidth, tileHeight)
   self.tiles = {}
 
@@ -33,7 +15,6 @@ function TileSet:init(path, tileWidth, tileHeight)
   self.offsetY = 0
 
   self.image = love.graphics.newImage(path)
-  self.batch = love.graphics.newSpriteBatch(self.image)
 
   local imageWidth, imageHeight = self.image:getDimensions()
   local xTiles, yTiles = imageWidth / tileWidth, imageHeight / tileHeight
