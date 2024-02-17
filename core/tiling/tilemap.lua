@@ -29,7 +29,7 @@ end
 
 function TileMap:addLayer(name, position)
   if position < 0 then
-    position = #self.layers - position + 1
+    position = #self.layers - position
   end
   table.insert(self.layers, position, name)
   local layer = {}
@@ -77,6 +77,7 @@ function TileMap:_updateAutotileAt(x, y, layerName)
 
   local autotile = tileSet:getAutotile(u, r, d, l, tl, tr, br, bl) or 0
   layer[x][y] = autotile
+  print(layer.batches[tileSet])
   layer.batches[tileSet]:add(
     tileSet.tiles[autotile].quad,
     x * tileSet.tileWidth, y * tileSet.tileHeight)
@@ -124,6 +125,8 @@ function TileMap:setCell(x, y, tileSetName, layerName)
 end
 
 function TileMap:draw(x, y)
+  x = math.floor(x or 0)
+  y = math.floor(y or 0)
   for _, layerName in ipairs(self.layers) do
     local layer = self.layers[layerName]
     for _, batch in pairs(layer.batches) do

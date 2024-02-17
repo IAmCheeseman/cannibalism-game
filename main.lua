@@ -36,8 +36,7 @@ local Book = require("book")
 local tileSet = require("core.tiling.tileset")("assets/grass.png", 16, 16)
 local tileMap = require("core.tiling.tilemap")(128)
 
-tileMap:addLayer("grass", 1)
-tileMap:addLayer("stone", 1)
+tileMap:addLayer("grass", -1)
 
 tileMap:addTileSet(tileSet, "grass")
 
@@ -55,6 +54,7 @@ for i=1, #positions, 2 do
   local x, y = positions[i], positions[i + 1]
   tileMap:updateAutotile(x, y, "grass")
 end
+layer = "stone"
 
 function love.load()
   world:add(Player())
