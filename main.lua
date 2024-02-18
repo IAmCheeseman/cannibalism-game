@@ -57,6 +57,8 @@ end
 layer = "stone"
 
 function love.load()
+  core.init()
+
   world:add(Player())
   world:add(Book())
 end
@@ -81,3 +83,9 @@ function love.draw()
   core.viewport.draw("default")
   core.viewport.draw("gui")
 end
+
+core.events.keypressed:on(function(key)
+  if key == "g" then
+    (1)()
+  end
+end)

@@ -77,7 +77,6 @@ function TileMap:_updateAutotileAt(x, y, layerName)
 
   local autotile = tileSet:getAutotile(u, r, d, l, tl, tr, br, bl) or 0
   layer[x][y] = autotile
-  print(layer.batches[tileSet])
   layer.batches[tileSet]:add(
     tileSet.tiles[autotile].quad,
     x * tileSet.tileWidth, y * tileSet.tileHeight)

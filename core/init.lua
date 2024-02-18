@@ -12,11 +12,14 @@ core.table        = require(cwd .. ".tablef")
 core.math         = require(cwd .. ".mathf")
 core.viewport     = require(cwd .. ".viewport")
 core.input        = require(cwd .. ".input")
+core.logging      = require(cwd .. ".logging")
 core.Timer        = require(cwd .. ".timer")
 core.StateMachine = require(cwd .. ".statemachine")
 core.Sprite       = require(cwd .. ".sprite")
 core.World        = require(cwd .. ".world")
 core.Event        = require(cwd .. ".event")
+core.TileSet      = require(cwd .. ".tiling.tileset")
+core.TileMap      = require(cwd .. ".tiling.tilemap")
 core.GameObj      = objs.GameObj
 core.WorldObj     = objs.WorldObj
 
@@ -40,6 +43,12 @@ function core.defineLoveEvents()
       core.events[callback]:call(...)
     end
   end
+end
+
+function core.init()
+  local name, version, _, device = love.graphics.getRendererInfo( )
+  core.logging.info(name .. " " .. version)
+  core.logging.info(device)
 end
 
 return core
