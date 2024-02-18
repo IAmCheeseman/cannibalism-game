@@ -40,8 +40,10 @@ tileMap:addLayer("grass", -1)
 
 tileMap:addTileSet(tileSet, "grass")
 
+local start = os.clock()
+
 local positions = {}
-local w = 100
+local w = 128
 for _=1, w*w/2 do
   local x = love.math.random(2, w)
   local y = love.math.random(2, w)
@@ -54,7 +56,14 @@ for i=1, #positions, 2 do
   local x, y = positions[i], positions[i + 1]
   tileMap:updateAutotile(x, y, "grass")
 end
-layer = "stone"
+
+core.logging.log(os.clock() - start)
+
+core.events.keypressed:on(function(key, _, _)
+  if key == "f1" then
+    core.physics.PhysicsWorld.drawShapes = not core.physics.PhysicsWorld.drawShapes
+  end
+end)
 
 function love.load()
   core.init()

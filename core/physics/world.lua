@@ -1,11 +1,10 @@
 local cwd = (...):gsub("%.physics.world$", "")
 local class = require(cwd .. ".class")
-local event = require(cwd .. ".event")
 local SpatialPartition = require(cwd .. ".physics.partition")
 
-local draw = false
-
 local PhysicsWorld = class()
+
+PhysicsWorld.drawShapes = false
 
 function PhysicsWorld:init(gridSize, partitionCount)
   gridSize = gridSize or 128
@@ -20,7 +19,7 @@ function PhysicsWorld:addBody(body)
 end
 
 function PhysicsWorld:draw()
-  if not draw then
+  if not PhysicsWorld.drawShapes then
     return
   end
 

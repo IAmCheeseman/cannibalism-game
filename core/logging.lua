@@ -6,6 +6,8 @@ local date = os.date("*t")
 love.filesystem.createDirectory("logs")
 local logFile = ("%s/%d-%d-%d_%d-%d.log"):format(loggingDirectory, date.year, date.month, date.day, date.hour, date.min)
 
+local oldPrint = print
+
 love.filesystem.write(logFile, "")
 
 local thread = love.thread.newThread(cwd .. "/logger.lua")
@@ -16,7 +18,7 @@ function logging.addType(name)
     local message = table.concat({...}, "\t")
     local out = "[".. name .. "] " .. tostring(message)
     love.thread.getChannel("logger"):push(out)
-    print(out)
+    oldPrint(out)
   end
 end
 
@@ -24,6 +26,8 @@ logging.addType("log")
 logging.addType("error")
 logging.addType("warning")
 logging.addType("info")
+
+print = logging.log
 
 -- Remove old logs
 local maxLogLifetime = 3600 * 24 * 5 -- 5 days
