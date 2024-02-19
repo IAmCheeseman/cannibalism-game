@@ -12,6 +12,7 @@ function Shader:init(...)
   local args = {...}
   self.frag = args[1]
   self.vert = args[2]
+  self.warnedUniforms = {}
 
   self.shader = love.graphics.newShader(...)
 end
@@ -27,6 +28,9 @@ end
 function Shader:sendUniform(uniform, ...)
   if self.shader:hasUniform(uniform) then
     self.shader:send(uniform, ...)
+  elseif not self.warnedUniforms[uniform] then
+    self.warnedUniforms[uniform] = true
+    logging.warning("Uniform '" .. uniform .. "' does not exist.")
   end
 end
 
@@ -38,6 +42,8 @@ function Shader:reload()
   if not ok then
     logging.error(errMsg)
   end
+
+  self.warnedUniforms = {}
 end
 
 function shader.new(name, ...)

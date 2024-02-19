@@ -22,7 +22,7 @@ core.input.addMouse("useTome", 2)
 
 core.viewport.new("default", screenWidth, screenHeight)
 core.viewport.new("gui",     screenWidth, screenHeight)
-core.viewport.setBgColor("default", 0, 0.25, 0.25, 1)
+core.viewport.setBgColor("default", 0, 0, 0, 1)
 core.viewport.setBgColor("gui", 0, 0, 0, 0)
 
 core.events.gui = core.Event()
@@ -59,6 +59,30 @@ end
 
 core.logging.log(os.clock() - start)
 
+local lightPositions = {}
+local lightColors = {}
+local lightStrength = {}
+
+lightPositions[1] = {50, 50}
+lightPositions[2] = {300, 32}
+lightPositions[3] = {0, 0}
+
+lightColors[1] = {1, 1, 1, 1}
+lightColors[2] = {3, 0, 0, 1}
+lightColors[3] = {1, 1, 1, 0.2}
+
+lightStrength[1] = 100
+lightStrength[2] = 50
+lightStrength[3] = 50
+
+for _=3, 16 do
+  table.insert(lightPositions, {0, 0})
+  table.insert(lightColors, {0, 0, 0, 0})
+  table.insert(lightStrength, 0)
+end
+
+local lighting = core.shader.new("lighting", "core/lighting.frag")
+
 core.events.keypressed:on(function(key, _, _)
   if key == "f1" then
     core.physics.PhysicsWorld.drawShapes = not core.physics.PhysicsWorld.drawShapes
@@ -67,21 +91,48 @@ end)
 
 core.events.focus:on(core.shader.reloadAll)
 
+local player
+
 function love.load()
   core.init()
 
-  world:add(Player())
+  player = Player()
+  world:add(player)
   world:add(Book())
 end
 
-function love.update()
+local time = 0
+
+local daylightCycleTime = math.pi / 30
+local brightness = 1
+
+function love.update(dt)
+  time = time + dt
+
+  lightPositions[3] = {player.x, player.y - 4}
+
+  local normalizedPositions = {}
+  local camx, camy = core.viewport.getCameraPos("default")
+  for i, pos in ipairs(lightPositions) do
+    normalizedPositions[i] = {pos[1] - camx, pos[2] - camy}
+  end
+
+  brightness = (math.sin(time * daylightCycleTime) + 1) / 2
+
+  lighting:sendUniform("screenSize", {screenWidth, screenHeight})
+  lighting:sendUniform("ambientLight", {brightness, brightness, brightness, 1})
+  lighting:sendUniform("lightPositions", unpack(normalizedPositions))
+  lighting:sendUniform("lightColors", unpack(lightColors))
+  lighting:sendUniform("lightStrengths", unpack(lightStrength))
+
   world:update()
 end
 
 function love.draw()
   core.viewport.drawTo("default", function()
     love.graphics.setColor(love.math.colorFromBytes(99, 155, 255))
-    love.graphics.rectangle("fill", 0, 0, 1600, 1600)
+    local camx, camy = core.viewport.getCameraPos("default")
+    love.graphics.rectangle("fill", camx - 1, camy - 1, screenWidth + 2, screenHeight + 2)
     love.graphics.setColor(1, 1, 1)
     tileMap:draw()
     world:draw()
@@ -93,9 +144,12 @@ function love.draw()
     love.graphics.print(
       tostring(core.math.snapped(1 / love.timer.getFPS() * 1000, 0.01)) .. "/16 ms",
       0, 0)
+    love.graphics.print(("%f, %f"):format(time, brightness), 0, 16)
   end)
 
   love.graphics.setColor(1, 1, 1, 1)
+  lighting:apply()
   core.viewport.draw("default")
+  lighting:stop()
   core.viewport.draw("gui")
 end
