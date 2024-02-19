@@ -37,10 +37,7 @@ local tileSet = require("core.tiling.tileset")("assets/grass.png", 16, 16)
 local tileMap = require("core.tiling.tilemap")(128)
 
 tileMap:addLayer("grass", -1)
-
 tileMap:addTileSet(tileSet, "grass")
-
-local start = os.clock()
 
 local positions = {}
 local w = 128
@@ -57,41 +54,23 @@ for i=1, #positions, 2 do
   tileMap:updateAutotile(x, y, "grass")
 end
 
-core.logging.log(os.clock() - start)
-
-local lightPositions = {}
-local lightColors = {}
-local lightStrength = {}
-
-lightPositions[1] = {50, 50}
-lightPositions[2] = {300, 32}
-lightPositions[3] = {0, 0}
-
-lightColors[1] = {1, 1, 1, 1}
-lightColors[2] = {3, 0, 0, 1}
-lightColors[3] = {1, 1, 1, 0.2}
-
-lightStrength[1] = 100
-lightStrength[2] = 50
-lightStrength[3] = 50
-
-for _=3, 16 do
-  table.insert(lightPositions, {0, 0})
-  table.insert(lightColors, {0, 0, 0, 0})
-  table.insert(lightStrength, 0)
-end
-
-local lighting = core.shader.new("lighting", "core/lighting.frag")
-
 core.events.keypressed:on(function(key, _, _)
   if key == "f1" then
     core.physics.PhysicsWorld.drawShapes = not core.physics.PhysicsWorld.drawShapes
   end
 end)
 
-core.events.focus:on(core.shader.reloadAll)
+core.events.focus:on(function(isFocused)
+  if isFocused then
+    core.shader.reloadAll()
+  end
+end)
 
 local player
+
+core.lighting.ambientColor.r = 0
+core.lighting.ambientColor.g = 0
+core.lighting.ambientColor.b = 0
 
 function love.load()
   core.init()
@@ -101,30 +80,7 @@ function love.load()
   world:add(Book())
 end
 
-local time = 0
-
-local daylightCycleTime = math.pi / 30
-local brightness = 1
-
-function love.update(dt)
-  time = time + dt
-
-  lightPositions[3] = {player.x, player.y - 4}
-
-  local normalizedPositions = {}
-  local camx, camy = core.viewport.getCameraPos("default")
-  for i, pos in ipairs(lightPositions) do
-    normalizedPositions[i] = {pos[1] - camx, pos[2] - camy}
-  end
-
-  brightness = (math.sin(time * daylightCycleTime) + 1) / 2
-
-  lighting:sendUniform("screenSize", {screenWidth, screenHeight})
-  lighting:sendUniform("ambientLight", {brightness, brightness, brightness, 1})
-  lighting:sendUniform("lightPositions", unpack(normalizedPositions))
-  lighting:sendUniform("lightColors", unpack(lightColors))
-  lighting:sendUniform("lightStrengths", unpack(lightStrength))
-
+function love.update()
   world:update()
 end
 
@@ -144,12 +100,9 @@ function love.draw()
     love.graphics.print(
       tostring(core.math.snapped(1 / love.timer.getFPS() * 1000, 0.01)) .. "/16 ms",
       0, 0)
-    love.graphics.print(("%f, %f"):format(time, brightness), 0, 16)
   end)
 
   love.graphics.setColor(1, 1, 1, 1)
-  lighting:apply()
-  core.viewport.draw("default")
-  lighting:stop()
+  core.lighting.drawToViewport("default")
   core.viewport.draw("gui")
 end

@@ -1,3 +1,5 @@
+local start = os.clock()
+
 local cwd = (...):gsub("%.init$", "")
 
 local core = {}
@@ -14,6 +16,7 @@ core.viewport     = require(cwd .. ".viewport")
 core.input        = require(cwd .. ".input")
 core.logging      = require(cwd .. ".logging")
 core.shader       = require(cwd .. ".shader")
+core.lighting     = require(cwd .. ".lighting")
 core.Timer        = require(cwd .. ".timer")
 core.StateMachine = require(cwd .. ".statemachine")
 core.Sprite       = require(cwd .. ".sprite")
@@ -47,6 +50,8 @@ function core.defineLoveEvents()
 end
 
 function core.init()
+  core.logging.log("Initialized. Took " .. tostring((os.clock() - start) * 1000) .. " ms.")
+
   local name, version, _, device = love.graphics.getRendererInfo( )
   core.logging.info(name .. " " .. version)
   core.logging.info(device)

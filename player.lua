@@ -25,6 +25,10 @@ function Player:init()
     }
   })
   self.sprite:setOffsetPreset("center", "bottom")
+  self.light = core.lighting.PointLight(self.x, self.y, 64, {
+    color = {1, 0.5, 0.3, 1}
+  })
+  world:add(self.light)
 
   self.velx = 0
   self.vely = 0
@@ -60,6 +64,9 @@ function Player:update()
   self.stateMachine:update()
   self.sprite:update()
   self:updateCamera()
+
+  self.light.x = self.x
+  self.light.y = self.y
 end
 
 function Player:draw()

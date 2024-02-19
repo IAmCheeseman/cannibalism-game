@@ -1,6 +1,7 @@
 local cwd = (...):gsub("%.world$", "")
 local class = require(cwd .. ".class")
 local tablef = require(cwd .. ".tablef")
+local Event = require(cwd .. ".event")
 
 local World = class()
 
@@ -12,6 +13,9 @@ function World:init(physicsWorld)
   self.objData = {}
   self.addQueue = {}
   self.removeQueue = {}
+
+  self.updateEvent = Event()
+  self.drawEvent = Event()
 end
 
 function World:_flushQueues()
@@ -27,10 +31,18 @@ function World:_flushQueues()
       index = #self.objs,
       typeIndex = #self.types[mt.__id]
     }
+
+    if obj.added then
+      obj:added(self)
+    end
   end
   self.addQueue = {}
 
   for _, obj in ipairs(self.removeQueue) do
+    if obj.destroy then
+      obj:removed(self)
+    end
+
     local index = self.objData[obj].index
     local typeIndex = self.objData[obj].typeIndex
     tablef.swapRemove(self.objs, index)
@@ -59,6 +71,7 @@ function World:update()
   self:_flushQueues()
 
   local dt = love.timer.getDelta()
+  self.updateEvent:call(dt)
   for _, obj in ipairs(self.objs) do
     if obj.update then
       obj:update(dt)
@@ -76,6 +89,7 @@ function World:draw()
       obj:draw()
     end
   end
+  self.drawEvent:call()
 
   self.physicsWorld:draw()
 end
