@@ -65,6 +65,8 @@ core.events.keypressed:on(function(key, _, _)
   end
 end)
 
+core.events.focus:on(core.shader.reloadAll)
+
 function love.load()
   core.init()
 
@@ -78,6 +80,9 @@ end
 
 function love.draw()
   core.viewport.drawTo("default", function()
+    love.graphics.setColor(love.math.colorFromBytes(99, 155, 255))
+    love.graphics.rectangle("fill", 0, 0, 1600, 1600)
+    love.graphics.setColor(1, 1, 1)
     tileMap:draw()
     world:draw()
   end)
@@ -85,16 +90,12 @@ function love.draw()
   core.viewport.drawTo("gui", function()
     core.events.gui:call()
     luiScene:render()
-    love.graphics.print(love.timer.getFPS(), 0, 0)
+    love.graphics.print(
+      tostring(core.math.snapped(1 / love.timer.getFPS() * 1000, 0.01)) .. "/16 ms",
+      0, 0)
   end)
 
   love.graphics.setColor(1, 1, 1, 1)
   core.viewport.draw("default")
   core.viewport.draw("gui")
 end
-
-core.events.keypressed:on(function(key)
-  if key == "g" then
-    (1)()
-  end
-end)
