@@ -41,6 +41,7 @@ function PointLight:init(x, y, radius, opts)
   self.radius = radius
 
   self.color = opts.color or {1, 1, 1, 1}
+  self.visible = type(opts.visible) == "nil" and true or opts.visible
 end
 
 function PointLight:added(_)
@@ -62,14 +63,18 @@ function lighting.drawToViewport(viewportName)
     local radii = {}
     local camx, camy = core.viewport.getCameraPos(viewportName)
     for i, light in ipairs(lights) do
-      positions[i] = {light.x - camx, light.y - camy}
-      colors[i] = light.color
-      radii[i] = light.radius
+      if light.visible then
+        positions[i] = {light.x - camx, light.y - camy}
+        colors[i] = light.color
+        radii[i] = light.radius
+      end
     end
 
-    lightingShader:sendUniform("lightPositions", unpack(positions))
-    lightingShader:sendUniform("lightColors", unpack(colors))
-    lightingShader:sendUniform("lightRadii", unpack(radii))
+    if #positions > 0 then
+      lightingShader:sendUniform("lightPositions", unpack(positions))
+      lightingShader:sendUniform("lightColors", unpack(colors))
+      lightingShader:sendUniform("lightRadii", unpack(radii))
+    end
   end
 
   lightingShader:sendUniform("screenSize", {viewport.getSize(viewportName)})

@@ -68,9 +68,9 @@ end)
 
 local player
 
-core.lighting.ambientColor.r = 0
-core.lighting.ambientColor.g = 0
-core.lighting.ambientColor.b = 0
+core.lighting.ambientColor.r = 1
+core.lighting.ambientColor.g = 1
+core.lighting.ambientColor.b = 1
 
 function love.load()
   core.init()
