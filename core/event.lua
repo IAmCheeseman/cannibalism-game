@@ -1,6 +1,5 @@
 local cwd = (...):gsub("%.event$", "")
 local class = require(cwd .. ".class")
-local tablef = require(cwd .. ".tablef")
 
 local Event = class()
 
