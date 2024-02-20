@@ -67,10 +67,7 @@ core.events.focus:on(function(isFocused)
 end)
 
 local player
-
-core.lighting.ambientColor.r = 1
-core.lighting.ambientColor.g = 1
-core.lighting.ambientColor.b = 1
+local time = 0
 
 function love.load()
   core.init("Emotional Game", "0.1.0")
@@ -80,7 +77,13 @@ function love.load()
   world:add(Book())
 end
 
-function love.update()
+function love.update(dt)
+  time = time + dt
+  local b = (math.sin(time / 6) + 1) / 2
+  core.lighting.ambientColor.r = b
+  core.lighting.ambientColor.g = b
+  core.lighting.ambientColor.b = b
+
   world:update()
 end
 

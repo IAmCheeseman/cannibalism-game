@@ -60,7 +60,7 @@ function shader.reloadAll()
   for _, v in pairs(shaders) do
     v:reload()
   end
-  logging.info("Reloaded shaders!")
+  logging.log("Reloaded shaders!")
 end
 
 return shader

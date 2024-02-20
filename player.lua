@@ -26,8 +26,7 @@ function Player:init()
   })
   self.sprite:setOffsetPreset("center", "bottom")
   self.light = core.lighting.PointLight(self.x, self.y, 64, {
-    color = {1, 0.5, 0.3, 1},
-    visible = false,
+    color = {0.9, 0.5, 0.3, 3},
   })
   world:add(self.light)
 

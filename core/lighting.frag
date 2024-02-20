@@ -20,10 +20,20 @@ vec4 effect(vec4 _, Image tex, vec2 uv, vec2 screenUv) {
     float avg = 1 - (lightColor.r + lightColor.g + lightColor.b) / 3;
     float dist = distance(screen, position);
     float strength = max(radius - dist, 0.) / radius;
+
+    float b = (
+        ambientLight.r
+      + ambientLight.r
+      + ambientLight.b
+      + ambientLight.g
+      + ambientLight.g
+      + ambientLight.g) / 6;
+    b = pow(1. - b, 2);
+
     vec4 tinted = mix(color, ambientLight, pointLightTint);
     lightColor = mix(
         lightColor, vec4(tinted.rgb, 1.),
-        strength * tinted.a * avg);
+        strength * tinted.a * avg * b);
   }
 
   return Texel(tex, uv) * (ambientLight + lightColor);
