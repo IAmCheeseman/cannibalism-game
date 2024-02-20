@@ -64,7 +64,15 @@ function World:_flushQueues()
 end
 
 function World:iterateType(type)
-  return ipairs(self.types[type.__id])
+  local i = 0
+  return function()
+    i = i + 1
+    if not self.types[type.__id] then
+      return nil
+    end
+
+    return self.types[type.__id][i]
+  end
 end
 
 function World:update()

@@ -1,5 +1,6 @@
 local cwd = (...):gsub("%.event$", "")
 local class = require(cwd .. ".class")
+local tablef = require(cwd .. ".tablef")
 
 local Event = class()
 
@@ -26,7 +27,7 @@ function Event:call(...)
   end
 
   for _, connection in ipairs(self.connections) do
-    for _, obj in connection.world:iterateType(connection.type) do
+    for obj in connection.world:iterateType(connection.type) do
       obj[connection.fn](obj, ...)
     end
   end
