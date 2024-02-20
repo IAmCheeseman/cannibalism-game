@@ -15,7 +15,10 @@ thread:start(logFile)
 
 function logging.addType(name)
   logging[name] = function(...)
-    local message = table.concat({...}, "\t")
+    local message = ""
+    for _, v in ipairs({...}) do -- can't use table.concat since that doesn't call tostring.
+      message = message .. tostring(v) .. "\t"
+    end
     local out = "[".. name .. "] " .. tostring(message)
     love.thread.getChannel("logger"):push(out)
     oldPrint(out)
