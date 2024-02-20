@@ -50,4 +50,20 @@ function tablef.flush(t)
   end
 end
 
+function tablef.print(t, i)
+  i = i or 1
+  local lowerTab = ("\t"):rep(i - 1)
+  local tabs = ("\t"):rep(i)
+  print(lowerTab .. "{\n")
+  for k, v in pairs(t) do
+    if type(v) == "table" then
+      io.write(tabs .. tostring(k) .. " = ")
+      tablef.print(v)
+    else
+      io.write(tabs .. tostring(k) .. " = " .. tostring(v))
+    end
+  end
+  io.write(lowerTab .. "}\n")
+end
+
 return tablef
