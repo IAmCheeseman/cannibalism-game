@@ -73,7 +73,7 @@ core.lighting.ambientColor.g = 1
 core.lighting.ambientColor.b = 1
 
 function love.load()
-  core.init()
+  core.init("Emotional Game", "0.1.0")
 
   player = Player()
   world:add(player)

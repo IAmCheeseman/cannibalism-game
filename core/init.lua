@@ -49,12 +49,18 @@ function core.defineLoveEvents()
   end
 end
 
-function core.init()
-  core.logging.log("Initialized. Took " .. tostring((os.clock() - start) * 1000) .. " ms.")
+function core.init(gameName, gameVersion)
+  love.window.setTitle(gameName)
+  core.logging.log("Initialized. Took " .. tostring(math.floor((os.clock() - start) * 1000 + 0.5)) .. " ms.")
 
-  local name, version, _, device = love.graphics.getRendererInfo( )
-  core.logging.info(name .. " " .. version)
-  core.logging.info(device)
+  core.logging.info(gameName .. " v" .. gameVersion)
+
+  core.logging.info("Operating System: " .. love.system.getOS())
+  local name, version, vendor, device = love.graphics.getRendererInfo( )
+  core.logging.info("Renderer name: " .. name)
+  core.logging.info("Renderer version: " .. version)
+  core.logging.info("Renderer deveice: " .. device)
+  core.logging.info("Renderer vendor: " .. vendor)
 end
 
 return core
