@@ -11,6 +11,6 @@ vec4 effect(vec4 _, Image tex, vec2 uv, vec2 pixelUv) {
   color = mix(color, greenChannel * texColor.g, float(texColor.g != 0.));
   color = mix(color, blueChannel * texColor.b, float(texColor.b != 0.));
 
-  return color;
+  return vec4(color.rgb, float(color.a != 0.));
 }
 
