@@ -33,11 +33,14 @@ world = core.World(physicsWorld)
 local Player = require("player")
 local Book = require("book")
 
-local tileSet = require("core.tiling.tileset")("assets/grass.png", 16, 16)
-local tileMap = require("core.tiling.tilemap")(128)
+local grassTs = core.TileSet("assets/grass.png", 16, 16)
+-- local sandTs = core.TileSet("assets/sand.png", 16, 16)
+local tileMap = core.TileMap(128)
 
 tileMap:addLayer("grass", -1)
-tileMap:addTileSet(tileSet, "grass")
+tileMap:addTileSet(grassTs, "grass")
+-- tileMap:addLayer("sand", -1)
+-- tileMap:addTileSet(sandTs, "sand")
 
 local positions = {}
 local w = 128

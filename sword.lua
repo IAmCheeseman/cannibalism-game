@@ -11,6 +11,7 @@ itemManager.define(
 function Sword:init(anchor)
   self:base("init")
 
+  self.paletteShader = core.shader.new("3colorpalette", "3colorpalette.frag")
   self.sprite = core.Sprite("assets/sword.png", {
     xframes = 11,
     yframes = 1,
@@ -88,7 +89,13 @@ function Sword:draw()
   local swingDir = (self.combo == 1 or self.combo == 3) and 1 or -1
   local scaley = (mx > self.x and 1 or -1) * swingDir
 
+  self.paletteShader:sendUniform("redChannel", {1, 1, 1, 1})
+  self.paletteShader:sendUniform("greenChannel", {0.5, 0.5, 0, 1})
+  self.paletteShader:sendUniform("blueChannel", {0.5, 0.5, 0.5, 1})
+
+  self.paletteShader:apply()
   self.sprite:draw(dx, dy, angle, 1, scaley)
+  self.paletteShader:stop()
 end
 
 function Sword:onSwordAnimationFinish(_, animationName)
