@@ -34,13 +34,13 @@ local Player = require("player")
 local Book = require("book")
 
 local grassTs = core.TileSet("assets/grass.png", 16, 16)
--- local sandTs = core.TileSet("assets/sand.png", 16, 16)
+local sandTs = core.TileSet("assets/sand.png", 16, 16)
 local tileMap = core.TileMap(128)
 
 tileMap:addLayer("grass", -1)
 tileMap:addTileSet(grassTs, "grass")
--- tileMap:addLayer("sand", -1)
--- tileMap:addTileSet(sandTs, "sand")
+tileMap:addLayer("sand", 1)
+tileMap:addTileSet(sandTs, "sand")
 
 local positions = {}
 local w = 128
@@ -49,12 +49,18 @@ for _=1, w*w/2 do
   local y = love.math.random(2, w)
   table.insert(positions, x)
   table.insert(positions, y)
-  tileMap:setCell(x, y, "grass")
+  if love.math.random() < 0.5 then
+    tileMap:setCell(x, y, "grass")
+  end
+  if love.math.random() < 0.5 then
+    tileMap:setCell(x, y, "sand")
+  end
 end
 
 for i=1, #positions, 2 do
   local x, y = positions[i], positions[i + 1]
   tileMap:updateAutotile(x, y, "grass")
+  tileMap:updateAutotile(x, y, "sand")
 end
 
 core.events.keypressed:on(function(key, _, _)

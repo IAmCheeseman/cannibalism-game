@@ -65,7 +65,12 @@ end
 function TileMap:_updateAutotileAt(x, y, layerName)
   local layer = self.layers[layerName]
 
-  local tileSet = TileSet.getGlobalTile(layer[x][y]).tileSet
+  local tile = TileSet.getGlobalTile(layer[x][y])
+  if not tile then
+    return
+  end
+
+  local tileSet = tile.tileSet
   local u  = self:getCell(x, y - 1, layerName) ~= 0
   local r  = self:getCell(x + 1, y, layerName) ~= 0
   local d  = self:getCell(x, y + 1, layerName) ~= 0
@@ -75,10 +80,13 @@ function TileMap:_updateAutotileAt(x, y, layerName)
   local br = self:getCell(x + 1, y + 1, layerName) ~= 0
   local bl = self:getCell(x - 1, y + 1, layerName) ~= 0
 
-  local autotile = tileSet:getAutotile(u, r, d, l, tl, tr, br, bl) or 0
+  local autotile, tileSetTile = tileSet:getAutotile(u, r, d, l, tl, tr, br, bl)
+  if not autotile then
+    autotile, tileSetTile = 0, 1
+  end
   layer[x][y] = autotile
   layer.batches[tileSet]:add(
-    tileSet.tiles[autotile].quad,
+    tileSet.tiles[tileSetTile].quad,
     x * tileSet.tileWidth, y * tileSet.tileHeight)
 end
 
