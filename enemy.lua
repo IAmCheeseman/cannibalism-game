@@ -28,7 +28,6 @@ end
 
 function Enemy:takeDamage(amount)
   self.health = self.health - amount
-  print(self.health, self)
   if self.health <= 0 then
     world:remove(self)
   end

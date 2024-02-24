@@ -129,6 +129,11 @@ function Sword:onMousePressed()
     local animationName = self.combo == 3 and "poke" or "swing"
     self.cooldown:start(self.sprite:getAnimation(animationName).run)
 
+    local mx, my = core.viewport.getMousePosition("default")
+    local dirx, diry = core.math.directionTo(self.x, self.y, mx, my)
+    self.hitbox.shape.offsetx = dirx * 16 - 8
+    self.hitbox.shape.offsety = diry * 16 - 16
+
     for i, body in ipairs(self.hitbox:getColliding()) do
       body.anchor:takeDamage(50)
     end
