@@ -26,11 +26,13 @@ core.viewport.setBgColor("default", 0, 0, 0, 1)
 core.viewport.setBgColor("gui", 0, 0, 0, 0)
 
 core.events.gui = core.Event()
+core.events.guiAboveLui = core.Event()
 
 physicsWorld = core.physics.PhysicsWorld(128, 128)
 world = core.World(physicsWorld)
 
 local Player = require("player")
+local Enemy = require("enemy")
 local Book = require("book")
 
 local grassTs = core.TileSet("assets/grass.png", 16, 16)
@@ -76,13 +78,20 @@ core.events.focus:on(function(isFocused)
 end)
 
 local player
+local enemy
 local time = 0
 
 function love.load()
   core.init("Emotional Game", "0.1.0")
 
   player = Player()
+  enemy = Enemy()
+
+  enemy.x = 32
+  enemy.y = 32
+
   world:add(player)
+  world:add(enemy)
   world:add(Book())
 end
 
@@ -109,6 +118,9 @@ function love.draw()
   core.viewport.drawTo("gui", function()
     core.events.gui:call()
     luiScene:render()
+    core.events.guiAboveLui:call()
+
+    love.graphics.setColor(1, 1, 1)
     love.graphics.print(
       tostring(core.math.snapped(1 / love.timer.getFPS() * 1000, 0.01)) .. "/16 ms",
       0, 0)

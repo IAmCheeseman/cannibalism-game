@@ -149,6 +149,52 @@ function AbstractBody:init(anchor, shape, options)
   self:base("init", "abstract", anchor, shape, options)
 end
 
+function AbstractBody:getColliding()
+  local colliding = {}
+
+  local neighbors = self.world.partition:getNeighbors(self)
+
+  for _, neighbor in ipairs(neighbors) do
+    for _, body in ipairs(neighbor) do
+      -- verify it's in our masks
+      local sx, sy = self:getPosition()
+      local ox, oy = body:getPosition()
+      local isAabb = aabb(
+        sx, sy, self.shape.width, self.shape.height,
+        ox, oy, body.shape.width, body.shape.height)
+      for mask, _ in pairs(self.mask) do
+        if body.layers[mask] and isAabb then
+          table.insert(colliding, body)
+        end
+      end
+    end
+  end
+
+  return colliding
+end
+
+function AbstractBody:isColliding()
+  local neighbors = self.world.partition:getNeighbors(self)
+
+  for _, neighbor in ipairs(neighbors) do
+    for _, body in ipairs(neighbor) do
+      -- verify it's in our masks
+      local sx, sy = self:getPosition()
+      local ox, oy = body:getPosition()
+      local isAabb = aabb(
+        sx, sy, self.shape.width, self.shape.height,
+        ox, oy, body.shape.width, body.shape.height)
+      for mask, _ in pairs(self.mask) do
+        if body.layers[mask] and isAabb then
+          return true
+        end
+      end
+    end
+  end
+
+  return false
+end
+
 function AbstractBody:getColor()
   return 0, 0, 1, 0.5
 end

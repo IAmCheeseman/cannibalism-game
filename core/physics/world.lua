@@ -18,6 +18,10 @@ function PhysicsWorld:addBody(body)
   self.partition:addBody(body)
 end
 
+function PhysicsWorld:removeBody(body)
+  self.partition:removeBody(body)
+end
+
 function PhysicsWorld:draw()
   if not PhysicsWorld.drawShapes then
     return

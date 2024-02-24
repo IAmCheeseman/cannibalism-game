@@ -86,4 +86,17 @@ function SpatialPartition:addBody(body)
   }
 end
 
+function SpatialPartition:removeBody(body)
+  local bodyData  = self.bodies[body]
+  local partition = self.partitions[bodyData.partition]
+  local index = bodyData.index
+  tablef.swapRemove(partition, index)
+  local swapped = partition[index]
+  if swapped then
+    self.bodies[swapped].index = index
+  end
+
+  self.bodies[body] = nil
+end
+
 return SpatialPartition

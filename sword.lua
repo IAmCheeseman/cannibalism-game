@@ -40,6 +40,13 @@ function Sword:init(anchor)
   self.sprite:play("idle")
   self.sprite:setAnimOverCallback(self, self.onSwordAnimationFinish)
 
+  self.hitbox = core.physics.AbstractBody(
+    self, core.physics.makeAabb(-8, -16, 16, 16), {
+      layers = {"weapon"},
+      mask = {"enemy"}
+    })
+  physicsWorld:addBody(self.hitbox)
+
   self.cooldown = core.Timer(0.4)
   self.comboWindow = core.Timer(0.2)
 
@@ -121,6 +128,10 @@ function Sword:onMousePressed()
     end
     local animationName = self.combo == 3 and "poke" or "swing"
     self.cooldown:start(self.sprite:getAnimation(animationName).run)
+
+    for i, body in ipairs(self.hitbox:getColliding()) do
+      body.anchor:takeDamage(50)
+    end
   end
 end
 

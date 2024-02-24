@@ -39,23 +39,24 @@ function World:_flushQueues()
   self.addQueue = {}
 
   for _, obj in ipairs(self.removeQueue) do
-    if obj.destroy then
+    if obj.removed then
       obj:removed(self)
     end
 
     local index = self.objData[obj].index
     local typeIndex = self.objData[obj].typeIndex
-    tablef.swapRemove(self.objs, index)
-
     self.objData[obj] = nil
+
+    tablef.swapRemove(self.objs, index)
     local swapped = self.objs[index]
     if swapped then
       self.objData[swapped].index = index
     end
 
     local mt = getmetatable(obj)
-    tablef.swapRemove(self.types[mt.__id], typeIndex)
-    swapped = self.types[mt.__id][typeIndex]
+    local ofType = self.types[mt.__id]
+    tablef.swapRemove(ofType, typeIndex)
+    swapped = ofType[typeIndex]
     if swapped then
       self.objData[swapped].typeIndex = typeIndex
     end
@@ -92,7 +93,7 @@ function World:draw()
     return a.zIndex < b.zIndex
   end)
   for i, obj in ipairs(self.objs) do
-    obj.zIndex = i
+    self.objData[obj].index = i
     if obj.draw then
       obj:draw()
     end

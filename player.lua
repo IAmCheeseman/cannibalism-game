@@ -1,5 +1,4 @@
 local Sword = require("sword")
-local SpeechBubble = require("speechbubble")
 
 local Player = class(WorldObj)
 
@@ -7,6 +6,8 @@ local ACCEL = 15
 
 function Player:init()
   self:base("init")
+
+  Player.instance = self
 
   self.sprite = core.Sprite("assets/sam.png", {
     xframes = 3,
@@ -30,6 +31,9 @@ function Player:init()
   })
   world:add(self.light)
 
+  self.maxHealth = 100
+  self.health = 50
+
   self.velx = 0
   self.vely = 0
   self.time = 0
@@ -46,9 +50,6 @@ function Player:init()
 
   self.body = core.physics.SolidBody(self, core.physics.makeAabb(-4, -8, 8), {})
   physicsWorld:addBody(self.body)
-
-  self.maxHealth = 100
-  self.health = self.maxHealth
 end
 
 function Player:updateCamera()
@@ -137,5 +138,16 @@ function Player:normalDraw()
 
   self.sprite:draw(self.x, self.y, 0, scalex, scaley, skew, 0)
 end
+
+function Player:gui()
+  local w = 40
+  love.graphics.setColor(0, 0, 0)
+  love.graphics.rectangle("fill", 2, 2, w, 5)
+  love.graphics.setColor(1, 0, 0)
+  local val = w * (self.health / self.maxHealth)
+  love.graphics.rectangle("fill", 2, 2, val, 5)
+end
+
+core.events.gui:connect(world, Player, "gui")
 
 return Player
