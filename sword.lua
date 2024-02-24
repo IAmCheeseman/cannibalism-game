@@ -134,8 +134,8 @@ function Sword:onMousePressed()
     self.hitbox.shape.offsetx = dirx * 16 - 8
     self.hitbox.shape.offsety = diry * 16 - 16
 
-    for i, body in ipairs(self.hitbox:getColliding()) do
-      body.anchor:takeDamage(50)
+    for _, body in ipairs(self.hitbox:getColliding()) do
+      body.anchor:takeDamage(core.math.angle(dirx, diry), 50)
     end
   end
 end

@@ -1,3 +1,5 @@
+local Corpse = require("corpse")
+
 local Enemy = class(WorldObj)
 
 function Enemy:init()
@@ -26,10 +28,13 @@ function Enemy:removed()
   physicsWorld:removeBody(self.hurtbox)
 end
 
-function Enemy:takeDamage(amount)
+function Enemy:takeDamage(kbDir, amount)
   self.health = self.health - amount
   if self.health <= 0 then
     world:remove(self)
+
+    local corpse = Corpse(self.x, self.y, kbDir, 500, nil, core.physics.makeAabb(-8, -8, 16, 8))
+    world:add(corpse)
   end
 end
 
