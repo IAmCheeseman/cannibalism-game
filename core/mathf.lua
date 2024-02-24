@@ -94,4 +94,21 @@ function mathf.rotated(x, y, r)
   return nx, ny
 end
 
+-- amp, 0-1
+-- freq, any
+-- octaves, any
+-- pers 0-1
+-- lacun 0-100
+function mathf.noise(x, y, amp, freq, octaves, pers, lacun, seed)
+  local value = 0;
+
+  for i=1, octaves do
+    value = value + amp * love.math.noise(x * freq + i * 64, y * freq + i * 64, seed)
+    amp = amp * pers
+    freq = freq * lacun
+  end
+
+  return value
+end
+
 return mathf

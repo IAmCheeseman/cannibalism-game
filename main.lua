@@ -88,7 +88,7 @@ end
 
 function love.update(dt)
   time = time + dt
-  local b = (math.sin(time / 6) + 1) / 2
+  local b = (math.sin(time / 12) + 1) / 2 - 0.1
   core.lighting.ambientColor.r = b
   core.lighting.ambientColor.g = b
   core.lighting.ambientColor.b = b
