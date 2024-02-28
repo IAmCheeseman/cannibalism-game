@@ -81,10 +81,7 @@ function Sword:update()
   self.x = core.math.deltaLerp(self.x, self.anchor.x, accel)
   self.y = core.math.deltaLerp(self.y, self.anchor.y, accel)
 
-  self.sprite:update()
-  self.cooldown:update()
-  self.comboWindow:update()
-  self.hitbox:update()
+  self:updateChildren()
 end
 
 function Sword:draw()

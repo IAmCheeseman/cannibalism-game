@@ -33,11 +33,28 @@ local function typesMatch(self, other)
 
   if not match and smt.__base then
     local current = smt.__base
+    local id = smt.__id
     smt.__base = smt.__base.__base
     smt.__id = current.__id
     match = typesMatch(self, other)
     smt.__base = current
+    smt.__id = id
+  end
+  return match
+end
+
+local function isTypeOf(self, type)
+  local smt = getmetatable(self)
+  local match = smt.__id == type.__id
+
+  if not match and smt.__base then
+    local current = smt.__base
+    local id = smt.__id
+    smt.__base = smt.__base.__base
     smt.__id = current.__id
+    match = isTypeOf(self, type)
+    smt.__base = current
+    smt.__id = id
   end
   return match
 end
@@ -65,6 +82,7 @@ local function class(extends)
 
   definition.base = base
   definition.typesMatch = typesMatch
+  definition.isTypeOf = isTypeOf
 
   return definition
 end

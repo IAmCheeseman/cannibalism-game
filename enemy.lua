@@ -124,14 +124,7 @@ end
 
 function Enemy:update()
   self.zIndex = self.y
-
-  self.stateMachine:update()
-
-  self.sprite:update()
-  self.sword:update()
-  self.attackCharge:update()
-  self.hitbox:update()
-  self.hurtbox:update()
+  self:updateChildren()
 end
 
 function Enemy:idleUpdate(_)

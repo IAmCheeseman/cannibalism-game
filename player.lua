@@ -67,8 +67,7 @@ end
 function Player:update()
   self.zIndex = -self.y
 
-  self.stateMachine:update()
-  self.sprite:update()
+  self:updateChildren()
   self:updateCamera()
 
   self.light.x = self.x

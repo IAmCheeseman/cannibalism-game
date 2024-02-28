@@ -63,4 +63,12 @@ function core.init(gameName, gameVersion)
   core.logging.info("Renderer vendor: " .. vendor)
 end
 
+function core.updateChildren(obj)
+  for _, child in pairs(obj) do
+    if type(child) == "table" and child.update then
+      child:update()
+    end
+  end
+end
+
 return core
