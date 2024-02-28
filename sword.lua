@@ -84,6 +84,7 @@ function Sword:update()
   self.sprite:update()
   self.cooldown:update()
   self.comboWindow:update()
+  self.hitbox:update()
 end
 
 function Sword:draw()

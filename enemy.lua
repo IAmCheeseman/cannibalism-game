@@ -130,6 +130,8 @@ function Enemy:update()
   self.sprite:update()
   self.sword:update()
   self.attackCharge:update()
+  self.hitbox:update()
+  self.hurtbox:update()
 end
 
 function Enemy:idleUpdate(_)

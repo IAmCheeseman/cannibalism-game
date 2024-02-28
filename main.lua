@@ -54,6 +54,13 @@ for _=1, w*w/2 do
   table.insert(positions, y)
   if love.math.random() < 0.5 then
     tileMap:setCell(x, y, "grass")
+
+    local anchor = {x=x*16, y=y*16}
+    local body = core.physics.SolidBody(anchor, core.physics.makeAabb(-8, -8, 16, 16), {
+      layers = {"env"},
+      mask = {},
+    })
+    physicsWorld:addBody(body)
   end
   if love.math.random() < 0.5 then
     tileMap:setCell(x, y, "sand")

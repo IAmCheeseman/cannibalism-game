@@ -64,7 +64,7 @@ function SpatialPartition:updateBody(body)
 
   tablef.swapRemove(self.partitions[bodyIndex.partition], bodyIndex.index)
   local newBody = self.partitions[bodyIndex.partition][bodyIndex.index]
-  if self.bodies[newBody] then
+  if newBody and self.bodies[newBody] then
     self.bodies[newBody].index = bodyIndex.index
   end
 

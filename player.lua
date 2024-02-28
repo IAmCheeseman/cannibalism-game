@@ -48,7 +48,10 @@ function Player:init()
 
   self.speed = 150
 
-  self.body = core.physics.SolidBody(self, core.physics.makeAabb(-4, -8, 8), {})
+  self.body = core.physics.SolidBody(self, core.physics.makeAabb(-4, -8, 8), {
+    layers = {},
+    mask = {"env"}
+  })
   physicsWorld:addBody(self.body)
 end
 

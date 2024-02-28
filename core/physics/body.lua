@@ -149,6 +149,10 @@ function AbstractBody:init(anchor, shape, options)
   self:base("init", "abstract", anchor, shape, options)
 end
 
+function AbstractBody:update()
+  self.world.partition:updateBody(self)
+end
+
 function AbstractBody:getColliding()
   local colliding = {}
 
@@ -156,17 +160,22 @@ function AbstractBody:getColliding()
 
   for _, neighbor in ipairs(neighbors) do
     for _, body in ipairs(neighbor) do
-      -- verify it's in our masks
       local sx, sy = self:getPosition()
       local ox, oy = body:getPosition()
-      local isAabb = aabb(
+      if body ~= self and aabb(
         sx, sy, self.shape.width, self.shape.height,
-        ox, oy, body.shape.width, body.shape.height)
-      for mask, _ in pairs(self.mask) do
-        if body.layers[mask] and isAabb then
-          table.insert(colliding, body)
+        ox, oy, body.shape.width, body.shape.height) then
+
+        -- verify it's in our masks
+        for mask, _ in pairs(self.mask) do
+          if body.layers[mask] then
+            table.insert(colliding, body)
+            break
+          end
         end
+
       end
+
     end
   end
 
@@ -174,6 +183,8 @@ function AbstractBody:getColliding()
 end
 
 function AbstractBody:isColliding()
+  self.world.partition:updateBody(self)
+
   local neighbors = self.world.partition:getNeighbors(self)
 
   for _, neighbor in ipairs(neighbors) do

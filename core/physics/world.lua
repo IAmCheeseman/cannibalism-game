@@ -29,9 +29,13 @@ function PhysicsWorld:draw()
 
   for body, _ in pairs(self.partition.bodies) do
     love.graphics.setColor(body:getColor())
+
     local shape = body.shape
     local x, y = body:getPosition()
     love.graphics.rectangle("fill", x, y, shape.width, shape.height)
+
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.print(self.partition:findPartitionFor(x, y), x, y)
   end
   love.graphics.setColor(1, 1, 1)
 end
