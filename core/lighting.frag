@@ -19,6 +19,7 @@ vec4 effect(vec4 _, Image tex, vec2 uv, vec2 screenUv) {
 
     float dist = distance(screen, position);
     float strength = max(radius - dist, 0.) / radius;
+    strength = pow(strength, 2);
 
     float b = (
         ambientLight.r
