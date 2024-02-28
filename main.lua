@@ -3,6 +3,7 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 core = require("core")
 core.defineLoveEvents()
 class = core.class
+GameObj = core.GameObj
 WorldObj = core.WorldObj
 
 local LUI = require("lib.LUI")
@@ -32,8 +33,8 @@ physicsWorld = core.physics.PhysicsWorld(128, 128)
 world = core.World(physicsWorld)
 
 local Player = require("player")
+local Cursor = require("cursor")
 local Enemy = require("enemy")
-local Book = require("book")
 
 local grassTs = core.TileSet("assets/grass.png", 16, 16)
 local sandTs = core.TileSet("assets/sand.png", 16, 16)
@@ -92,7 +93,7 @@ function love.load()
 
   world:add(player)
   world:add(enemy)
-  world:add(Book())
+  world:add(Cursor())
 end
 
 function love.update(dt)

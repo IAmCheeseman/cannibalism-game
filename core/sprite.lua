@@ -52,7 +52,7 @@ function Sprite:setOffsetPreset(x, y)
   if x == "left" then
     self.offsetx = 0
   elseif x == "center" then
-    self.offsetx = width / 2
+    self.offsetx = math.floor(width / 2)
   elseif x == "right" then
     self.offsetx = width
   end
@@ -60,7 +60,7 @@ function Sprite:setOffsetPreset(x, y)
   if y == "top" then
     self.offsety = 0
   elseif y == "center" then
-    self.offsety = height / 2
+    self.offsety = math.floor(height / 2)
   elseif y == "bottom" then
     self.offsety = height
   end
