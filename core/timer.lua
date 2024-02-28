@@ -21,7 +21,7 @@ function Timer:start(newTime)
 end
 
 function Timer:percentageOver()
-  return self.timeLeft / self.totalTime
+  return 1. - self.timeLeft / self.totalTime
 end
 
 function Timer:update()

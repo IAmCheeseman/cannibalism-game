@@ -90,8 +90,9 @@ end
 
 function World:draw()
   table.sort(self.objs, function(a, b)
-    return a.zIndex < b.zIndex
+    return a.zIndex > b.zIndex
   end)
+
   for i, obj in ipairs(self.objs) do
     self.objData[obj].index = i
     if obj.draw then

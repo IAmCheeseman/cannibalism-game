@@ -30,8 +30,7 @@ function PhysicsWorld:draw()
   for body, _ in pairs(self.partition.bodies) do
     love.graphics.setColor(body:getColor())
     local shape = body.shape
-    local anchor = body.anchor
-    local x, y = anchor.x + shape.offsetx, anchor.y + shape.offsety
+    local x, y = body:getPosition()
     love.graphics.rectangle("fill", x, y, shape.width, shape.height)
   end
   love.graphics.setColor(1, 1, 1)
