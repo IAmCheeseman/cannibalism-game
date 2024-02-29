@@ -63,7 +63,7 @@ local function setCircle(t, x, y, radius)
       local dist = core.math.distanceBetween(dx, dy, x, y)
       local angle = core.math.angle(cx, cy)
       local n = core.math.noise(angle * 20, 0, 0.75, 0.05, 8, 0.5, 2, seed + lakeCount * 50)
-      local minDist = radius - n * 12
+      local minDist = radius - n * 16
       if dist < minDist
       and dx > 1 and dy > 1
       and dx < #world.map and dy < #world.map[dx]
@@ -99,7 +99,7 @@ local function generateIsland(island)
   for _=1, 20 do
     local x = love.math.random(island.x, island.x + island.width)
     local y = love.math.random(island.y, island.y + island.height)
-    local radius = love.math.random(12, 24)
+    local radius = love.math.random(16, 32)
     setCircle(island.sandTile, x, y, radius)
     setCircle(0, x, y, math.floor(radius * 0.9))
 
