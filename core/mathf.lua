@@ -29,6 +29,10 @@ function mathf.clamp(a, min, max)
   return math.min(math.max(a, min), max)
 end
 
+function mathf.map(a, min, max)
+  return a * (max - min) + min
+end
+
 function mathf.sign(a)
   return a < 0 and -1 or 1
 end
