@@ -38,6 +38,7 @@ local worldGen = require("worldgen")
 local Player = require("player")
 local Cursor = require("cursor")
 local Enemy = require("enemy")
+local Tree = require("tree")
 
 local grassTs = core.TileSet("assets/grass.png", 16, 16)
 local sandTs = core.TileSet("assets/sand.png", 16, 16)
@@ -80,6 +81,14 @@ for x=1, generated.width do
     elseif tile == 3 then
       tileMap:setCell(x, y, "grass")
       tileMap:setCell(x, y, "deepGrass")
+
+      if love.math.random() < 0.33 then
+        local tree = Tree(
+          x * 16 + love.math.random() * 16,
+          y * 16 + love.math.random() * 16)
+        world:add(tree)
+      end
+
       love.graphics.setColor(0, 0.5, 0)
     else
       love.graphics.setColor(0, 1, 1)
