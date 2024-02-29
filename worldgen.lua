@@ -54,6 +54,26 @@ function worldGen.initializeWorld(width, height, setSeed)
   seed = setSeed or love.math.random(999999)
 end
 
+local lakeCount = 0
+
+local function setCircle(t, x, y, radius)
+  for cx=-radius, radius do
+    for cy=-radius, radius do
+      local dx, dy = x + cx, y + cy
+      local dist = core.math.distanceBetween(dx, dy, x, y)
+      local angle = core.math.angle(cx, cy)
+      local n = core.math.noise(angle * 20, 0, 0.75, 0.05, 8, 0.5, 2, seed + lakeCount * 50)
+      local minDist = radius - n * 12
+      if dist < minDist
+      and dx > 1 and dy > 1
+      and dx < #world.map and dy < #world.map[dx]
+      and world.map[dx][dy] ~= 0 then
+        world.map[dx][dy] = t
+      end
+    end
+  end
+end
+
 local function generateIsland(island)
   for x=1, island.width do
     for y=1, island.height do
@@ -74,6 +94,16 @@ local function generateIsland(island)
         end
       end
     end
+  end
+
+  for _=1, 20 do
+    local x = love.math.random(island.x, island.x + island.width)
+    local y = love.math.random(island.y, island.y + island.height)
+    local radius = love.math.random(12, 24)
+    setCircle(island.sandTile, x, y, radius)
+    setCircle(0, x, y, math.floor(radius * 0.9))
+
+    lakeCount = lakeCount + 1
   end
 end
 
