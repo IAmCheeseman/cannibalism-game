@@ -48,7 +48,7 @@ end
 
 function shader.new(name, ...)
   if shaders[name] then
-    return shaders[name].shader
+    return shaders[name]
   else
     local newShader = Shader(...)
     shaders[name] = newShader

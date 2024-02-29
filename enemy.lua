@@ -123,7 +123,7 @@ function Enemy:takeDamage(kbDir, amount)
 end
 
 function Enemy:update()
-  self.zIndex = self.y
+  self.zIndex = -self.y
   self:updateChildren()
 end
 

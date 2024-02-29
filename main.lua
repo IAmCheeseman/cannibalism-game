@@ -39,6 +39,7 @@ local Player = require("player")
 local Cursor = require("cursor")
 local Enemy = require("enemy")
 local Tree = require("tree")
+local Tent = require("tent")
 
 local grassTs = core.TileSet("assets/grass.png", 16, 16)
 local sandTs = core.TileSet("assets/sand.png", 16, 16)
@@ -72,6 +73,16 @@ for x=1, generated.width do
     if tile == 1 then
       tileMap:setCell(x, y, "grass")
       love.graphics.setColor(0, 1, 0)
+      local n = core.math.noise(x, y, 0.45, 0.03, 5, 0.55, 2)
+      if n < 0.2 then
+        if love.math.random() < 0.1 then
+          local tent = Tent(
+            x * 16 + love.math.random() * 16,
+            y * 16 + love.math.random() * 16)
+          world:add(tent)
+        end
+        love.graphics.setColor(1, 1, 1)
+      end
       if love.math.random() < 0.1 then
         table.insert(possibleSpawnPoints, {x=x * 16, y=y * 16})
       end
@@ -135,13 +146,7 @@ function love.load()
 
   possibleSpawnPoints = {}
 
-  enemy = Enemy()
-
-  enemy.x = 32
-  enemy.y = 32
-
   world:add(player)
-  world:add(enemy)
   world:add(Cursor())
 end
 
