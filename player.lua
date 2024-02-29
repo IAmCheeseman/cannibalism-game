@@ -71,8 +71,8 @@ function Player:updateCamera()
   local cx, cy = core.viewport.getCameraPos("default")
   core.viewport.setCameraPos(
     "default",
-    core.math.deltaLerp(cx, math.floor(self.x - ww * 0.5 + 0.5), 25),
-    core.math.deltaLerp(cy, math.floor(self.y - wh * 0.5 + 0.5) - 8, 25))
+    core.math.deltaLerp(cx, math.floor(self.x - ww * 0.5 + 0.5), 24),
+    core.math.deltaLerp(cy, math.floor(self.y - wh * 0.5 + 0.5) - 8, 20))
 end
 
 function Player:update()
