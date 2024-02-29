@@ -78,9 +78,11 @@ local function generateIsland(island)
 end
 
 function worldGen.generate()
+  local start = os.clock()
   for _, island in ipairs(islands) do
     generateIsland(island)
   end
+  print("World gen took " .. tostring((os.clock() - start) * 1000) .. " ms")
   return world
 end
 
