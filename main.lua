@@ -166,12 +166,13 @@ function love.draw()
 
     local cx, cy = core.viewport.getCameraPos("default")
     local w, h = core.viewport.getSize("default")
-    cx, cy = (cx - w / 2) / 16, (cy - h / 2) / 16
+    local wh = h
+    cx, cy = (cx - w * 1.5) / 16, (cy - h * 1.5) / 16
     w, h = w / 4, h / 4
     local quad = love.graphics.newQuad(cx, cy, w, h, map:getDimensions())
-    love.graphics.draw(map, quad, 0, 0)
+    love.graphics.draw(map, quad, 0, wh - h)
     love.graphics.setColor(1, 0, 0)
-    love.graphics.points(player.x / 16 - cx, player.y / 16 - cy)
+    love.graphics.points(player.x / 16 - cx, wh - (player.y / 16 - cy))
   end)
 
   love.graphics.setColor(1, 1, 1, 1)
