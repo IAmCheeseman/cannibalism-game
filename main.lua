@@ -22,7 +22,7 @@ core.input.addKey("toggleBook", "tab")
 core.input.addMouse("useWeapon", 1)
 core.input.addMouse("useTome", 2)
 
-core.viewport.new("default", screenWidth, screenHeight)
+core.viewport.new("default", screenWidth, screenHeight, true)
 core.viewport.new("gui",     screenWidth, screenHeight)
 core.viewport.setBgColor("default", 0, 0, 0, 1)
 core.viewport.setBgColor("gui", 0, 0, 0, 0)

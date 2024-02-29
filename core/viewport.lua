@@ -1,4 +1,5 @@
 local cwd = (...):gsub("%.viewport$", "")
+local mathf = require(cwd .. ".mathf")
 
 local viewport = {}
 
@@ -44,7 +45,10 @@ function viewport.draw(name)
   local v = getViewport(name)
   local x, y, scale = getViewportTransform(name)
 
-  love.graphics.draw(v.canvas, x, y, 0, scale)
+  local ox, oy = mathf.frac(v.camerax), mathf.frac(v.cameray)
+  local quad = love.graphics.newQuad(ox, oy, v.width, v.height, v.canvas:getDimensions())
+
+  love.graphics.draw(v.canvas, quad, x, y, 0, scale)
 end
 
 function viewport.drawTo(name, f)
