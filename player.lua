@@ -152,6 +152,8 @@ function Player:normalDraw()
   end
 
   self.sprite:draw(self.x, self.y, 0, scalex, scaley, skew, 0)
+  love.graphics.setColor(0, 0, 0, 0.5)
+  self.sprite:draw(self.x, self.y, 0, scalex, -scaley * 0.5, skew, 0)
 end
 
 function Player:gui()

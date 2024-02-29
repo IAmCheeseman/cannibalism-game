@@ -159,6 +159,8 @@ function Enemy:attackChargeDraw()
   self.whitenShader:apply()
   self.sprite:draw(self.x, self.y, 0, self.scalex, 1)
   self.whitenShader:stop()
+  love.graphics.setColor(0, 0, 0, 0.5)
+  self.sprite:draw(self.x, self.y, 0, self.scalex, -0.5)
 end
 
 function Enemy:pursueUpdate(_)
@@ -181,12 +183,15 @@ end
 
 function Enemy:pursueDraw()
   self.sprite:draw(self.x, self.y, 0, self.scalex, 1)
+  love.graphics.setColor(0, 0, 0, 0.5)
+  self.sprite:draw(self.x, self.y, 0, self.scalex, -0.5)
 end
 
 function Enemy:draw()
   love.graphics.setColor(1, 1, 1)
   self.stateMachine:draw()
 
+  love.graphics.setColor(1, 1, 1)
   local player = Player.instance
   local angle = core.math.angleBetween(self.x, self.y, player.x, player.y)
   local scaley = player.x < self.x and -1 or 1

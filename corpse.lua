@@ -52,9 +52,12 @@ function Corpse:draw()
     self.outline:apply()
   end
 
+  love.graphics.setColor(1, 1, 1)
   self.sprite:draw(x, y)
-
   self.outline:stop()
+
+  love.graphics.setColor(0, 0, 0, 0.5)
+  self.sprite:draw(x, y, 0, 1, -0.5)
 end
 
 return Corpse
