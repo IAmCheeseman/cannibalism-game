@@ -115,6 +115,30 @@ function Sword:onSwordAnimationFinish(_, animationName)
   self.comboWindow:start()
 end
 
+function Sword:updateHitbox()
+  local mx, my = core.viewport.getMousePosition("default")
+  mx, my = core.math.directionTo(self.x, self.y, mx, my)
+  mx = math.floor(mx + 0.5)
+  my = math.floor(my + 0.5)
+  local w, h = 0, 0
+
+  if my == 0 then
+    w = 16
+  else
+    w = 24
+  end
+  if mx == 0 then
+    h = 16
+  else
+    h = 24
+  end
+
+  self.hitbox.shape.offsetx = -w / 2
+  self.hitbox.shape.offsety = -h
+  self.hitbox.shape.width = w
+  self.hitbox.shape.height = h
+end
+
 function Sword:onMousePressed()
   local swordAnim = self.sprite:getAnimation(self.sprite.playing)
   if core.input.isPressed("useWeapon")
@@ -129,8 +153,9 @@ function Sword:onMousePressed()
 
     local mx, my = core.viewport.getMousePosition("default")
     local dirx, diry = core.math.directionTo(self.x, self.y, mx, my)
-    self.hitbox.shape.offsetx = dirx * 16 - 8
-    self.hitbox.shape.offsety = diry * 16 - 16
+    self:updateHitbox()
+    self.hitbox.shape.offsetx = self.hitbox.shape.offsetx + dirx * 16
+    self.hitbox.shape.offsety = self.hitbox.shape.offsety + diry * 16
 
     for _, body in ipairs(self.hitbox:getColliding()) do
       body.anchor:takeDamage(core.math.angle(dirx, diry), 50)

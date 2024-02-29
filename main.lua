@@ -30,7 +30,7 @@ core.viewport.setBgColor("gui", 0, 0, 0, 0)
 core.events.gui = core.Event()
 core.events.guiAboveLui = core.Event()
 
-physicsWorld = core.physics.PhysicsWorld(128, 128)
+physicsWorld = core.physics.PhysicsWorld(128, 512 * 2)
 world = core.World(physicsWorld)
 
 local worldGen = require("worldgen")
@@ -58,7 +58,7 @@ worldGen.addIsland("grassland", {
   sandTile = 2,
   altBiomeTile = 3,
 })
-worldGen.initializeWorld(512, 512, 1)
+worldGen.initializeWorld(512, 512)
 local generated = worldGen.generate()
 
 local map = love.graphics.newCanvas(512, 512)
@@ -121,6 +121,8 @@ function love.load()
   local pos = core.table.getRandom(possibleSpawnPoints)
   player.x = pos.x
   player.y = pos.y
+
+  core.physics.PhysicsWorld.drawAround = player.body
 
   possibleSpawnPoints = {}
 
