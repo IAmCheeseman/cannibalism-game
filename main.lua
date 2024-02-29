@@ -11,7 +11,8 @@ local LUI = require("lib.LUI")
 luiScene = LUI.Scene()
 
 -- 16:9
-local screenWidth, screenHeight = 256, 144
+-- local screenWidth, screenHeight = 256, 144
+local screenWidth, screenHeight = 320, 180
 
 core.input.addKey("up", "w")
 core.input.addKey("left", "a")
@@ -32,45 +33,69 @@ core.events.guiAboveLui = core.Event()
 physicsWorld = core.physics.PhysicsWorld(128, 128)
 world = core.World(physicsWorld)
 
+local worldGen = require("worldgen")
+
 local Player = require("player")
 local Cursor = require("cursor")
 local Enemy = require("enemy")
 
 local grassTs = core.TileSet("assets/grass.png", 16, 16)
 local sandTs = core.TileSet("assets/sand.png", 16, 16)
-local tileMap = core.TileMap(128)
+local deepGrassTs = core.TileSet("assets/darkgrass.png", 16, 16)
+local tileMap = core.TileMap(512)
 
 tileMap:addLayer("grass", -1)
 tileMap:addTileSet(grassTs, "grass")
 tileMap:addLayer("sand", 1)
 tileMap:addTileSet(sandTs, "sand")
+tileMap:addLayer("deepGrass", -1)
+tileMap:addTileSet(deepGrassTs, "deepGrass")
 
-local positions = {}
-local w = 128
-for _=1, w*w/2 do
-  local x = love.math.random(2, w)
-  local y = love.math.random(2, w)
-  table.insert(positions, x)
-  table.insert(positions, y)
-  if love.math.random() < 0.5 then
-    tileMap:setCell(x, y, "grass")
+worldGen.addIsland("grassland", {
+  x = 2, y = 2,
+  size = 256,
+  grassTile = 1,
+  sandTile = 2,
+  altBiomeTile = 3,
+})
+worldGen.initializeWorld(512, 512, 1)
+local generated = worldGen.generate()
 
-    local anchor = {x=x*16, y=y*16}
-    local body = core.physics.SolidBody(anchor, core.physics.makeAabb(-8, -8, 16, 16), {
-      layers = {"env"},
-      mask = {},
-    })
-    physicsWorld:addBody(body)
-  end
-  if love.math.random() < 0.5 then
-    tileMap:setCell(x, y, "sand")
+local map = love.graphics.newCanvas(512, 512)
+local possibleSpawnPoints = {}
+
+love.graphics.setCanvas(map)
+for x=1, generated.width do
+  for y=1, generated.height do
+    local tile = generated.map[x][y]
+    if tile == 1 then
+      tileMap:setCell(x, y, "grass")
+      love.graphics.setColor(0, 1, 0)
+      if love.math.random() < 0.1 then
+        table.insert(possibleSpawnPoints, {x=x * 16, y=y * 16})
+      end
+    elseif tile == 2 then
+      tileMap:setCell(x, y, "sand")
+      love.graphics.setColor(1, 1, 0)
+    elseif tile == 3 then
+      tileMap:setCell(x, y, "grass")
+      tileMap:setCell(x, y, "deepGrass")
+      love.graphics.setColor(0, 0.5, 0)
+    else
+      love.graphics.setColor(0, 1, 1)
+    end
+    love.graphics.points(x, y)
   end
 end
+love.graphics.setCanvas()
 
-for i=1, #positions, 2 do
-  local x, y = positions[i], positions[i + 1]
-  tileMap:updateAutotile(x, y, "grass")
-  tileMap:updateAutotile(x, y, "sand")
+for x=1, generated.width do
+  for y=1, generated.height do
+    local tile = generated.map[x][y]
+    if tile ~= 0 then
+      tileMap:updateAutotile(x, y, {"grass", "sand", "deepGrass"})
+    end
+  end
 end
 
 core.events.keypressed:on(function(key, _, _)
@@ -93,6 +118,12 @@ function love.load()
   core.init("Emotional Game", "0.1.0")
 
   player = Player()
+  local pos = core.table.getRandom(possibleSpawnPoints)
+  player.x = pos.x
+  player.y = pos.y
+
+  possibleSpawnPoints = {}
+
   enemy = Enemy()
 
   enemy.x = 32
@@ -105,7 +136,7 @@ end
 
 function love.update(dt)
   time = time + dt
-  local b = (math.sin(time / 3) + 1) / 2 - 0.1
+  local b = 0.9--(math.sin(time / 3) + 1) / 2 - 0.1
   core.lighting.ambientColor.r = b
   core.lighting.ambientColor.g = b
   core.lighting.ambientColor.b = b
@@ -132,6 +163,15 @@ function love.draw()
     love.graphics.print(
       tostring(core.math.snapped(1 / love.timer.getFPS() * 1000, 0.01)) .. "/16 ms",
       0, 0)
+
+    local cx, cy = core.viewport.getCameraPos("default")
+    local w, h = core.viewport.getSize("default")
+    cx, cy = (cx - w / 2) / 16, (cy - h / 2) / 16
+    w, h = w / 4, h / 4
+    local quad = love.graphics.newQuad(cx, cy, w, h, map:getDimensions())
+    love.graphics.draw(map, quad, 0, 0)
+    love.graphics.setColor(1, 0, 0)
+    love.graphics.points(player.x / 16 - cx, player.y / 16 - cy)
   end)
 
   love.graphics.setColor(1, 1, 1, 1)

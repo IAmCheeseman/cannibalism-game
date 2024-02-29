@@ -55,6 +55,17 @@ function Player:init()
   physicsWorld:addBody(self.body)
 end
 
+function Player:added()
+  local ww, wh = core.viewport.getSize("default")
+  core.viewport.setCameraPos(
+    "default",
+    math.floor(self.x - ww * 0.5 + 0.5),
+    math.floor(self.y - wh * 0.5 + 0.5) - 8)
+
+  self.sword.x = self.x
+  self.sword.y = self.y
+end
+
 function Player:updateCamera()
   local ww, wh = core.viewport.getSize("default")
   local cx, cy = core.viewport.getCameraPos("default")

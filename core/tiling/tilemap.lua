@@ -105,11 +105,13 @@ function TileMap:updateAutotile(x, y, layerName)
       self:_updateAutotileAt(x, y - 1, layer)
     end
   else -- Update all layers at x, y
-    for layer, _ in pairs(self.layers) do
-      self:_updateAutotileAt(x, y, layer)
-      self:_updateAutotileAt(x - 1, y, layer)
-      self:_updateAutotileAt(x - 1, y - 1, layer)
-      self:_updateAutotileAt(x, y - 1, layer)
+    for layer, _ in ipairs(self.layers) do
+      if type(layer) ~= "number" then
+        self:_updateAutotileAt(x, y, layer)
+        self:_updateAutotileAt(x - 1, y, layer)
+        self:_updateAutotileAt(x - 1, y - 1, layer)
+        self:_updateAutotileAt(x, y - 1, layer)
+      end
     end
   end
 end

@@ -50,6 +50,11 @@ function tablef.flush(t)
   end
 end
 
+function tablef.getRandom(t)
+  local index = love.math.random(1, #t)
+  return t[index]
+end
+
 function tablef.print(t, i)
   i = i or 1
   local lowerTab = ("\t"):rep(i - 1)
