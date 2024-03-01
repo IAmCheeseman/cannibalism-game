@@ -74,13 +74,9 @@ for x=1, generated.width do
       tileMap:setCell(x, y, "grass")
       love.graphics.setColor(0, 1, 0)
       local n = core.math.noise(x, y, 0.45, 0.03, 5, 0.55, 2)
-      if n < 0.2 then
-        if love.math.random() < 0.1 then
-          local tent = Tent(
-            x * 16 + love.math.random() * 16,
-            y * 16 + love.math.random() * 16)
-          world:add(tent)
-        end
+      if n < 0.2 and love.math.random() < 0.1 then
+        local tent = Tent(x * 16, y * 16)
+        world:add(tent)
         love.graphics.setColor(1, 1, 1)
       end
       if love.math.random() < 0.1 then

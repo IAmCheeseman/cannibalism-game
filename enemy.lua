@@ -6,6 +6,7 @@ local Enemy = class(WorldObj)
 function Enemy:init()
   self:base("init")
 
+  self.isDead = false
   self.maxHealth = 100
   self.health = self.maxHealth
   self.vx, self.vy = 0, 0
@@ -114,6 +115,8 @@ function Enemy:takeDamage(kbDir, amount)
 
   if self.health <= 0 then
     world:remove(self)
+
+    self.isDead = true
 
     self.sprite:play("corpse")
     local corpse = Corpse(

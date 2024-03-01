@@ -15,6 +15,8 @@ function Tent:init(x, y)
 
   self.timer = core.Timer(3)
   self.timer:start()
+
+  self.count = 0
 end
 
 function Tent:update()
@@ -23,15 +25,19 @@ function Tent:update()
   if dist < 128 then
     self:updateChildren()
 
-    if self.timer.justFinished then
-      local enemy = Enemy()
+    local isEnemySpawned = not self.spawned or self.spawned.isDead
+    local hasEnemies = self.count < 3
+    if self.timer.justFinished and isEnemySpawned and hasEnemies then
+      self.spawned = Enemy()
 
-      enemy.x = self.x
-      enemy.y = self.y
+      self.spawned.x = self.x
+      self.spawned.y = self.y
 
-      world:add(enemy)
+      world:add(self.spawned)
 
       self.timer:start()
+
+      self.count = self.count + 1
     end
   end
 end
