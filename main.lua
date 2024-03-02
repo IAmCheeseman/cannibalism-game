@@ -6,10 +6,6 @@ class = core.class
 GameObj = core.GameObj
 WorldObj = core.WorldObj
 
-local LUI = require("lib.LUI")
-
-luiScene = LUI.Scene()
-
 -- 16:9
 -- local screenWidth, screenHeight = 256, 144
 local screenWidth, screenHeight = 320, 180
@@ -37,7 +33,6 @@ local worldGen = require("worldgen")
 
 local Player = require("player")
 local Cursor = require("cursor")
-local Enemy = require("enemy")
 local Tree = require("tree")
 local Tent = require("tent")
 
@@ -168,7 +163,6 @@ function love.draw()
 
   core.viewport.drawTo("gui", function()
     core.events.gui:call()
-    luiScene:render()
     core.events.guiAboveLui:call()
 
     love.graphics.setColor(1, 1, 1)
