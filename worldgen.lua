@@ -14,9 +14,15 @@ function worldGen.addIsland(name, opts)
   island.y = opts.y
   island.width = opts.width or opts.size
   island.height = opts.height or island.width
+
+  island.tileMap = opts.tileMap
+
   island.grassTile = opts.grassTile
+  island.grassLayer = opts.grassLayer or opts.grassTile
   island.sandTile = opts.sandTile
+  island.sandLayer = opts.sandLayer or opts.sandTile
   island.altBiomeTile = opts.altBiomeTile
+  island.altBiomeLayer = opts.altBiomeLayer or opts.altBiomeTile
 
   island.seed = opts.setSeed or (seed + #islands * 100)
 
@@ -39,9 +45,10 @@ function worldGen.addIslandBiome(islandName, noiseFn, generationFn)
   })
 end
 
-function worldGen.initializeWorld(width, height, setSeed)
+function worldGen.initializeWorld(objWorld, width, height, setSeed)
   world.width = width
   world.height = height
+  world.objWorld = objWorld
 
   world.map = {}
   for x=1, world.width do
@@ -68,7 +75,7 @@ local function setCircle(t, x, y, radius)
       and dx > 1 and dy > 1
       and dx < #world.map and dy < #world.map[dx]
       and world.map[dx][dy] ~= 0 then
-        world.map[dx][dy] = t
+        world.map[dx][dy] = t or 0
       end
     end
   end
@@ -101,9 +108,27 @@ local function generateIsland(island)
     local y = love.math.random(island.y, island.y + island.height)
     local radius = love.math.random(16, 32)
     setCircle(island.sandTile, x, y, radius)
-    setCircle(0, x, y, math.floor(radius * 0.9))
+    setCircle(nil, x, y, math.floor(radius * 0.9))
 
     lakeCount = lakeCount + 1
+  end
+
+  for x=1, world.width do
+    for y=1, world.height do
+      local tile = world.map[x][y]
+
+      if tile == island.grassTile then
+        island.tileMap:setCell(x, y, island.grassTile, island.grassLayer)
+      elseif tile == island.altBiomeTile then
+        island.tileMap:setCell(x, y, island.altBiomeTile, island.altBiomeLayer)
+      elseif tile == island.sandTile then
+        island.tileMap:setCell(x, y, island.sandTile, island.sandLayer)
+      end
+
+      if tile ~= 0 then
+        island.tileMap:updateAutotile(x, y, {"grass", "sand", "deepGrass"})
+      end
+    end
   end
 end
 

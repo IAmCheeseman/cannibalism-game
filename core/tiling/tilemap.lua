@@ -122,15 +122,34 @@ end
 
 function TileMap:setCell(x, y, tileSetName, layerName)
   layerName = layerName or tileSetName
-  self:_ensureLayerExists(layerName)
-  local layer = self.layers[layerName]
-  local tileSet = self.tileSets[tileSetName]
-  local tile = tileSet:getDefaultTile()
+  local tile
 
-  self:_setCellAt(x, y, tile, layer)
-  self:_setCellAt(x - 1, y, tile, layer)
-  self:_setCellAt(x - 1, y - 1, tile, layer)
-  self:_setCellAt(x, y - 1, tile, layer)
+  if tileSetName then
+    local tileSet = self.tileSets[tileSetName]
+    tile = tileSet:getDefaultTile()
+  else
+
+  end
+
+  if type(layerName) == "string" then
+    self:_ensureLayerExists(layerName)
+    local layer = self.layers[layerName]
+
+    self:_setCellAt(x, y, tile, layer)
+    self:_setCellAt(x - 1, y, tile, layer)
+    self:_setCellAt(x - 1, y - 1, tile, layer)
+    self:_setCellAt(x, y - 1, tile, layer)
+  elseif type(layerName) == "table" then
+    for _, v in ipairs(layerName) do
+      self:_ensureLayerExists(v)
+      local layer = self.layers[v]
+
+      self:_setCellAt(x, y, tile, layer)
+      self:_setCellAt(x - 1, y, tile, layer)
+      self:_setCellAt(x - 1, y - 1, tile, layer)
+      self:_setCellAt(x, y - 1, tile, layer)
+    end
+  end
 end
 
 function TileMap:draw(x, y)

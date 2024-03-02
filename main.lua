@@ -41,21 +41,24 @@ local sandTs = core.TileSet("assets/sand.png", 16, 16)
 local deepGrassTs = core.TileSet("assets/darkgrass.png", 16, 16)
 local tileMap = core.TileMap(512)
 
+tileMap:addLayer("sand", -1)
+tileMap:addTileSet(sandTs, "sand")
 tileMap:addLayer("grass", -1)
 tileMap:addTileSet(grassTs, "grass")
-tileMap:addLayer("sand", 1)
-tileMap:addTileSet(sandTs, "sand")
 tileMap:addLayer("deepGrass", -1)
 tileMap:addTileSet(deepGrassTs, "deepGrass")
 
 worldGen.addIsland("grassland", {
   x = 2, y = 2,
   size = 256,
-  grassTile = 1,
-  sandTile = 2,
-  altBiomeTile = 3,
+
+  tileMap = tileMap,
+  grassTile = "grass",
+  sandTile = "sand",
+  altBiomeTile = "deepGrass",
 })
-worldGen.initializeWorld(512, 512)
+
+worldGen.initializeWorld(world, 512, 512)
 local generated = worldGen.generate()
 
 local map = love.graphics.newCanvas(512, 512)
@@ -65,29 +68,18 @@ love.graphics.setCanvas(map)
 for x=1, generated.width do
   for y=1, generated.height do
     local tile = generated.map[x][y]
-    if tile == 1 then
-      tileMap:setCell(x, y, "grass")
+    if tile == "grass" then
       love.graphics.setColor(0, 1, 0)
-      local n = core.math.noise(x, y, 0.45, 0.03, 5, 0.55, 2)
-      if n < 0.2 and love.math.random() < 0.1 then
-        local tent = Tent(x * 16, y * 16)
-        world:add(tent)
-        love.graphics.setColor(1, 1, 1)
-      end
       if love.math.random() < 0.1 then
         table.insert(possibleSpawnPoints, {x=x * 16, y=y * 16})
       end
-    elseif tile == 2 then
-      tileMap:setCell(x, y, "sand")
+    elseif tile == "sand" then
       love.graphics.setColor(1, 1, 0)
-    elseif tile == 3 then
-      tileMap:setCell(x, y, "grass")
-      tileMap:setCell(x, y, "deepGrass")
-
+    elseif tile == "deepGrass" then
       if love.math.random() < 0.33 then
         local tree = Tree(
-          x * 16 + love.math.random() * 16,
-          y * 16 + love.math.random() * 16)
+          x * 16 + love.math.random() * 8,
+          y * 16 + love.math.random() * 8)
         world:add(tree)
       end
 
@@ -122,16 +114,14 @@ core.events.focus:on(function(isFocused)
 end)
 
 local player
-local enemy
 local time = 0
 
 function love.load()
   core.init("Emotional Game", "0.1.0")
 
   player = Player()
-  local pos = core.table.getRandom(possibleSpawnPoints)
-  player.x = pos.x
-  player.y = pos.y
+  player.x = 64 * 16
+  player.y = 64 * 16
 
   core.physics.PhysicsWorld.drawAround = player.body
 
