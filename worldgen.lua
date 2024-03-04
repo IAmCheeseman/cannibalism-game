@@ -15,14 +15,16 @@ function worldGen.addIsland(name, opts)
   island.width = opts.width or opts.size
   island.height = opts.height or island.width
 
-  island.tileMap = opts.tileMap
-
   island.grassTile = opts.grassTile
   island.grassLayer = opts.grassLayer or opts.grassTile
   island.sandTile = opts.sandTile
   island.sandLayer = opts.sandLayer or opts.sandTile
   island.altBiomeTile = opts.altBiomeTile
   island.altBiomeLayer = opts.altBiomeLayer or opts.altBiomeTile
+
+  island.grassCallback = opts.grassCallback
+  island.sandCallback = opts.sandCallback
+  island.altBiomeCallback = opts.altBiomeCallback
 
   island.seed = opts.setSeed or (seed + #islands * 100)
 
@@ -113,21 +115,19 @@ local function generateIsland(island)
     lakeCount = lakeCount + 1
   end
 
-  for x=1, world.width do
-    for y=1, world.height do
+  for x=island.x, island.width do
+    for y=island.y, island.height do
       local tile = world.map[x][y]
 
       if tile == island.grassTile then
-        island.tileMap:setCell(x, y, island.grassTile, island.grassLayer)
+        core.try(island.grassCallback, x, y)
       elseif tile == island.altBiomeTile then
-        island.tileMap:setCell(x, y, island.altBiomeTile, island.altBiomeLayer)
+        core.try(island.altBiomeCallback, x, y)
       elseif tile == island.sandTile then
-        island.tileMap:setCell(x, y, island.sandTile, island.sandLayer)
+        core.try(island.sandCallback, x, y)
       end
 
-      if tile ~= 0 then
-        island.tileMap:updateAutotile(x, y, {"grass", "sand", "deepGrass"})
-      end
+      core.try(island.tileCallback, x, y)
     end
   end
 end

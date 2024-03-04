@@ -73,6 +73,8 @@ function Sword:getPushVelocity()
 end
 
 function Sword:update()
+  self.zIndex = -self.y
+
   if self.comboWindow.justFinished and self.cooldown.isOver then
     self.combo = 1
   end

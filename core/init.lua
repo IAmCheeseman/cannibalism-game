@@ -23,7 +23,8 @@ core.Sprite       = require(cwd .. ".sprite")
 core.World        = require(cwd .. ".world")
 core.Event        = require(cwd .. ".event")
 core.TileSet      = require(cwd .. ".tiling.tileset")
-core.TileMap      = require(cwd .. ".tiling.tilemap")
+core.TileLayer    = require(cwd .. ".tiling.tilelayer")
+-- core.TileMap      = require(cwd .. ".tiling.tilemap")
 core.GameObj      = objs.GameObj
 core.WorldObj     = objs.WorldObj
 
@@ -63,12 +64,11 @@ function core.init(gameName, gameVersion)
   core.logging.info("Renderer vendor: " .. vendor)
 end
 
-function core.updateChildren(obj)
-  for _, child in pairs(obj) do
-    if type(child) == "table" and child.update then
-      child:update()
-    end
+function core.try(f, ...)
+  if f then
+    return f(...)
   end
+  return nil
 end
 
 return core

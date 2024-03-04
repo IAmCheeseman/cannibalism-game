@@ -34,72 +34,80 @@ local worldGen = require("worldgen")
 local Player = require("player")
 local Cursor = require("cursor")
 local Tree = require("tree")
-local Tent = require("tent")
 
 local grassTs = core.TileSet("assets/grass.png", 16, 16)
 local sandTs = core.TileSet("assets/sand.png", 16, 16)
 local deepGrassTs = core.TileSet("assets/darkgrass.png", 16, 16)
-local tileMap = core.TileMap(512)
 
-tileMap:addLayer("sand", -1)
-tileMap:addTileSet(sandTs, "sand")
-tileMap:addLayer("grass", -1)
-tileMap:addTileSet(grassTs, "grass")
-tileMap:addLayer("deepGrass", -1)
-tileMap:addTileSet(deepGrassTs, "deepGrass")
+local deepGrassLayer = core.TileLayer(512, 512)
+deepGrassLayer:addTileSet(deepGrassTs)
+deepGrassLayer.zIndex = -102
+local grassLayer = core.TileLayer(512, 512)
+grassLayer:addTileSet(grassTs)
+grassLayer.zIndex = -101
+local sandLayer = core.TileLayer(512, 512)
+sandLayer:addTileSet(sandTs)
+sandLayer.zIndex = -100
+
+world:add(grassLayer)
+world:add(deepGrassLayer)
+world:add(sandLayer)
 
 worldGen.addIsland("grassland", {
   x = 2, y = 2,
   size = 256,
 
-  tileMap = tileMap,
   grassTile = "grass",
+  grassCallback = function(x, y)
+    grassLayer:setCell(x, y, grassTs)
+    love.graphics.setColor(0, 1, 0)
+    love.graphics.points(x, y)
+  end,
   sandTile = "sand",
+  sandCallback = function(x, y)
+    sandLayer:setCell(x, y, sandTs)
+    love.graphics.setColor(1, 1, 0)
+    love.graphics.points(x, y)
+  end,
   altBiomeTile = "deepGrass",
+  altBiomeCallback = function(x, y)
+    deepGrassLayer:setCell(x, y, deepGrassTs)
+    love.graphics.setColor(0, 0.5, 0)
+    love.graphics.points(x, y)
+
+    if love.math.random() < 0.33 then
+      local tree = Tree(
+        x * 16 + love.math.random() * 8,
+        y * 16 + love.math.random() * 8)
+      world:add(tree)
+    end
+  end,
+
+  -- tileCallback = function(x, y)
+  --   deepGrassLayer:autotile(x, y)
+  --   grassLayer:autotile(x, y)
+  --   sandLayer:autotile(x, y)
+  -- end,
 })
+
+local map = love.graphics.newCanvas(512, 512)
+
+love.graphics.setCanvas(map)
 
 worldGen.initializeWorld(world, 512, 512)
 local generated = worldGen.generate()
 
-local map = love.graphics.newCanvas(512, 512)
-local possibleSpawnPoints = {}
-
-love.graphics.setCanvas(map)
 for x=1, generated.width do
   for y=1, generated.height do
-    local tile = generated.map[x][y]
-    if tile == "grass" then
-      love.graphics.setColor(0, 1, 0)
-      if love.math.random() < 0.1 then
-        table.insert(possibleSpawnPoints, {x=x * 16, y=y * 16})
-      end
-    elseif tile == "sand" then
-      love.graphics.setColor(1, 1, 0)
-    elseif tile == "deepGrass" then
-      if love.math.random() < 0.33 then
-        local tree = Tree(
-          x * 16 + love.math.random() * 8,
-          y * 16 + love.math.random() * 8)
-        world:add(tree)
-      end
-
-      love.graphics.setColor(0, 0.5, 0)
-    else
-      love.graphics.setColor(0, 1, 1)
+    if generated.map[x][y] ~= 0 then
+      deepGrassLayer:autotile(x, y)
+      grassLayer:autotile(x, y)
+      sandLayer:autotile(x, y)
     end
-    love.graphics.points(x, y)
   end
 end
+
 love.graphics.setCanvas()
-
-for x=1, generated.width do
-  for y=1, generated.height do
-    local tile = generated.map[x][y]
-    if tile ~= 0 then
-      tileMap:updateAutotile(x, y, {"grass", "sand", "deepGrass"})
-    end
-  end
-end
 
 core.events.keypressed:on(function(key, _, _)
   if key == "f1" then
@@ -125,8 +133,6 @@ function love.load()
 
   core.physics.PhysicsWorld.drawAround = player.body
 
-  possibleSpawnPoints = {}
-
   world:add(player)
   world:add(Cursor())
 end
@@ -147,7 +153,6 @@ function love.draw()
     local camx, camy = core.viewport.getCameraPos("default")
     love.graphics.rectangle("fill", camx - 1, camy - 1, screenWidth + 2, screenHeight + 2)
     love.graphics.setColor(1, 1, 1)
-    tileMap:draw()
     world:draw()
   end)
 
