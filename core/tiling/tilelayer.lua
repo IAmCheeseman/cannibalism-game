@@ -53,8 +53,8 @@ function TileLayer:setCell(x, y, tileSet)
 end
 
 function TileLayer:getCell(x, y)
-  if x - 1 < 1 or x > #self.map
-  or y - 1 < 1 or y > #self.map[x] then
+  if x < 1 or x > #self.map
+  or y < 1 or y > #self.map[x] then
     error("x and/or y is out of bounds.")
   end
   return self.map[x][y]
@@ -101,6 +101,7 @@ function TileLayer:autotile(x, y)
 end
 
 function TileLayer:draw()
+  love.graphics.setColor(1, 1, 1)
   for _, batch in pairs(self.batches) do
     love.graphics.draw(batch, self.x, self.y)
   end

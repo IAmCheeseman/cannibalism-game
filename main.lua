@@ -26,12 +26,13 @@ core.viewport.setBgColor("gui", 0, 0, 0, 0)
 core.events.gui = core.Event()
 core.events.guiAboveLui = core.Event()
 
-physicsWorld = core.physics.PhysicsWorld(128, 512 * 2)
+physicsWorld = core.physics.PhysicsWorld(128, 64)
 world = core.World(physicsWorld)
 
 local worldGen = require("worldgen")
 
 local Player = require("player")
+local Enemy = require("enemy")
 local Cursor = require("cursor")
 local Tree = require("tree")
 
@@ -39,15 +40,17 @@ local grassTs = core.TileSet("assets/grass.png", 16, 16)
 local sandTs = core.TileSet("assets/sand.png", 16, 16)
 local deepGrassTs = core.TileSet("assets/darkgrass.png", 16, 16)
 
-local deepGrassLayer = core.TileLayer(512, 512)
+local worldSize = 32
+
+local deepGrassLayer = core.TileLayer(worldSize, worldSize)
 deepGrassLayer:addTileSet(deepGrassTs)
-deepGrassLayer.zIndex = -102
-local grassLayer = core.TileLayer(512, 512)
+deepGrassLayer.zIndex = 1000
+local grassLayer = core.TileLayer(worldSize, worldSize)
 grassLayer:addTileSet(grassTs)
-grassLayer.zIndex = -101
-local sandLayer = core.TileLayer(512, 512)
+grassLayer.zIndex = 1001
+local sandLayer = core.TileLayer(worldSize, worldSize)
 sandLayer:addTileSet(sandTs)
-sandLayer.zIndex = -100
+sandLayer.zIndex = 1002
 
 world:add(grassLayer)
 world:add(deepGrassLayer)
@@ -55,7 +58,7 @@ world:add(sandLayer)
 
 worldGen.addIsland("grassland", {
   x = 2, y = 2,
-  size = 256,
+  size = worldSize - 3,
 
   grassTile = "grass",
   grassCallback = function(x, y)
@@ -90,11 +93,11 @@ worldGen.addIsland("grassland", {
   -- end,
 })
 
-local map = love.graphics.newCanvas(512, 512)
+local map = love.graphics.newCanvas(worldSize)
 
 love.graphics.setCanvas(map)
 
-worldGen.initializeWorld(world, 512, 512)
+worldGen.initializeWorld(world, worldSize, worldSize)
 local generated = worldGen.generate()
 
 for x=1, generated.width do
@@ -105,6 +108,19 @@ for x=1, generated.width do
       sandLayer:autotile(x, y)
     end
   end
+end
+
+for _=4, 6 do
+  local x, y = 1, 1
+  while generated.map[x][y] == 0 do
+    x = love.math.random(1, generated.width-1)
+    y = love.math.random(1, generated.height-1)
+  end
+
+  local enemy = Enemy()
+  enemy.x = x * 16
+  enemy.y = y * 16
+  world:add(enemy)
 end
 
 love.graphics.setCanvas()
@@ -128,8 +144,8 @@ function love.load()
   core.init("Emotional Game", "0.1.0")
 
   player = Player()
-  player.x = 64 * 16
-  player.y = 64 * 16
+  player.x = (worldSize / 2) * 16
+  player.y = (worldSize / 2) * 16
 
   core.physics.PhysicsWorld.drawAround = player.body
 
@@ -157,6 +173,7 @@ function love.draw()
   end)
 
   core.viewport.drawTo("gui", function()
+
     core.events.gui:call()
     core.events.guiAboveLui:call()
 
@@ -165,15 +182,11 @@ function love.draw()
       tostring(core.math.snapped(1 / love.timer.getFPS() * 1000, 0.01)) .. "/16 ms",
       0, 0)
 
-    local cx, cy = core.viewport.getCameraPos("default")
-    local w, h = core.viewport.getSize("default")
-    local wh = h
-    cx, cy = (cx - w * 1.5) / 16, (cy - h * 1.5) / 16
-    w, h = w / 4, h / 4
-    local quad = love.graphics.newQuad(cx, cy, w, h, map:getDimensions())
-    love.graphics.draw(map, quad, 0, wh - h)
+    local _, wh = core.viewport.getSize("default")
+    local h = map:getHeight()
+    love.graphics.draw(map, 0, wh - h)
     love.graphics.setColor(1, 0, 0)
-    love.graphics.points(player.x / 16 - cx, wh - (player.y / 16 - cy))
+    love.graphics.points(player.x / 16, (wh - h) + (player.y / 16))
   end)
 
   love.graphics.setColor(1, 1, 1, 1)

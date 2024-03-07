@@ -88,27 +88,34 @@ local function generateIsland(island)
     for y=1, island.height do
       local dx, dy = x + island.x, y + island.y
       local px, py = x / island.width, y / island.height
-      local n = core.math.noise(x, y, 0.75, 0.05, 8, 0.5, 2, seed)
+      local n = core.math.noise(x, y, 0.4, 0.025, 8, 0.75, 7, seed)
       local strength = math.sin(math.pi * px) * math.sin(math.pi * py)
       n = n * strength
+
       if n > 0.25 then
         world.map[dx][dy] = island.sandTile
+        love.graphics.setColor(1, 1, 0)
+      else
+        love.graphics.setColor(0, 0, 1 * n * 4)
       end
       if n > 0.3 then
         local bn = core.math.noise(x, y, 0.45, 0.03, 5, 0.55, 2, seed + 100)
         if bn < 0.5 then
           world.map[dx][dy] = island.grassTile
+        love.graphics.setColor(0, 1, 0)
         else
           world.map[dx][dy] = island.altBiomeTile
+        love.graphics.setColor(0, 0.5, 0)
         end
       end
+      love.graphics.points(x, y)
     end
   end
 
   for _=1, 20 do
     local x = love.math.random(island.x, island.x + island.width)
     local y = love.math.random(island.y, island.y + island.height)
-    local radius = love.math.random(16, 32)
+    local radius = love.math.random(3, 6)
     setCircle(island.sandTile, x, y, radius)
     setCircle(nil, x, y, math.floor(radius * 0.9))
 
@@ -130,12 +137,14 @@ local function generateIsland(island)
       core.try(island.tileCallback, x, y)
     end
   end
+
+  return noise
 end
 
 function worldGen.generate()
   local start = os.clock()
   for _, island in ipairs(islands) do
-    generateIsland(island)
+    return world, generateIsland(island)
   end
   print("World gen took " .. tostring((os.clock() - start) * 1000) .. " ms")
   return world

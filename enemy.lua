@@ -1,5 +1,6 @@
 local Corpse = require("corpse")
 local Player = require("player")
+local MeleeAi = require("meleeai")
 
 local Enemy = class(WorldObj)
 
@@ -9,9 +10,7 @@ function Enemy:init()
   self.isDead = false
   self.maxHealth = 100
   self.health = self.maxHealth
-  self.vx, self.vy = 0, 0
-  self.speed = 80
-  self.scalex = 1
+  self.velx, self.vely = 0, 0
 
   self.whitenShader = core.shader.new("whiten", "whiten.frag")
 
@@ -44,31 +43,15 @@ function Enemy:init()
   self.attackCharge = core.Timer(1)
 
   self.stateMachine = core.StateMachine(self)
-    :addState("pursue", self.pursueUpdate, self.pursueDraw)
-    :addState("attackCharge",
-      self.attackChargeUpdate,
-      self.attackChargeDraw,
-      self.attackChargeStart,
-      self.attackChargeStop)
-    :setCurrent("pursue")
+    :addState("ai", self.updateAi)
+    :addState("attack",
+      self.attackUpdate,
+      nil,
+      self.attackStart,
+      self.attackStop)
+    :setCurrent("ai")
 
-  self.sword = core.Sprite("assets/sword.png", {
-    xframes = 11,
-    yframes = 1,
-    animations = {
-      idle = {
-        fps = 1,
-        start = 1,
-        stop = 1
-      },
-      swing = {
-        once = true,
-        fps = 15,
-        start = 2,
-        stop = 6,
-      },
-    }
-  })
+  self.sword = core.Sprite("assets/sword.png")
   self.sword.offsetx = 8
   self.sword.offsety = 13
   self.sword:play("idle")
@@ -99,6 +82,8 @@ function Enemy:added()
       mask = {"env"}
     })
   physicsWorld:addBody(self.collision)
+
+  self.ai = MeleeAi(self, self.collision)
 end
 
 function Enemy:removed()
@@ -130,28 +115,23 @@ function Enemy:update()
   self:updateChildren()
 end
 
-function Enemy:idleUpdate(_)
-  self.sprite:play("idle")
-
-  self.vx = core.math.deltaLerp(self.vx, 0, 15)
-  self.vy = core.math.deltaLerp(self.vy, 0, 15)
-
-  self.vx, self.vy = self.collision:moveAndCollide(self.vx, self.vy)
-end
-
-function Enemy:attackChargeStart()
+function Enemy:attackStart()
   self.attackCharge:start()
 end
 
-function Enemy:attackChargeUpdate(dt)
-  self:idleUpdate(dt)
+function Enemy:attackUpdate(dt)
+  self.sprite:play("idle")
+
+  self.velx = core.math.deltaLerp(self.velx, 0, 15)
+  self.vely = core.math.deltaLerp(self.vely, 0, 15)
+  self.velx, self.vely = self.collision:moveAndCollide(self.velx, self.vely)
 
   if self.attackCharge.isOver then
-    self.stateMachine:setCurrent("pursue")
+    self.stateMachine:setCurrent("ai")
   end
 end
 
-function Enemy:attackChargeStop()
+function Enemy:attackStop()
   self.sword:play("swing")
 end
 
@@ -166,33 +146,29 @@ function Enemy:attackChargeDraw()
   self.sprite:draw(self.x, self.y, 0, self.scalex, -0.5)
 end
 
-function Enemy:pursueUpdate(_)
+function Enemy:updateAi(_)
   self.sprite:play("walk")
 
-  local player = Player.instance
-  local dirx, diry = core.math.directionTo(self.x, self.y, player.x, player.y)
-  self.vx = core.math.deltaLerp(self.vx, dirx * self.speed, 15)
-  self.vy = core.math.deltaLerp(self.vy, diry * self.speed, 15)
+  self.ai:updateStates()
 
-  self.scalex = self.x > player.x and 1 or -1
+  self.velx, self.vely = self.collision:moveAndCollide(self.velx, self.vely)
 
-  self.vx, self.vy = self.collision:moveAndCollide(self.vx, self.vy)
-
-  local dist = core.math.distanceBetween(self.x, self.y, player.x, player.y)
-  if dist < 28 then
-    self.stateMachine:setCurrent("attackCharge")
+  if self.ai:shouldDoAction("attack") then
+    self.stateMachine:setCurrent("attack")
   end
 end
 
-function Enemy:pursueDraw()
+function Enemy:draw()
+  local brightness = self.stateMachine:getCurrent() == "ai"
+      and 0
+  or self.attackCharge:percentageOver()
+  self.whitenShader:sendUniform("whiteness", brightness)
+
+  self.whitenShader:apply()
   self.sprite:draw(self.x, self.y, 0, self.scalex, 1)
+  self.whitenShader:stop()
   love.graphics.setColor(0, 0, 0, 0.5)
   self.sprite:draw(self.x, self.y, 0, self.scalex, -0.5)
-end
-
-function Enemy:draw()
-  love.graphics.setColor(1, 1, 1)
-  self.stateMachine:draw()
 
   love.graphics.setColor(1, 1, 1)
   local player = Player.instance
