@@ -106,6 +106,17 @@ for x=1, generated.width do
       deepGrassLayer:autotile(x, y)
       grassLayer:autotile(x, y)
       sandLayer:autotile(x, y)
+    else
+      local anchor = {x=x * 16, y=y * 16}
+      local body = core.physics.SolidBody(
+        anchor,
+        core.physics.makeAabb(-8, -8, 16, 16),
+        {
+          layers = {"env"},
+          mask = {}
+        })
+
+      physicsWorld:addBody(body)
     end
   end
 end
