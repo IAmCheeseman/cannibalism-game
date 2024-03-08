@@ -166,7 +166,7 @@ end
 
 function love.update(dt)
   time = time + dt
-  local b = core.math.map((math.sin(time / 12) + 1) / 2, 0, 0.9)
+  local b = 0.9 --core.math.map((math.sin(time / 12) + 1) / 2, 0, 0.9)
   core.lighting.ambientColor.r = b
   core.lighting.ambientColor.g = b
   core.lighting.ambientColor.b = b
@@ -204,3 +204,12 @@ function love.draw()
   core.lighting.drawToViewport("default")
   core.viewport.draw("gui")
 end
+
+local fullscreen = false
+
+core.events.keypressed:on(function(key, _, isRepeat)
+  if key == "f11" and not isRepeat then
+    fullscreen = not fullscreen
+    love.window.setFullscreen(fullscreen, "desktop")
+  end
+end)
