@@ -22,22 +22,16 @@ worldGen.addIsland("grassland", {
   grassCallback = function(x, y)
     grassLayer:setCell(x, y, grassTs)
     sandLayer:setCell(x, y, sandTs)
-    love.graphics.setColor(0, 1, 0)
-    love.graphics.points(x, y)
   end,
   sandTile = "sand",
   sandCallback = function(x, y)
     sandLayer:setCell(x, y, sandTs)
-    love.graphics.setColor(1, 1, 0)
-    love.graphics.points(x, y)
   end,
   altBiomeTile = "deepGrass",
   altBiomeCallback = function(x, y)
     deepGrassLayer:setCell(x, y, deepGrassTs)
     grassLayer:setCell(x, y, grassTs)
     sandLayer:setCell(x, y, sandTs)
-    love.graphics.setColor(0, 0.5, 0)
-    love.graphics.points(x, y)
 
     if love.math.random() < 0.33 then
       local tree = Tree(
