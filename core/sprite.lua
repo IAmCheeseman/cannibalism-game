@@ -2,23 +2,6 @@ local cwd = (...):gsub("%.sprite$", "")
 local class = require(cwd .. ".class")
 local assets = require(cwd .. ".assets")
 
-local testAnim = {
-  xframes = 10,
-  yframes = 3,
-  animations = {
-    run = {
-      start = 1,
-      stop = 10,
-      fps = 10,
-    },
-    idle = {
-      start = 11,
-      stop = 14,
-      fps = 10,
-    }
-  }
-}
-
 local Sprite = class()
 
 function Sprite:init(path, animationConfig)

@@ -50,9 +50,13 @@ function Player:init()
 
   self.body = physicsWorld:newCircleBody {
     type = "dynamic",
+    category = {"entity"},
+    mask = {"entity"},
     x = 0,
     y = 0,
-    shape = {4},
+    anchor = self,
+    rotationFixed = true,
+    shape = {0, -4, 4},
   }
 end
 
@@ -65,6 +69,12 @@ function Player:added()
 
   self.sword.x = self.x
   self.sword.y = self.y
+
+  self.body:setPosition(self.x, self.y)
+end
+
+function Player:removed()
+  self.body:destroy()
 end
 
 function Player:updateCamera()
@@ -128,8 +138,8 @@ function Player:attackUpdate()
   self.velx = core.math.deltaLerp(self.velx, 0, ACCEL)
   self.vely = core.math.deltaLerp(self.vely, 0, ACCEL)
 
-  self.body.body:setLinearVelocity(self.velx, self.vely)
-  self.x, self.y = self.body.body:getWorldCenter()
+  self.body:setVelocity(self.velx, self.vely)
+  self.x, self.y = self.body:getPosition()
 
   if not self.sword:shouldStopPlayer() then
     self.stateMachine:setCurrent("normal")

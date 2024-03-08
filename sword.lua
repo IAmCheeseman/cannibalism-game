@@ -28,9 +28,10 @@ function Sword:init(anchor)
     y = self.anchor.y,
     rotationFixed = true,
     shape = {24, 32},
-    category = {2},
-    mask = {1},
+    category = {"hitbox"},
+    mask = {"player", "env"},
   }
+  self.hitbox:setActive(false)
 
   self.cooldown = core.Timer(0.3)
 
@@ -55,6 +56,16 @@ end
 
 function Sword:update(dt)
   self.zIndex = -self.anchor.y - 1
+
+  for body, _ in pairs(self.hitbox:getCollisions()) do
+    if body.anchor.takeDamage then
+      body.anchor:takeDamage(self.hitAngle, 50)
+    end
+  end
+
+  if self.cooldown.justFinished then
+    self.hitbox:setActive(false)
+  end
 
   local accel = 50
   self.x = core.math.deltaLerp(self.x, self.anchor.x, accel)
@@ -94,42 +105,19 @@ function Sword:updateHitbox()
 
   self.hitbox:setPosition(self.x + mx * 16, self.y + my * 16)
   self.hitbox:setRotation(core.math.angle(mx, my))
-  -- mx = math.floor(mx + 0.5)
-  -- my = math.floor(my + 0.5)
-  -- local w, h = 0, 0
-  --
-  -- if my == 0 then
-  --   w = 16
-  -- else
-  --   w = 24
-  -- end
-  -- if mx == 0 then
-  --   h = 16
-  -- else
-  --   h = 24
-  -- end
-  --
-  -- self.hitbox.shape.offsetx = -w / 2
-  -- self.hitbox.shape.offsety = -h
-  -- self.hitbox.shape.width = w
-  -- self.hitbox.shape.height = h
 end
 
 function Sword:onMousePressed()
   if core.input.isPressed("useWeapon") and self.cooldown.isOver then
-    self.cooldown:start(0.3)
-
+    self.cooldown:start(0.05)
     self.swingDir = -self.swingDir
+    self:updateHitbox()
 
     local mx, my = core.viewport.getMousePosition("default")
-    local dirx, diry = core.math.directionTo(self.x, self.y, mx, my)
-    self:updateHitbox()
-    -- self.hitbox.shape.offsetx = self.hitbox.shape.offsetx + dirx * 16
-    -- self.hitbox.shape.offsety = self.hitbox.shape.offsety + diry * 16
+    mx, my = core.math.directionTo(self.x, self.y, mx, my)
+    self.hitAngle = core.math.angle(mx, my)
 
-    -- for _, body in ipairs(self.hitbox:getColliding()) do
-    --   body.anchor:takeDamage(core.math.angle(dirx, diry), 50)
-    -- end
+    self.hitbox:setActive(true)
   end
 end
 

@@ -60,43 +60,59 @@ end
 
 function Enemy:added()
   local w, h = self.sprite:getDimensions()
-  local cx, cy, cw, ch = -w/2, -h, w, h
+  local cx, cy, cw, ch = 0, -h/2, w, h
 
-  self.hitbox = core.physics.AbstractBody(
-    self, core.physics.makeAabb(cx, cy, cw, ch), {
-      layers = {},
-      mask = {"player"},
-    })
-  physicsWorld:addBody(self.hitbox)
+  self.hitbox = physicsWorld:newRectangleBody {
+    type = "static",
+    anchor = self,
+    followAnchor = true,
+    sensor = true,
+    shape = {cx, cy, cw, ch},
+    category = {"hitbox"},
+    mask = {"hurtbox"},
+  }
 
-  self.hurtbox = core.physics.AbstractBody(
-    self, core.physics.makeAabb(cx, cy, cw, ch), {
-      layers = {"enemy"},
-      mask = {},
-    })
-  physicsWorld:addBody(self.hurtbox)
+  self.hurtbox = physicsWorld:newRectangleBody {
+    type = "static",
+    anchor = self,
+    followAnchor = true,
+    sensor = true,
+    shape = {cx, cy, cw, ch},
+    category = {"enemy", "hurtbox"},
+    mask = {},
+  }
 
-  self.collision = core.physics.SolidBody(
-    self, core.physics.makeAabb(cx, cy, cw, ch), {
-      layers = {},
-      mask = {"env"}
-    })
-  physicsWorld:addBody(self.collision)
+  self.collision = physicsWorld:newCircleBody {
+    type = "dynamic",
+    anchor = self,
+    x = self.x,
+    y = self.y,
+    shape = {4},
+    category = {"entity"},
+    mask = {},
+  }
+
+  self.iframes = core.Timer(0.1)
 
   self.ai = MeleeAi(self, self.collision)
 end
 
 function Enemy:removed()
-  physicsWorld:removeBody(self.hitbox)
-  physicsWorld:removeBody(self.hurtbox)
-  physicsWorld:removeBody(self.collision)
+  self.hitbox:destroy()
+  self.hurtbox:destroy()
+  self.collision:destroy()
 end
 
 function Enemy:takeDamage(kbDir, amount)
+  if not self.iframes.isOver then
+    return
+  end
+  self.iframes:start()
+
   self.health = self.health - amount
 
-  self.vx = math.cos(kbDir) * 250
-  self.vy = math.sin(kbDir) * 250
+  self.velx = math.cos(kbDir) * 250
+  self.vely = math.sin(kbDir) * 250
 
   if self.health <= 0 then
     world:remove(self)
@@ -104,8 +120,8 @@ function Enemy:takeDamage(kbDir, amount)
     self.isDead = true
 
     self.sprite:play("corpse")
-    local corpse = Corpse(
-      self.x, self.y, kbDir, 500, self.sprite)
+    self.sprite:update()
+    local corpse = Corpse(self.x, self.y, kbDir, 500, self.sprite)
     world:add(corpse)
   end
 end
@@ -119,12 +135,14 @@ function Enemy:attackStart()
   self.attackCharge:start()
 end
 
-function Enemy:attackUpdate(dt)
+function Enemy:attackUpdate()
   self.sprite:play("idle")
 
   self.velx = core.math.deltaLerp(self.velx, 0, 15)
   self.vely = core.math.deltaLerp(self.vely, 0, 15)
-  self.velx, self.vely = self.collision:moveAndCollide(self.velx, self.vely)
+
+  self.collision:setVelocity(self.velx, self.vely)
+  self.x, self.y = self.collision:getPosition()
 
   if self.attackCharge.isOver then
     self.stateMachine:setCurrent("ai")
@@ -139,11 +157,13 @@ function Enemy:attackChargeDraw()
   local brightness = self.attackCharge:percentageOver()
   self.whitenShader:sendUniform("whiteness", brightness)
 
+  local scalex = self.velx < 0 and 1 or -1
+
   self.whitenShader:apply()
-  self.sprite:draw(self.x, self.y, 0, self.scalex, 1)
+  self.sprite:draw(self.x, self.y, 0, scalex, 1)
   self.whitenShader:stop()
   love.graphics.setColor(0, 0, 0, 0.5)
-  self.sprite:draw(self.x, self.y, 0, self.scalex, -0.5)
+  self.sprite:draw(self.x, self.y, 0, scalex, -0.5)
 end
 
 function Enemy:updateAi(_)
@@ -151,7 +171,8 @@ function Enemy:updateAi(_)
 
   self.ai:updateStates()
 
-  self.velx, self.vely = self.collision:moveAndCollide(self.velx, self.vely)
+  self.collision:setVelocity(self.velx, self.vely)
+  self.x, self.y = self.collision:getPosition()
 
   if self.ai:shouldDoAction("attack") then
     self.stateMachine:setCurrent("attack")
@@ -164,11 +185,13 @@ function Enemy:draw()
   or self.attackCharge:percentageOver()
   self.whitenShader:sendUniform("whiteness", brightness)
 
+  local scalex = self.velx < 0 and 1 or -1
+
   self.whitenShader:apply()
-  self.sprite:draw(self.x, self.y, 0, self.scalex, 1)
+  self.sprite:draw(self.x, self.y, 0, scalex, 1)
   self.whitenShader:stop()
   love.graphics.setColor(0, 0, 0, 0.5)
-  self.sprite:draw(self.x, self.y, 0, self.scalex, -0.5)
+  self.sprite:draw(self.x, self.y, 0, scalex, -0.5)
 
   love.graphics.setColor(1, 1, 1)
   local player = Player.instance

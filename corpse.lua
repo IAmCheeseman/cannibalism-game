@@ -10,31 +10,30 @@ function Corpse:init(x, y, angle, strength, sprite)
 
   self.outline = core.shader.new("outline", "outline.frag")
 
-  self.vx = math.cos(angle) * strength
-  self.vy = math.sin(angle) * strength
+  self.velx = math.cos(angle) * strength
+  self.vely = math.sin(angle) * strength
 
   self.canInteract = false
 
-  local offsetx, offsety = self.sprite.offsetx, self.sprite.offsety
-  local width, height = self.sprite:getDimensions()
-  self.collision = core.physics.SolidBody(
-    self, core.physics.makeAabb(offsetx, offsety, width, height), {
-      layers = {"corpse"},
-      mask = {"env"},
-    })
-  physicsWorld:addBody(self.collision)
+  self.collision = physicsWorld:newCircleBody {
+    x = self.x,
+    y = self.y,
+    type = "dynamic",
+    anchor = self,
+    shape = {4},
+    category = {"entity"},
+    mask = {"entity"},
+  }
 end
 
 function Corpse:update()
   self.zIndex = -self.y
 
-  self.vx = core.math.deltaLerp(self.vx, 0, 10)
-  self.vy = core.math.deltaLerp(self.vy, 0, 10)
+  self.velx = core.math.deltaLerp(self.velx, 0, 10)
+  self.vely = core.math.deltaLerp(self.vely, 0, 10)
 
-  self.vx, self.vy = self.collision:moveAndCollide(self.vx, self.vy)
-
-  self.sprite:update()
-
+  self.collision:setVelocity(self.velx, self.vely)
+  self.x, self.y = self.collision:getPosition()
 
   local player = Player.instance
   local dist = core.math.distanceBetween(self.x, self.y, player.x, player.y)

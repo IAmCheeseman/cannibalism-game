@@ -6,6 +6,14 @@ class = core.class
 GameObj = core.GameObj
 WorldObj = core.WorldObj
 
+core.physics.addCategory("default")
+core.physics.addCategory("env")
+core.physics.addCategory("entity")
+core.physics.addCategory("enemy")
+core.physics.addCategory("player")
+core.physics.addCategory("hitbox")
+core.physics.addCategory("hurtbox")
+
 -- 16:9
 local screenWidth, screenHeight = 256, 144
 -- local screenWidth, screenHeight = 320, 180
@@ -94,6 +102,8 @@ worldGen.addIsland("grassland", {
       x = x * 16,
       y = y * 16,
       type = "static",
+      category = {"env"},
+      mask = {},
       shape = {16, 16}
     }
   end,
@@ -123,18 +133,18 @@ for x=1, generated.width do
   end
 end
 
--- for _=4, 6 do
---   local x, y = 1, 1
---   while generated.map[x][y] == 0 do
---     x = love.math.random(1, generated.width-1)
---     y = love.math.random(1, generated.height-1)
---   end
---
---   local enemy = Enemy()
---   enemy.x = x * 16
---   enemy.y = y * 16
---   world:add(enemy)
--- end
+for _=4, 6 do
+  local x, y = 1, 1
+  while generated.map[x][y] == 0 do
+    x = love.math.random(1, generated.width-1)
+    y = love.math.random(1, generated.height-1)
+  end
+
+  local enemy = Enemy()
+  enemy.x = x * 16
+  enemy.y = y * 16
+  world:add(enemy)
+end
 
 love.graphics.setCanvas()
 
@@ -156,7 +166,6 @@ function love.load()
   player = Player()
   player.x = (worldSize / 2) * 16
   player.y = (worldSize / 2) * 16
-  player.body.body:setPosition(player.x, player.y)
 
   world:add(player)
   world:add(Cursor())
