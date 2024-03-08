@@ -68,7 +68,6 @@ local function open(enemyCount)
     collision:destroy()
   end
   collisions = {}
-  -- test
 
   deepGrassLayer = core.TileLayer(worldSize, worldSize)
   deepGrassLayer:addTileSet(deepGrassTs)
