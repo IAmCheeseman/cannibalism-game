@@ -10,6 +10,7 @@ itemManager.define(
 
 function Sword:init(anchor)
   self:base("init")
+  self.anchor = anchor
 
   self.paletteShader = core.shader.new("3colorpalette", "3colorpalette.frag")
   self.sprite = core.Sprite("assets/sword.png")
@@ -19,17 +20,16 @@ function Sword:init(anchor)
   self.swingAmount = math.pi / 4
   self.swingDir = 1
   self.rot = 0
-  --
-  -- self.hitbox = core.physics.AbstractBody(
-  --   self, core.physics.makeAabb(-8, -16, 16, 16), {
-  --     layers = {"weapon"},
-  --     mask = {"enemy"}
-  --   })
-  -- physicsWorld:addBody(self.hitbox)
+
+  self.hitbox = physicsWorld:newRectangleBody(
+      self.anchor.x, self.anchor.y,
+      "dynamic", 24, 32)
+  self.hitbox.fixture:setCategory(2)
+  self.hitbox.fixture:setMask(1)
+  self.hitbox.body:setFixedRotation(true)
 
   self.cooldown = core.Timer(0.3)
 
-  self.anchor = anchor
   self.x = anchor.x
   self.y = anchor.y
 end
@@ -85,8 +85,11 @@ function Sword:draw()
 end
 
 function Sword:updateHitbox()
-  -- local mx, my = core.viewport.getMousePosition("default")
-  -- mx, my = core.math.directionTo(self.x, self.y, mx, my)
+  local mx, my = core.viewport.getMousePosition("default")
+  mx, my = core.math.directionTo(self.x, self.y, mx, my)
+
+  self.hitbox.body:setPosition(self.x + mx * 16, self.y + my * 16)
+  self.hitbox.body:setAngle(core.math.angle(mx, my))
   -- mx = math.floor(mx + 0.5)
   -- my = math.floor(my + 0.5)
   -- local w, h = 0, 0

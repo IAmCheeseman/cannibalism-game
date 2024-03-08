@@ -37,21 +37,22 @@ function PhysicsWorld:draw()
 
   love.graphics.setColor(1, 0, 0)
   love.graphics.setLineStyle("rough")
+  -- I stole this code from https://github.com/a327ex/windfield/blob/master/windfield/init.lua#L76
   for _, body in ipairs(bodies) do
     local fixtures = body:getFixtures()
     for _, fixture in ipairs(fixtures) do
-      if fixture:getShape():type() == 'PolygonShape' then
-        love.graphics.polygon('line', body:getWorldPoints(fixture:getShape():getPoints()))
-      elseif fixture:getShape():type() == 'EdgeShape' or fixture:getShape():type() == 'ChainShape' then
+      if fixture:getShape():type() == "PolygonShape" then
+        love.graphics.polygon("line", body:getWorldPoints(fixture:getShape():getPoints()))
+      elseif fixture:getShape():type() == "EdgeShape" or fixture:getShape():type() == "ChainShape" then
         local points = {body:getWorldPoints(fixture:getShape():getPoints())}
         for i = 1, #points, 2 do
           if i < #points-2 then love.graphics.line(points[i], points[i+1], points[i+2], points[i+3]) end
         end
-      elseif fixture:getShape():type() == 'CircleShape' then
+      elseif fixture:getShape():type() == "CircleShape" then
         local body_x, body_y = body:getPosition()
         local shape_x, shape_y = fixture:getShape():getPoint()
         local r = fixture:getShape():getRadius()
-        love.graphics.circle('line', body_x + shape_x, body_y + shape_y, r, 360)
+        love.graphics.circle("line", body_x + shape_x, body_y + shape_y, r, 360)
       end
     end
   end

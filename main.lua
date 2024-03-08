@@ -26,7 +26,7 @@ core.viewport.setBgColor("gui", 0, 0, 0, 0)
 core.events.gui = core.Event()
 core.events.guiAboveLui = core.Event()
 
-physicsWorld = core.physics.PhysicsWorld(0, 9.8)
+physicsWorld = core.physics.PhysicsWorld(0, 0)
 world = core.World(physicsWorld)
 
 local worldGen = require("worldgen")

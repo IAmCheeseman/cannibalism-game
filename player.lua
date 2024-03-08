@@ -48,11 +48,6 @@ function Player:init()
 
   self.speed = 150
 
-  -- self.body = core.physics.SolidBody(self, core.physics.makeAabb(-4, -8, 8), {
-  --   layers = {},
-  --   mask = {"env"}
-  -- })
-  -- physicsWorld:addBody(self.body)
   self.body = physicsWorld:newCircleBody(self.x, self.y, "dynamic", 4)
 end
 
@@ -110,8 +105,6 @@ function Player:normalUpdate(dt)
   self.velx = core.math.deltaLerp(self.velx, ix * self.speed, ACCEL)
   self.vely = core.math.deltaLerp(self.vely, iy * self.speed, ACCEL)
 
-  -- self.velx, self.vely = self.body:moveAndCollide(self.velx, self.vely)
-
   self.body.body:setLinearVelocity(self.velx, self.vely)
   self.x, self.y = self.body.body:getWorldCenter()
 
@@ -130,7 +123,8 @@ function Player:attackUpdate()
   self.velx = core.math.deltaLerp(self.velx, 0, ACCEL)
   self.vely = core.math.deltaLerp(self.vely, 0, ACCEL)
 
-  -- self.velx, self.vely = self.body:moveAndCollide(self.velx, self.vely)
+  self.body.body:setLinearVelocity(self.velx, self.vely)
+  self.x, self.y = self.body.body:getWorldCenter()
 
   if not self.sword:shouldStopPlayer() then
     self.stateMachine:setCurrent("normal")
