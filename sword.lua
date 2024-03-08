@@ -21,6 +21,13 @@ function Sword:init(anchor)
   self.swingDir = 1
   self.rot = 0
 
+  self.cooldown = core.Timer(0.3)
+
+  self.x = anchor.x
+  self.y = anchor.y
+end
+
+function Sword:added()
   self.hitbox = physicsWorld:newRectangleBody {
     type = "dynamic",
     sensor = true,
@@ -32,11 +39,10 @@ function Sword:init(anchor)
     mask = {"player", "env"},
   }
   self.hitbox:setActive(false)
+end
 
-  self.cooldown = core.Timer(0.3)
-
-  self.x = anchor.x
-  self.y = anchor.y
+function Sword:removed()
+  self.hitbox:destroy()
 end
 
 function Sword:getPushVelocity()
@@ -104,7 +110,7 @@ end
 
 function Sword:onMousePressed()
   if core.input.isPressed("useWeapon") and self.cooldown.isOver then
-    self.cooldown:start(0.05)
+    self.cooldown:start(0.4)
     self.swingDir = -self.swingDir
     self:updateHitbox()
 

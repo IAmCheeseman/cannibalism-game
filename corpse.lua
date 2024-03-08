@@ -14,7 +14,9 @@ function Corpse:init(x, y, angle, strength, sprite)
   self.vely = math.sin(angle) * strength
 
   self.canInteract = false
+end
 
+function Corpse:added()
   self.collision = physicsWorld:newCircleBody {
     x = self.x,
     y = self.y,
@@ -24,6 +26,10 @@ function Corpse:init(x, y, angle, strength, sprite)
     category = {"entity"},
     mask = {"entity"},
   }
+end
+
+function Corpse:removed()
+  self.collision:destroy()
 end
 
 function Corpse:update()

@@ -46,17 +46,6 @@ function Player:init()
   world:add(self.sword)
 
   self.speed = 150
-
-  self.body = physicsWorld:newCircleBody {
-    type = "dynamic",
-    category = {"entity"},
-    mask = {"entity"},
-    x = 0,
-    y = 0,
-    anchor = self,
-    rotationFixed = true,
-    shape = {0, -4, 4},
-  }
 end
 
 function Player:added()
@@ -69,7 +58,16 @@ function Player:added()
   self.sword.x = self.x
   self.sword.y = self.y
 
-  self.body:setPosition(self.x, self.y)
+  self.body = physicsWorld:newCircleBody {
+    type = "dynamic",
+    category = {"entity"},
+    mask = {"entity"},
+    x = self.x,
+    y = self.y,
+    anchor = self,
+    rotationFixed = true,
+    shape = {0, -4, 4},
+  }
 end
 
 function Player:removed()

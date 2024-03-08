@@ -16,6 +16,8 @@ function World:init(physicsWorld)
 
   self.paused = false
 
+  self.objectAdded = Event()
+  self.objectRemoved = Event()
   self.updateEvent = Event()
   self.drawEvent = Event()
 end
@@ -37,30 +39,36 @@ function World:_flushQueues()
     if obj.added then
       obj:added(self)
     end
+
+    self.objectAdded:call(obj)
   end
   self.addQueue = {}
 
   for _, obj in ipairs(self.removeQueue) do
-    if obj.removed then
-      obj:removed(self)
-    end
+    if self.objData[obj] then
+      if obj.removed then
+        obj:removed(self)
+      end
 
-    local index = self.objData[obj].index
-    local typeIndex = self.objData[obj].typeIndex
-    self.objData[obj] = nil
+      self.objectRemoved:call(obj)
 
-    tablef.swapRemove(self.objs, index)
-    local swapped = self.objs[index]
-    if swapped then
-      self.objData[swapped].index = index
-    end
+      local index = self.objData[obj].index
+      local typeIndex = self.objData[obj].typeIndex
+      self.objData[obj] = nil
 
-    local mt = getmetatable(obj)
-    local ofType = self.types[mt.__id]
-    tablef.swapRemove(ofType, typeIndex)
-    swapped = ofType[typeIndex]
-    if swapped then
-      self.objData[swapped].typeIndex = typeIndex
+      tablef.swapRemove(self.objs, index)
+      local swapped = self.objs[index]
+      if swapped then
+        self.objData[swapped].index = index
+      end
+
+      local mt = getmetatable(obj)
+      local ofType = self.types[mt.__id]
+      tablef.swapRemove(ofType, typeIndex)
+      swapped = ofType[typeIndex]
+      if swapped then
+        self.objData[swapped].typeIndex = typeIndex
+      end
     end
   end
   self.removeQueue = {}
@@ -76,6 +84,10 @@ function World:iterateType(type)
 
     return self.types[type.__id][i]
   end
+end
+
+function World:typeCount(type)
+  return #self.types[type.__id] - 1
 end
 
 function World:update()
@@ -113,6 +125,15 @@ end
 
 function World:remove(obj)
   table.insert(self.removeQueue, obj)
+end
+
+function World:clear()
+  for _, obj in ipairs(self.objs) do
+    self:remove(obj)
+  end
+
+  collectgarbage()
+  collectgarbage()
 end
 
 return World

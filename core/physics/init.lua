@@ -154,7 +154,7 @@ end
 
 function Body:destroy()
   if self.body:isDestroyed() then
-    logging.warn("Body beloning to '" .. tostring(self.anchor) ..  "' already destroyed.")
+    logging.warning("Body beloning to '" .. tostring(self.anchor) ..  "' already destroyed.")
     return
   end
 
