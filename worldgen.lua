@@ -25,6 +25,9 @@ function worldGen.addIsland(name, opts)
   island.grassCallback = opts.grassCallback
   island.sandCallback = opts.sandCallback
   island.altBiomeCallback = opts.altBiomeCallback
+  island.emptyCallback = opts.emptyCallback
+  island.fullCallback = opts.fullCallback
+  island.tileCallback = opts.tileCallback
 
   island.seed = opts.setSeed or (seed + #islands * 100)
 
@@ -92,13 +95,13 @@ local function generateIsland(island)
       local strength = math.sin(math.pi * px) * math.sin(math.pi * py)
       n = n * strength
 
-      if n > 0.15 then
+      if n > 0.25 then
         world.map[dx][dy] = island.sandTile
         love.graphics.setColor(1, 1, 0)
       else
         love.graphics.setColor(0, 0, 1 * n * 4)
       end
-      if n > 0.3 then
+      if n > 0.35 then
         local bn = core.math.noise(x, y, 0.45, 0.03, 5, 0.55, 2, seed + 100)
         if bn < 0.5 then
           world.map[dx][dy] = island.grassTile
@@ -132,8 +135,13 @@ local function generateIsland(island)
         core.try(island.altBiomeCallback, x, y)
       elseif tile == island.sandTile then
         core.try(island.sandCallback, x, y)
+      else
+        core.try(island.emptyCallback, x, y)
       end
 
+      if tile ~= 0 then
+        core.try(island.fullCallback, x, y)
+      end
       core.try(island.tileCallback, x, y)
     end
   end
