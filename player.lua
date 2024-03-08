@@ -40,7 +40,6 @@ function Player:init()
 
   self.stateMachine = core.StateMachine(self)
     :addState("normal", self.normalUpdate, self.normalDraw)
-    :addState("attack", self.attackUpdate, self.normalDraw, self.attackStart)
     :setCurrent("normal")
 
   self.sword = Sword(self)
@@ -122,30 +121,6 @@ function Player:normalUpdate(dt)
 
   self.body:setVelocity(self.velx, self.vely)
   self.x, self.y = self.body:getPosition()
-
-  if self.sword:shouldStopPlayer() then
-    self.stateMachine:setCurrent("attack")
-  end
-end
-
-function Player:attackStart()
-  local pushx, pushy = self.sword:getPushVelocity()
-  self.velx = self.velx + pushx
-  self.vely = self.vely + pushy
-end
-
-function Player:attackUpdate()
-  self.velx = core.math.deltaLerp(self.velx, 0, ACCEL)
-  self.vely = core.math.deltaLerp(self.vely, 0, ACCEL)
-
-  self.body:setVelocity(self.velx, self.vely)
-  self.x, self.y = self.body:getPosition()
-
-  if not self.sword:shouldStopPlayer() then
-    self.stateMachine:setCurrent("normal")
-  end
-
-  self.sprite:play("idle")
 end
 
 function Player:normalDraw()

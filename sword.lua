@@ -39,10 +39,6 @@ function Sword:init(anchor)
   self.y = anchor.y
 end
 
-function Sword:shouldStopPlayer()
-  return not self.cooldown.isOver
-end
-
 function Sword:getPushVelocity()
   local mx, my = core.viewport.getMousePosition("default")
   local velx, vely = core.math.directionTo(self.x, self.y, mx, my)
@@ -59,7 +55,7 @@ function Sword:update(dt)
 
   for body, _ in pairs(self.hitbox:getCollisions()) do
     if body.anchor.takeDamage then
-      body.anchor:takeDamage(self.hitAngle, 50)
+      body.anchor:takeDamage(self.hitAngle, 34)
     end
   end
 
@@ -67,9 +63,8 @@ function Sword:update(dt)
     self.hitbox:setActive(false)
   end
 
-  local accel = 50
-  self.x = core.math.deltaLerp(self.x, self.anchor.x, accel)
-  self.y = core.math.deltaLerp(self.y, self.anchor.y, accel)
+  self.x = self.anchor.x
+  self.y = self.anchor.y
 
   self.rot = core.math.lerpAngle(
     self.rot,
