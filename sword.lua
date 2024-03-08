@@ -16,8 +16,9 @@ function Sword:init(anchor)
   self.sprite.offsetx = 8
   self.sprite.offsety = 13
 
-  self.angle = math.pi / 4
+  self.swingAmount = math.pi / 4
   self.swingDir = 1
+  self.rot = 0
 
   self.hitbox = core.physics.AbstractBody(
     self, core.physics.makeAabb(-8, -16, 16, 16), {
@@ -48,12 +49,17 @@ function Sword:getPushVelocity()
   return velx, vely
 end
 
-function Sword:update()
-  self.zIndex = -self.y
+function Sword:update(dt)
+  self.zIndex = -self.anchor.y - 1
 
   local accel = 50
   self.x = core.math.deltaLerp(self.x, self.anchor.x, accel)
   self.y = core.math.deltaLerp(self.y, self.anchor.y, accel)
+
+  self.rot = core.math.lerpAngle(
+    self.rot,
+    (self.swingAmount * self.swingDir),
+    16 * dt)
 
   self:updateChildren()
 end
@@ -64,11 +70,7 @@ function Sword:draw()
   love.graphics.setColor(1, 1, 1)
 
   local angle = core.math.angleBetween(self.x, self.y, mx, my)
-  local offsetAngle = self.angle
-  if self.swingDir == -1 then
-    offsetAngle = offsetAngle + math.pi
-  end
-  angle = angle + offsetAngle
+  angle = angle + self.rot
   local dx, dy = self.x + math.cos(angle) * 9, self.y + math.sin(angle) * 8 - 8
 
   local scaley = -self.swingDir
