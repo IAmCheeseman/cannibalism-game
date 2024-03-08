@@ -67,6 +67,7 @@ local function open(enemyCount)
   for _, collision in ipairs(collisions) do
     collision:destroy()
   end
+  collisions = {}
 
   deepGrassLayer = core.TileLayer(worldSize, worldSize)
   deepGrassLayer:addTileSet(deepGrassTs)
