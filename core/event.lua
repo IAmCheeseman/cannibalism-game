@@ -27,7 +27,10 @@ function Event:call(...)
 
   for _, connection in ipairs(self.connections) do
     for obj in connection.world:iterateType(connection.type) do
-      obj[connection.fn](obj, ...)
+      local objPaused = self.paused and obj.pauses
+      if not connection.world.paused and not objPaused then
+        obj[connection.fn](obj, ...)
+      end
     end
   end
 end

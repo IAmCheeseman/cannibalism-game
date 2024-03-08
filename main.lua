@@ -209,4 +209,8 @@ core.events.keypressed:on(function(key, _, isRepeat)
     fullscreen = not fullscreen
     love.window.setFullscreen(fullscreen, "desktop")
   end
+
+  if key == "escape" and not isRepeat then
+    world.paused = not world.paused
+  end
 end)

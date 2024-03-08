@@ -14,6 +14,8 @@ function World:init(physicsWorld)
   self.addQueue = {}
   self.removeQueue = {}
 
+  self.paused = false
+
   self.updateEvent = Event()
   self.drawEvent = Event()
 end
@@ -82,7 +84,8 @@ function World:update()
   local dt = love.timer.getDelta()
   self.updateEvent:call(dt)
   for _, obj in ipairs(self.objs) do
-    if obj.update then
+    local objPaused = self.paused and obj.pauses
+    if obj.update and not objPaused then
       obj:update(dt)
     end
   end

@@ -17,6 +17,7 @@ end
 function GameObj:init()
   self.zIndex = 0
   self.children = {}
+  self.pauses = true
 end
 
 function GameObj:updateChildren()
