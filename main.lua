@@ -26,7 +26,7 @@ core.viewport.setBgColor("gui", 0, 0, 0, 0)
 core.events.gui = core.Event()
 core.events.guiAboveLui = core.Event()
 
-physicsWorld = core.physics.PhysicsWorld(128, 64)
+physicsWorld = core.physics.PhysicsWorld(0, 9.8)
 world = core.World(physicsWorld)
 
 local worldGen = require("worldgen")
@@ -91,7 +91,7 @@ worldGen.addIsland("grassland", {
 
   emptyCallback = function(x, y)
     physicsWorld:newRectangleBody(
-      x * 16 - 8, y * 16 - 8,
+      x * 16, y * 16, "static",
       16, 16)
   end,
 
@@ -156,6 +156,7 @@ function love.load()
   player = Player()
   player.x = (worldSize / 2) * 16
   player.y = (worldSize / 2) * 16
+  player.body.body:setPosition(player.x, player.y)
 
   world:add(player)
   world:add(Cursor())

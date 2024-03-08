@@ -53,7 +53,7 @@ function Player:init()
   --   mask = {"env"}
   -- })
   -- physicsWorld:addBody(self.body)
-  self.body = physicsWorld:newCircleBody(self.x, self.y, 4)
+  self.body = physicsWorld:newCircleBody(self.x, self.y, "dynamic", 4)
 end
 
 function Player:added()

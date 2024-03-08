@@ -5,9 +5,9 @@ local physics = {}
 
 local Body = class()
 
-function Body:init(world, x, y, shape)
+function Body:init(world, x, y, shape, type)
   self.shape = shape
-  self.body = love.physics.newBody(world, x, y)
+  self.body = love.physics.newBody(world, x, y, type)
   self.fixture = love.physics.newFixture(self.body, self.shape)
 end
 
@@ -22,20 +22,21 @@ function PhysicsWorld:update()
   self.world:update(love.timer.getDelta())
 end
 
-function PhysicsWorld:newRectangleBody(x, y, ...)
+function PhysicsWorld:newRectangleBody(x, y, type, ...)
   local shape = love.physics.newRectangleShape(...)
-  return Body(self.world, x, y, shape)
+  return Body(self.world, x, y, shape, type)
 end
 
-function PhysicsWorld:newCircleBody(x, y, ...)
+function PhysicsWorld:newCircleBody(x, y, type, ...)
   local shape = love.physics.newCircleShape(...)
-  return Body(self.world, x, y, shape)
+  return Body(self.world, x, y, shape, type)
 end
 
 function PhysicsWorld:draw()
   local bodies = self.world:getBodies()
 
   love.graphics.setColor(1, 0, 0)
+  love.graphics.setLineStyle("rough")
   for _, body in ipairs(bodies) do
     local fixtures = body:getFixtures()
     for _, fixture in ipairs(fixtures) do
