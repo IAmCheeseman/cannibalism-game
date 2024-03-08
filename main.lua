@@ -90,9 +90,12 @@ worldGen.addIsland("grassland", {
   end,
 
   emptyCallback = function(x, y)
-    physicsWorld:newRectangleBody(
-      x * 16, y * 16, "static",
-      16, 16)
+    physicsWorld:newRectangleBody {
+      x = x * 16,
+      y = y * 16,
+      type = "static",
+      shape = {16, 16}
+    }
   end,
 
   -- fullCallback = function(x, y)

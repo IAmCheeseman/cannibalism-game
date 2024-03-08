@@ -5,10 +5,60 @@ local physics = {}
 
 local Body = class()
 
-function Body:init(world, x, y, shape, type)
+function Body:init(world, opts, shape)
   self.shape = shape
-  self.body = love.physics.newBody(world, x, y, type)
+  self.body = love.physics.newBody(world, opts.x or 0, opts.y or 0, opts.type)
   self.fixture = love.physics.newFixture(self.body, self.shape)
+
+  self.fixture:setRestitution(opts.restitution or self.fixture:getRestitution())
+  self.fixture:setDensity(opts.density or self.fixture:getDensity())
+  self.fixture:setFriction(opts.friction or self.fixture:getFriction())
+  self.fixture:setSensor(opts.sensor or false)
+
+  self.fixture:setMask(unpack(opts.mask or {}))
+  self.fixture:setCategory(unpack(opts.category or {1}))
+
+  self.body:setFixedRotation(opts.rotationFixed or false)
+end
+
+function Body:setPosition(x, y)
+  self.body:setPosition(x, y)
+end
+
+function Body:getX()
+  return self.body:getX()
+end
+
+function Body:getY()
+  return self.body:getY()
+end
+
+function Body:getPosition()
+  return self:getX(), self:getY()
+end
+
+function Body:setFixedRotation(to)
+  self.body:setFixedRotation(to)
+end
+
+function Body:isRotationFixed()
+  return self.body:isFixedRotation()
+end
+
+function Body:setRotation(rot)
+  self.body:setAngle(rot)
+end
+
+function Body:getRotation()
+  return self.body:getAngle()
+end
+
+function Body:setVelocity(velx, vely)
+  self.body:setLinearVelocity(velx, vely)
+end
+
+function Body:getVelocity()
+  return self.body:getLinearVelocity()
 end
 
 local PhysicsWorld = class()
@@ -22,14 +72,14 @@ function PhysicsWorld:update()
   self.world:update(love.timer.getDelta())
 end
 
-function PhysicsWorld:newRectangleBody(x, y, type, ...)
-  local shape = love.physics.newRectangleShape(...)
-  return Body(self.world, x, y, shape, type)
+function PhysicsWorld:newRectangleBody(opts)
+  local shape = love.physics.newRectangleShape(unpack(opts.shape))
+  return Body(self.world, opts, shape)
 end
 
-function PhysicsWorld:newCircleBody(x, y, type, ...)
-  local shape = love.physics.newCircleShape(...)
-  return Body(self.world, x, y, shape, type)
+function PhysicsWorld:newCircleBody(opts)
+  local shape = love.physics.newCircleShape(unpack(opts.shape))
+  return Body(self.world, opts, shape)
 end
 
 function PhysicsWorld:draw()

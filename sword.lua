@@ -21,12 +21,16 @@ function Sword:init(anchor)
   self.swingDir = 1
   self.rot = 0
 
-  self.hitbox = physicsWorld:newRectangleBody(
-      self.anchor.x, self.anchor.y,
-      "dynamic", 24, 32)
-  self.hitbox.fixture:setCategory(2)
-  self.hitbox.fixture:setMask(1)
-  self.hitbox.body:setFixedRotation(true)
+  self.hitbox = physicsWorld:newRectangleBody {
+    type = "dynamic",
+    sensor = true,
+    x = self.anchor.x,
+    y = self.anchor.y,
+    rotationFixed = true,
+    shape = {24, 32},
+    category = {2},
+    mask = {1},
+  }
 
   self.cooldown = core.Timer(0.3)
 
@@ -88,8 +92,8 @@ function Sword:updateHitbox()
   local mx, my = core.viewport.getMousePosition("default")
   mx, my = core.math.directionTo(self.x, self.y, mx, my)
 
-  self.hitbox.body:setPosition(self.x + mx * 16, self.y + my * 16)
-  self.hitbox.body:setAngle(core.math.angle(mx, my))
+  self.hitbox:setPosition(self.x + mx * 16, self.y + my * 16)
+  self.hitbox:setRotation(core.math.angle(mx, my))
   -- mx = math.floor(mx + 0.5)
   -- my = math.floor(my + 0.5)
   -- local w, h = 0, 0
