@@ -90,14 +90,9 @@ worldGen.addIsland("grassland", {
   end,
 
   emptyCallback = function(x, y)
-    local anchor = {x=x * 16, y=y * 16}
-    local body = core.physics.SolidBody(
-      anchor, core.physics.makeAabb(-8, -8, 16, 16), {
-        layers = {"env"},
-        mask = {}
-      })
-
-    physicsWorld:addBody(body)
+    physicsWorld:newRectangleBody(
+      x * 16 - 8, y * 16 - 8,
+      16, 16)
   end,
 
   -- fullCallback = function(x, y)
@@ -125,18 +120,18 @@ for x=1, generated.width do
   end
 end
 
-for _=4, 6 do
-  local x, y = 1, 1
-  while generated.map[x][y] == 0 do
-    x = love.math.random(1, generated.width-1)
-    y = love.math.random(1, generated.height-1)
-  end
-
-  local enemy = Enemy()
-  enemy.x = x * 16
-  enemy.y = y * 16
-  world:add(enemy)
-end
+-- for _=4, 6 do
+--   local x, y = 1, 1
+--   while generated.map[x][y] == 0 do
+--     x = love.math.random(1, generated.width-1)
+--     y = love.math.random(1, generated.height-1)
+--   end
+--
+--   local enemy = Enemy()
+--   enemy.x = x * 16
+--   enemy.y = y * 16
+--   world:add(enemy)
+-- end
 
 love.graphics.setCanvas()
 
@@ -162,13 +157,13 @@ function love.load()
   player.x = (worldSize / 2) * 16
   player.y = (worldSize / 2) * 16
 
-  core.physics.PhysicsWorld.drawAround = player.body
-
   world:add(player)
   world:add(Cursor())
 end
 
 function love.update(dt)
+  physicsWorld:update()
+
   time = time + dt
   local b = 0.9 --core.math.map((math.sin(time / 12) + 1) / 2, 0, 0.9)
   core.lighting.ambientColor.r = b

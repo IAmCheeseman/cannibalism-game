@@ -1,40 +1,59 @@
-local cwd = (...):gsub("%.init$", "")
+local cwd = (...):gsub("%.physics$", "")
+local class = require(cwd .. ".class")
 
 local physics = {}
 
-local bodies = require(cwd .. ".body")
+local Body = class()
 
-physics.PhysicsWorld = require(cwd .. ".world")
-physics.SolidBody = bodies.Solid
-physics.AbstractBody = bodies.Abstract
+function Body:init(world, x, y, shape)
+  self.shape = shape
+  self.body = love.physics.newBody(world, x, y)
+  self.fixture = love.physics.newFixture(self.body, self.shape)
+end
 
-function physics.makeAabb(...)
-  local args = {...}
-  local offsetx, offsety, width, height = 0, 0, 0, 0
-  if #args == 4 then
-    offsetx = args[1]
-    offsety = args[2]
-    width = args[3]
-    height = args[4]
-  elseif #args == 2 then
-    width = args[1]
-    height = args[2]
-  elseif #args == 1 then
-    width = args[1]
-    height = args[1]
-  elseif #args == 3 then
-    offsetx = args[1]
-    offsety = args[2]
-    width = args[3]
-    height = args[3]
+local PhysicsWorld = class()
+physics.PhysicsWorld = PhysicsWorld
+
+function PhysicsWorld:init(...)
+  self.world = love.physics.newWorld(...)
+end
+
+function PhysicsWorld:update()
+  self.world:update(love.timer.getDelta())
+end
+
+function PhysicsWorld:newRectangleBody(x, y, ...)
+  local shape = love.physics.newRectangleShape(...)
+  return Body(self.world, x, y, shape)
+end
+
+function PhysicsWorld:newCircleBody(x, y, ...)
+  local shape = love.physics.newCircleShape(...)
+  return Body(self.world, x, y, shape)
+end
+
+function PhysicsWorld:draw()
+  local bodies = self.world:getBodies()
+
+  love.graphics.setColor(1, 0, 0)
+  for _, body in ipairs(bodies) do
+    local fixtures = body:getFixtures()
+    for _, fixture in ipairs(fixtures) do
+      if fixture:getShape():type() == 'PolygonShape' then
+        love.graphics.polygon('line', body:getWorldPoints(fixture:getShape():getPoints()))
+      elseif fixture:getShape():type() == 'EdgeShape' or fixture:getShape():type() == 'ChainShape' then
+        local points = {body:getWorldPoints(fixture:getShape():getPoints())}
+        for i = 1, #points, 2 do
+          if i < #points-2 then love.graphics.line(points[i], points[i+1], points[i+2], points[i+3]) end
+        end
+      elseif fixture:getShape():type() == 'CircleShape' then
+        local body_x, body_y = body:getPosition()
+        local shape_x, shape_y = fixture:getShape():getPoint()
+        local r = fixture:getShape():getRadius()
+        love.graphics.circle('line', body_x + shape_x, body_y + shape_y, r, 360)
+      end
+    end
   end
-
-  return {
-    offsetx = offsetx,
-    offsety = offsety,
-    width = width,
-    height = height,
-  }
 end
 
 return physics
