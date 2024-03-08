@@ -7,8 +7,8 @@ GameObj = core.GameObj
 WorldObj = core.WorldObj
 
 -- 16:9
--- local screenWidth, screenHeight = 256, 144
-local screenWidth, screenHeight = 320, 180
+local screenWidth, screenHeight = 256, 144
+-- local screenWidth, screenHeight = 320, 180
 
 core.input.addKey("up", "w")
 core.input.addKey("left", "a")
@@ -63,6 +63,7 @@ worldGen.addIsland("grassland", {
   grassTile = "grass",
   grassCallback = function(x, y)
     grassLayer:setCell(x, y, grassTs)
+    sandLayer:setCell(x, y, sandTs)
     love.graphics.setColor(0, 1, 0)
     love.graphics.points(x, y)
   end,
@@ -75,6 +76,8 @@ worldGen.addIsland("grassland", {
   altBiomeTile = "deepGrass",
   altBiomeCallback = function(x, y)
     deepGrassLayer:setCell(x, y, deepGrassTs)
+    grassLayer:setCell(x, y, grassTs)
+    sandLayer:setCell(x, y, sandTs)
     love.graphics.setColor(0, 0.5, 0)
     love.graphics.points(x, y)
 
@@ -109,9 +112,7 @@ for x=1, generated.width do
     else
       local anchor = {x=x * 16, y=y * 16}
       local body = core.physics.SolidBody(
-        anchor,
-        core.physics.makeAabb(-8, -8, 16, 16),
-        {
+        anchor, core.physics.makeAabb(-8, -8, 16, 16), {
           layers = {"env"},
           mask = {}
         })
@@ -184,20 +185,16 @@ function love.draw()
   end)
 
   core.viewport.drawTo("gui", function()
-
     core.events.gui:call()
     core.events.guiAboveLui:call()
 
     love.graphics.setColor(1, 1, 1)
+
+    local _, guiHeight = core.viewport.getSize("gui")
+    local font = love.graphics.getFont()
     love.graphics.print(
       tostring(core.math.snapped(1 / love.timer.getFPS() * 1000, 0.01)) .. "/16 ms",
-      0, 0)
-
-    local _, wh = core.viewport.getSize("default")
-    local h = map:getHeight()
-    love.graphics.draw(map, 0, wh - h)
-    love.graphics.setColor(1, 0, 0)
-    love.graphics.points(player.x / 16, (wh - h) + (player.y / 16))
+      0, guiHeight - font:getHeight())
   end)
 
   love.graphics.setColor(1, 1, 1, 1)

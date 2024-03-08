@@ -92,7 +92,7 @@ local function generateIsland(island)
       local strength = math.sin(math.pi * px) * math.sin(math.pi * py)
       n = n * strength
 
-      if n > 0.25 then
+      if n > 0.15 then
         world.map[dx][dy] = island.sandTile
         love.graphics.setColor(1, 1, 0)
       else
