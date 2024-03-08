@@ -139,9 +139,6 @@ end
 love.graphics.setCanvas()
 
 core.events.keypressed:on(function(key, _, _)
-  if key == "f1" then
-    core.physics.PhysicsWorld.drawShapes = not core.physics.PhysicsWorld.drawShapes
-  end
 end)
 
 core.events.focus:on(function(isFocused)
@@ -207,6 +204,10 @@ end
 local fullscreen = false
 
 core.events.keypressed:on(function(key, _, isRepeat)
+  if key == "f1" then
+    core.physics.draw = not core.physics.draw
+  end
+
   if key == "f11" and not isRepeat then
     fullscreen = not fullscreen
     love.window.setFullscreen(fullscreen, "desktop")

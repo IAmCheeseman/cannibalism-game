@@ -63,6 +63,7 @@ end
 
 local PhysicsWorld = class()
 physics.PhysicsWorld = PhysicsWorld
+physics.draw = false
 
 function PhysicsWorld:init(...)
   self.world = love.physics.newWorld(...)
@@ -83,6 +84,10 @@ function PhysicsWorld:newCircleBody(opts)
 end
 
 function PhysicsWorld:draw()
+  if not physics.draw then
+    return
+  end
+
   local bodies = self.world:getBodies()
 
   love.graphics.setColor(1, 0, 0)
