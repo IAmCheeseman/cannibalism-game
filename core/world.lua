@@ -91,6 +91,10 @@ function World:typeCount(type)
 end
 
 function World:update()
+  if not self.paused then
+    self.physicsWorld:update()
+  end
+
   self:_flushQueues()
 
   local dt = love.timer.getDelta()

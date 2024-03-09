@@ -59,14 +59,7 @@ end
 local timer = 0
 
 function love.update(dt)
-  physicsWorld:update()
-
   timer = timer + dt
-
-  local b = 0.9
-  core.lighting.ambientColor.r = b
-  core.lighting.ambientColor.g = b
-  core.lighting.ambientColor.b = b
 
   world:update()
 end
