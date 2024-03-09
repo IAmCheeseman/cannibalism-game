@@ -12,7 +12,6 @@ function Sword:init(anchor)
   self:base("init")
   self.anchor = anchor
 
-  self.paletteShader = core.shader.new("3colorpalette", "3colorpalette.frag")
   self.sprite = core.Sprite("assets/sword.png")
   self.sprite.offsetx = 8
   self.sprite.offsety = 13
@@ -111,13 +110,7 @@ function Sword:draw()
 
   local scaley = -self.swingDir
 
-  self.paletteShader:sendUniform("redChannel", {1, 1, 1, 1})
-  self.paletteShader:sendUniform("greenChannel", {0.5, 0.5, 0, 1})
-  self.paletteShader:sendUniform("blueChannel", {0.5, 0.5, 0.5, 1})
-
-  -- self.paletteShader:apply()
   self.sprite:draw(dx, dy, angle, 1, scaley)
-  -- self.paletteShader:stop()
 
   local hbx, hby = self.hitbox:getPosition()
   local hbr = self.hitbox:getRotation()
