@@ -37,6 +37,7 @@ core.events.guiAboveLui = core.Event()
 physicsWorld = core.physics.PhysicsWorld(0, 0)
 world = core.World(physicsWorld)
 
+local ui = require("ui")
 local Enemy = require("enemy")
 local openForest = require("forest")
 local enemyCount = 3
@@ -55,8 +56,12 @@ function love.load()
   openForest(enemyCount)
 end
 
-function love.update()
+local timer = 0
+
+function love.update(dt)
   physicsWorld:update()
+
+  timer = timer + dt
 
   local b = 0.9
   core.lighting.ambientColor.r = b
@@ -64,6 +69,15 @@ function love.update()
   core.lighting.ambientColor.b = b
 
   world:update()
+end
+
+local function getTimerStr(time)
+  local seconds = tostring(math.floor(time % 60))
+  if #seconds == 1 then
+    seconds = "0" .. seconds
+  end
+  local minutes = math.floor(time / 60)
+  return ("%d:%s"):format(minutes, seconds)
 end
 
 function love.draw()
@@ -76,16 +90,19 @@ function love.draw()
   end)
 
   core.viewport.drawTo("gui", function()
+    love.graphics.setFont(ui.font)
     core.events.gui:call()
     core.events.guiAboveLui:call()
 
     love.graphics.setColor(1, 1, 1)
 
-    local _, guiHeight = core.viewport.getSize("gui")
-    local font = love.graphics.getFont()
+    local guiWidth, guiHeight = core.viewport.getSize("gui")
+    local timerStr = getTimerStr(timer)
+    love.graphics.print(timerStr, guiWidth - ui.font:getWidth(timerStr) - 1, 2)
+
     love.graphics.print(
       tostring(core.math.snapped(1 / love.timer.getFPS() * 1000, 0.01)) .. "/16 ms",
-      0, guiHeight - font:getHeight())
+      0, guiHeight - ui.font:getHeight())
   end)
 
   love.graphics.setColor(1, 1, 1, 1)
