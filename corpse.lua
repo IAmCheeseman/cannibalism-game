@@ -35,6 +35,8 @@ end
 function Corpse:update()
   self.zIndex = -self.y
 
+  self.sprite:play("corpse")
+
   self.velx = core.math.deltaLerp(self.velx, 0, 10)
   self.vely = core.math.deltaLerp(self.vely, 0, 10)
 
