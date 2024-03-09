@@ -77,7 +77,7 @@ local function getTimerStr(time)
     seconds = "0" .. seconds
   end
   local minutes = math.floor(time / 60)
-  return ("%d:%s"):format(minutes, seconds)
+  return ("time %d:%s"):format(minutes, seconds)
 end
 
 function love.draw()
@@ -106,7 +106,7 @@ function love.draw()
   end)
 
   love.graphics.setColor(1, 1, 1, 1)
-  core.lighting.drawToViewport("default")
+  core.viewport.draw("default")
   core.viewport.draw("gui")
 end
 
