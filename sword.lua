@@ -17,6 +17,26 @@ function Sword:init(anchor)
   self.sprite.offsetx = 8
   self.sprite.offsety = 13
 
+  self.swing = core.Sprite("assets/swing.png", {
+    xframes = 8,
+    yframes = 1,
+    animations = {
+      idle = {
+        fps = 0,
+        start = 8,
+        stop = 8,
+      },
+      swing = {
+        once = true,
+        fps = 20,
+        start = 1,
+        stop = 8,
+      }
+    }
+  })
+  self.swing:setOffsetPreset("left", "center")
+  self.swing:play("idle")
+
   self.swingAmount = math.pi / 4
   self.swingDir = 1
   self.rot = 0
@@ -85,8 +105,8 @@ function Sword:draw()
 
   love.graphics.setColor(1, 1, 1)
 
-  local angle = core.math.angleBetween(self.x, self.y, mx, my)
-  angle = angle + self.rot
+  local mouseAngle = core.math.angleBetween(self.x, self.y, mx, my)
+  local angle = mouseAngle + self.rot
   local dx, dy = self.x + math.cos(angle) * 9, self.y + math.sin(angle) * 8 - 8
 
   local scaley = -self.swingDir
@@ -98,13 +118,17 @@ function Sword:draw()
   -- self.paletteShader:apply()
   self.sprite:draw(dx, dy, angle, 1, scaley)
   -- self.paletteShader:stop()
+
+  local hbx, hby = self.hitbox:getPosition()
+  local hbr = self.hitbox:getRotation()
+  self.swing:draw(hbx, hby, hbr)
 end
 
 function Sword:updateHitbox()
   local mx, my = core.viewport.getMousePosition("default")
   mx, my = core.math.directionTo(self.x, self.y, mx, my)
 
-  self.hitbox:setPosition(self.x + mx * 16, self.y + my * 16)
+  self.hitbox:setPosition(self.x + mx * 16, self.y + my * 16 - 8)
   self.hitbox:setRotation(core.math.angle(mx, my))
 end
 
@@ -117,6 +141,8 @@ function Sword:onMousePressed()
     local mx, my = core.viewport.getMousePosition("default")
     mx, my = core.math.directionTo(self.x, self.y, mx, my)
     self.hitAngle = core.math.angle(mx, my)
+
+    self.swing:play("swing")
 
     self.hitbox:setActive(true)
   end

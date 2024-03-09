@@ -113,6 +113,10 @@ function Sprite:play(name)
   end
   self.previous = self.playing
   self.playing = name
+
+  if self.animations then
+    self.frame = self.animations[self.playing].start
+  end
 end
 
 function Sprite:update()
