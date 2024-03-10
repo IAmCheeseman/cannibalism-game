@@ -1,0 +1,127 @@
+[gd_scene load_steps=14 format=3 uid="uid://dehpycbhc7bli"]
+
+[ext_resource type="Script" path="res://scenes/enemy/knight.gd" id="1_2btnr"]
+[ext_resource type="Texture2D" uid="uid://bvue8de6jom6e" path="res://assets/knight.png" id="1_a0qep"]
+[ext_resource type="Shader" path="res://shaders/whiten.gdshader" id="2_i4t4t"]
+[ext_resource type="Script" path="res://scripts/shadow/shadow.gd" id="2_ifjfv"]
+[ext_resource type="Script" path="res://scripts/soft_collision.gd" id="3_dwko6"]
+[ext_resource type="PackedScene" uid="uid://bnybsfvdttobu" path="res://scenes/sword.tscn" id="4_xpis5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_22f3t"]
+shader = ExtResource("2_i4t4t")
+shader_parameter/strength = 0.0
+
+[sub_resource type="Animation" id="Animation_4fp6x"]
+resource_name = "idle"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_epql5"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_5f8cd"]
+resource_name = "walk"
+length = 0.3
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [4, 5, 6]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_a8v01"]
+_data = {
+"RESET": SubResource("Animation_epql5"),
+"idle": SubResource("Animation_4fp6x"),
+"walk": SubResource("Animation_5f8cd")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5x82i"]
+radius = 4.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1vl0i"]
+radius = 5.0
+
+[node name="Knight" type="CharacterBody2D"]
+collision_layer = 0
+script = ExtResource("1_2btnr")
+speed = null
+accel = null
+flee_distance = null
+attack_distance = null
+
+[node name="Sprite" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_22f3t")
+texture = ExtResource("1_a0qep")
+offset = Vector2(0, -6)
+hframes = 4
+vframes = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite"]
+libraries = {
+"": SubResource("AnimationLibrary_a8v01")
+}
+
+[node name="SpriteShadow" type="Node2D" parent="." node_paths=PackedStringArray("shadow_sprite")]
+script = ExtResource("2_ifjfv")
+shadow_sprite = NodePath("../Sprite")
+
+[node name="Sword" parent="." instance=ExtResource("4_xpis5")]
+position = Vector2(0, -4)
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(0, -4)
+shape = SubResource("CircleShape2D_5x82i")
+
+[node name="SoftCollision" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 32
+script = ExtResource("3_dwko6")
+
+[node name="Collision" type="CollisionShape2D" parent="SoftCollision"]
+visible = false
+shape = SubResource("CircleShape2D_1vl0i")
+
+[node name="FleeCheck" type="RayCast2D" parent="."]
+
+[node name="Attack" type="Timer" parent="."]
+one_shot = true
+
+[node name="AttackCharge" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="timeout" from="Attack" to="." method="_on_attack_timeout"]
+[connection signal="timeout" from="AttackCharge" to="." method="_on_attack_charge_timeout"]

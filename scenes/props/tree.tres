@@ -7,4 +7,5 @@
 script = ExtResource("1_edarf")
 scene = ExtResource("1_20cma")
 chance = 0.333
+grid_aligned = false
 tiles = Array[int]([2])

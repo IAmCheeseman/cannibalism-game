@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://mw0jc7cfch2f"]
+[gd_scene load_steps=14 format=3 uid="uid://mw0jc7cfch2f"]
 
 [ext_resource type="Script" path="res://scripts/world/world.gd" id="1_b5711"]
 [ext_resource type="Texture2D" uid="uid://bsr7mwt6jwgf2" path="res://assets/grass.png" id="2_657x3"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://divwy2nfalis4" path="res://scenes/player.tscn" id="6_j1mjp"]
 [ext_resource type="Script" path="res://scripts/world/world_gen.gd" id="7_lsscq"]
 [ext_resource type="Resource" uid="uid://dawrlvsnu4ivr" path="res://scripts/world/forest.tres" id="8_var7i"]
+[ext_resource type="PackedScene" uid="uid://dehpycbhc7bli" path="res://scenes/enemy/knight.tscn" id="9_t6fyg"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0f0la"]
 texture = ExtResource("2_657x3")
@@ -382,6 +383,15 @@ layer_1/tile_data = PackedInt32Array()
 layer_2/name = "DeepGrass"
 layer_2/tile_data = PackedInt32Array()
 
+[node name="TileMap2" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_hemqx")
+format = 2
+layer_0/name = "Sand"
+layer_1/name = "Grass"
+layer_1/tile_data = PackedInt32Array()
+layer_2/name = "DeepGrass"
+layer_2/tile_data = PackedInt32Array()
+
 [node name="ShadowGroup" type="CanvasGroup" parent="."]
 self_modulate = Color(0, 0, 0, 0.501961)
 script = ExtResource("5_y1ogo")
@@ -400,3 +410,24 @@ script = ExtResource("7_lsscq")
 tile_map = NodePath("../TileMap")
 player = NodePath("../Player")
 area = ExtResource("8_var7i")
+
+[node name="Knight" parent="." instance=ExtResource("9_t6fyg")]
+position = Vector2(164, 100)
+speed = null
+accel = null
+flee_distance = null
+attack_distance = null
+
+[node name="Knight2" parent="." instance=ExtResource("9_t6fyg")]
+position = Vector2(170, 100)
+speed = null
+accel = null
+flee_distance = null
+attack_distance = null
+
+[node name="Knight3" parent="." instance=ExtResource("9_t6fyg")]
+position = Vector2(178, 99)
+speed = null
+accel = null
+flee_distance = null
+attack_distance = null
