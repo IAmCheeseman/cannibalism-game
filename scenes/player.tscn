@@ -1,9 +1,9 @@
 [gd_scene load_steps=10 format=3 uid="uid://divwy2nfalis4"]
 
-[ext_resource type="Script" path="res://entities/player.gd" id="1_rgy3p"]
+[ext_resource type="Script" path="res://scenes/player.gd" id="1_rgy3p"]
 [ext_resource type="Texture2D" uid="uid://bntxlcgxv71h2" path="res://assets/sam.png" id="2_qvvvq"]
-[ext_resource type="Script" path="res://effects/shadow.gd" id="3_k72rk"]
-[ext_resource type="PackedScene" uid="uid://bnybsfvdttobu" path="res://entities/sword.tscn" id="4_ai78g"]
+[ext_resource type="Script" path="res://scripts/shadow/shadow.gd" id="3_k72rk"]
+[ext_resource type="PackedScene" uid="uid://bnybsfvdttobu" path="res://scenes/sword.tscn" id="4_ai78g"]
 
 [sub_resource type="Animation" id="Animation_ai5gb"]
 length = 0.001

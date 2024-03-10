@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://bnybsfvdttobu"]
 
-[ext_resource type="Script" path="res://entities/sword.gd" id="1_kgeyt"]
+[ext_resource type="Script" path="res://scenes/sword.gd" id="1_kgeyt"]
 [ext_resource type="Texture2D" uid="uid://2brhgp83rl3x" path="res://assets/sword.png" id="1_xel02"]
 [ext_resource type="Texture2D" uid="uid://b2hv312ye6aif" path="res://assets/swing.png" id="3_cs3hs"]
 

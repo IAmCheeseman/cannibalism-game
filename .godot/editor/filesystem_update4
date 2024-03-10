@@ -1,1 +1,8 @@
-res://world/world.tscn
+res://scenes/world.tscn
+res://scripts/world/forest.tres
+res://scenes/player.tscn
+res://scenes/props/tree.tres
+res://scripts/world/world.gd
+res://scripts/world/world_gen.gd
+res://scripts/world/prop.gd
+res://scripts/world/area.gd

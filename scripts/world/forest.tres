@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="Area" load_steps=5 format=3 uid="uid://dawrlvsnu4ivr"]
+
+[ext_resource type="Script" path="res://scripts/world/area.gd" id="1_cllb2"]
+[ext_resource type="Resource" uid="uid://c5pc30vxlwx8e" path="res://scenes/props/tree.tres" id="1_nn2wl"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_3hedv"]
+frequency = 0.0205
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_fpk5p"]
+noise_type = 3
+frequency = 0.119
+
+[resource]
+script = ExtResource("1_cllb2")
+island_size = Vector2i(24, 24)
+island_noise = SubResource("FastNoiseLite_fpk5p")
+alt_noise = SubResource("FastNoiseLite_3hedv")
+sand_threshold = 0.2
+inner_threshold = 0.3
+alt_inner_threshold = 0.33
+props = Array[Resource("res://scripts/world/prop.gd")]([ExtResource("1_nn2wl")])
+sand_layer = 0
+inner_layer = 1
+alt_inner_layer = 2
+sand_terrain = 0
+inner_terrain = 1
+alt_inner_terrain = 2

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Prop" load_steps=3 format=3 uid="uid://c5pc30vxlwx8e"]
+
+[ext_resource type="PackedScene" uid="uid://dh01l7xgtrxgj" path="res://scenes/props/tree.tscn" id="1_20cma"]
+[ext_resource type="Script" path="res://scripts/world/prop.gd" id="1_edarf"]
+
+[resource]
+script = ExtResource("1_edarf")
+scene = ExtResource("1_20cma")
+chance = 0.333
+tiles = Array[int]([2])
