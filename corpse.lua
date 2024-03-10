@@ -23,8 +23,8 @@ function Corpse:added()
     type = "dynamic",
     anchor = self,
     shape = {4},
-    category = {"entity"},
-    mask = {"entity"},
+    category = {L_ENTITY},
+    mask = {L_ENTITY},
   }
 end
 

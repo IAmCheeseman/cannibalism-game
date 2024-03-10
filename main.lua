@@ -6,13 +6,13 @@ class = core.class
 GameObj = core.GameObj
 WorldObj = core.WorldObj
 
-core.physics.addCategory("default")
-core.physics.addCategory("env")
-core.physics.addCategory("entity")
-core.physics.addCategory("enemy")
-core.physics.addCategory("player")
-core.physics.addCategory("hitbox")
-core.physics.addCategory("hurtbox")
+L_DEFAULT = 1
+L_ENV     = 2
+L_ENTITY  = 3
+L_ENEMY   = 4
+L_PLAYER  = 5
+L_HITBOX  = 6
+L_HURTBOX = 7
 
 -- 16:9
 -- local screenWidth, screenHeight = 256, 144
@@ -42,7 +42,7 @@ local Enemy = require("enemy")
 local openForest = require("forest")
 local enemyCount = 3
 
-world.objectRemoved:on(function()
+Enemy.died:on(function()
   if world:typeCount(Enemy) == 0 then
     world:clear()
     enemyCount = math.ceil(enemyCount * 1.2)

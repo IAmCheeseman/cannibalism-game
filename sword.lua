@@ -8,9 +8,10 @@ itemManager.define(
   core.Sprite("assets/sword_slot.png"),
   {isWeapon=true})
 
-function Sword:init(anchor)
+function Sword:init(anchor, hitbox)
   self:base("init")
   self.anchor = anchor
+  self.hitbox = hitbox
 
   self.sprite = core.Sprite("assets/sword.png")
   self.sprite.offsetx = 8
@@ -33,12 +34,17 @@ function Sword:init(anchor)
       }
     }
   })
-  self.swing:setOffsetPreset("left", "center")
+  self.swing:setOffsetPreset("center", "center")
   self.swing:play("idle")
 
   self.swingAmount = math.pi / 4
   self.swingDir = 1
   self.rot = 0
+
+  self.damage = 34
+
+  self.targetx = 0
+  self.targety = 0
 
   self.cooldown = core.Timer(0.3)
 
@@ -47,17 +53,7 @@ function Sword:init(anchor)
 end
 
 function Sword:added()
-  self.hitbox = physicsWorld:newRectangleBody {
-    type = "dynamic",
-    sensor = true,
-    x = self.anchor.x,
-    y = self.anchor.y,
-    rotationFixed = true,
-    shape = {24, 32},
-    category = {"hitbox"},
-    mask = {"player", "env"},
-  }
-  self.hitbox:setActive(false)
+  -- self.hitbox:setActive(false)
 end
 
 function Sword:removed()
@@ -78,14 +74,12 @@ end
 function Sword:update(dt)
   self.zIndex = -self.anchor.y - 1
 
-  for body, _ in pairs(self.hitbox:getCollisions()) do
-    if body.anchor.takeDamage then
-      body.anchor:takeDamage(self.hitAngle, 34)
-    end
-  end
-
   if self.cooldown.justFinished then
     self.hitbox:setActive(false)
+  end
+
+  if self.cooldown.isOver then
+    self:updateHitbox()
   end
 
   self.x = self.anchor.x
@@ -100,11 +94,9 @@ function Sword:update(dt)
 end
 
 function Sword:draw()
-  local mx, my = core.viewport.getMousePosition("default")
-
   love.graphics.setColor(1, 1, 1)
 
-  local mouseAngle = core.math.angleBetween(self.x, self.y, mx, my)
+  local mouseAngle = core.math.angleBetween(self.x, self.y, self.targetx, self.targety)
   local angle = mouseAngle + self.rot
   local dx, dy = self.x + math.cos(angle) * 9, self.y + math.sin(angle) * 8 - 8
 
@@ -118,15 +110,15 @@ function Sword:draw()
 end
 
 function Sword:updateHitbox()
-  local mx, my = core.viewport.getMousePosition("default")
-  mx, my = core.math.directionTo(self.x, self.y, mx, my)
+  local dirx, diry = core.math.directionTo(self.x, self.y, self.targetx, self.targety)
 
-  self.hitbox:setPosition(self.x + mx * 16, self.y + my * 16 - 8)
-  self.hitbox:setRotation(core.math.angle(mx, my))
+  local dist = 16
+  self.hitbox:setPosition(self.x + dirx * dist, self.y + diry * dist - 8)
+  self.hitbox:setRotation(core.math.angle(dirx, diry))
 end
 
-function Sword:onMousePressed()
-  if core.input.isPressed("useWeapon") and self.cooldown.isOver then
+function Sword:attack()
+  if self.cooldown.isOver then
     self.cooldown:start(0.4)
     self.swingDir = -self.swingDir
     self:updateHitbox()
@@ -137,10 +129,14 @@ function Sword:onMousePressed()
 
     self.swing:play("swing")
 
-    self.hitbox:setActive(true)
+
+    for body, _ in pairs(self.hitbox:getCollisions()) do
+      if body.anchor and body.anchor.takeDamage then
+        print(body.test, body.fixture:getGroupIndex())
+        body.anchor:takeDamage(self.hitAngle, self.damage)
+      end
+    end
   end
 end
-
-core.events.mousepressed:connect(world, Sword, "onMousePressed")
 
 return Sword

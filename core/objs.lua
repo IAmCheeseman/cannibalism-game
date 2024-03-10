@@ -8,8 +8,8 @@ objs.GameObj = GameObj
 
 function GameObj:__newindex(k, v)
   if type(v) == "table" and v.update and not v:isTypeOf(GameObj) then
-    table.insert(self.children, v)
-    self.children[v] = true
+    table.insert(self.children, k)
+    self.children[k] = true
   end
   rawset(self, k, v)
 end
@@ -22,7 +22,7 @@ end
 
 function GameObj:updateChildren()
   for _, child in ipairs(self.children) do
-    child:update()
+    self[child]:update()
   end
 end
 

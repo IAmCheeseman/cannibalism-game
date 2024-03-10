@@ -32,7 +32,7 @@ function Player:init()
   world:add(self.light)
 
   self.maxHealth = 100
-  self.health = 50
+  self.health = 100
 
   self.velx = 0
   self.vely = 0
@@ -42,10 +42,17 @@ function Player:init()
     :addState("normal", self.normalUpdate, self.normalDraw)
     :setCurrent("normal")
 
-  self.sword = Sword(self)
-  world:add(self.sword)
-
   self.speed = 150
+end
+
+function Player:takeDamage(kbDir, amount)
+  self.health = self.health - amount
+  self.velx = math.cos(kbDir) * 200
+  self.vely = math.sin(kbDir) * 200
+
+  if self.health <= 0 then
+    world:remove(self)
+  end
 end
 
 function Player:added()
@@ -55,23 +62,49 @@ function Player:added()
     math.floor(self.x - ww * 0.5 + 0.5),
     math.floor(self.y - wh * 0.5 + 0.5) - 8)
 
-  self.sword.x = self.x
-  self.sword.y = self.y
-
-  self.body = physicsWorld:newCircleBody {
+  local swordHitbox = physicsWorld:newRectangleBody {
     type = "dynamic",
-    category = {"entity"},
-    mask = {"entity"},
     x = self.x,
     y = self.y,
+    rotationFixed = true,
+    sensor = true,
+    shape = {24, 32},
+    category = {L_HITBOX},
+    mask = {L_ENEMY},
+  }
+  self.sword = Sword(self, swordHitbox)
+  self.sword.damage = 123
+  self.sword.x = self.x
+  self.sword.y = self.y
+  world:add(self.sword)
+
+  self.hurtbox = physicsWorld:newCircleBody {
+    type = "dynamic",
     anchor = self,
     rotationFixed = true,
+    followAnchor = true,
+    sensor = true,
     shape = {0, -4, 4},
+    category = {L_PLAYER, L_HURTBOX},
+    mask = {},
+  }
+  self.hurtbox.test = true
+
+  self.collision = physicsWorld:newCircleBody {
+    type = "dynamic",
+    x = self.x,
+    y = self.y,
+    rotationFixed = true,
+    shape = {0, -4, 4},
+    category = {L_ENTITY},
+    mask = {L_ENTITY},
   }
 end
 
 function Player:removed()
-  self.body:destroy()
+  self.hurtbox:destroy()
+  self.collision:destroy()
+  world:remove(self.sword)
 end
 
 function Player:updateCamera()
@@ -91,6 +124,12 @@ function Player:update()
 
   self.light.x = self.x
   self.light.y = self.y
+
+  self.sword.targetx, self.sword.targety = core.viewport.getMousePosition("default")
+
+  if core.input.isPressed("useWeapon") then
+    self.sword:attack()
+  end
 end
 
 function Player:draw()
@@ -117,8 +156,8 @@ function Player:normalUpdate(dt)
   self.velx = core.math.deltaLerp(self.velx, ix * self.speed, ACCEL)
   self.vely = core.math.deltaLerp(self.vely, iy * self.speed, ACCEL)
 
-  self.body:setVelocity(self.velx, self.vely)
-  self.x, self.y = self.body:getPosition()
+  self.collision:setVelocity(self.velx, self.vely)
+  self.x, self.y = self.collision:getPosition()
 end
 
 function Player:normalDraw()
@@ -141,16 +180,5 @@ function Player:normalDraw()
   love.graphics.setColor(0, 0, 0, 0.5)
   self.sprite:draw(self.x, self.y, 0, scalex, -scaley * 0.5, skew, 0)
 end
-
-function Player:gui()
-  local w = 40
-  love.graphics.setColor(0, 0, 0)
-  love.graphics.rectangle("fill", 2, 2, w, 5)
-  love.graphics.setColor(1, 0, 0)
-  local val = w * (self.health / self.maxHealth)
-  love.graphics.rectangle("fill", 2, 2, val, 5)
-end
-
-core.events.gui:connect(world, Player, "gui")
 
 return Player

@@ -4,50 +4,6 @@ local logging = require(cwd .. ".logging")
 
 local physics = {}
 
-local categories = {}
-local count = 0
-
-function physics.addCategory(name)
-  if count == 16 then
-    error("Max categories count is 16.")
-  end
-
-  count = count + 1
-  categories[name] = count
-end
-
-physics.addCategory("default")
-
-local function getBox2dMask(mask)
-  local box2dMask = {}
-
-  for name, index in pairs(categories) do
-    local isInMask = false
-    for _, maskElement in ipairs(mask) do
-      if maskElement == name then
-        isInMask = true
-        break
-      end
-    end
-
-    if not isInMask then
-      table.insert(box2dMask, index)
-    end
-  end
-
-  return box2dMask
-end
-
-local function getBox2dCategory(category)
-  local box2dCategory = {}
-
-  for _, name in ipairs(category) do
-    table.insert(box2dCategory, categories[name])
-  end
-
-  return box2dCategory
-end
-
 local fixtureToBody = {}
 
 local Body = class()
@@ -62,8 +18,12 @@ function Body:init(world, opts, shape)
   self.fixture:setFriction(opts.friction or self.fixture:getFriction())
   self.fixture:setSensor(opts.sensor or false)
 
-  self.fixture:setMask(unpack(getBox2dCategory(opts.mask or {})))
-  self.fixture:setCategory(unpack(getBox2dCategory(opts.category or {"default"})))
+  if opts.mask then
+    self.fixture:setMask(unpack(opts.mask))
+  end
+  if opts.category then
+    self.fixture:setCategory(unpack(opts.category))
+  end
 
   -- local category, mask, group = self.fixture:getFilterData()
   -- self.fixture:setFilterData(category, bit.bnot(mask), group)
@@ -164,14 +124,14 @@ function Body:destroy()
   fixtureToBody[self.fixture] = nil
 end
 
-function onContactBegin(a, b, coll)
+local function onContactBegin(a, b, coll)
   local ab = fixtureToBody[a]
   local bb = fixtureToBody[b]
   ab:addCollision(bb, coll)
   bb:addCollision(ab, coll)
 end
 
-function onContactEnd(a, b, _)
+local function onContactEnd(a, b, _)
   local ab = fixtureToBody[a]
   local bb = fixtureToBody[b]
   ab:removeCollision(bb)

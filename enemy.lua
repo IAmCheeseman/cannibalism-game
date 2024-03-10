@@ -1,8 +1,11 @@
 local Corpse = require("corpse")
 local Player = require("player")
 local MeleeAi = require("meleeai")
+local Sword = require("sword")
 
 local Enemy = class(WorldObj)
+
+Enemy.died = core.Event()
 
 function Enemy:init()
   self:base("init")
@@ -40,7 +43,7 @@ function Enemy:init()
   })
   self.sprite:setOffsetPreset("center", "bottom")
 
-  self.attackCharge = core.Timer(1)
+  self.attackCharge = core.Timer(0.5)
 
   self.stateMachine = core.StateMachine(self)
     :addState("ai", self.updateAi)
@@ -50,45 +53,46 @@ function Enemy:init()
       self.attackStart,
       self.attackStop)
     :setCurrent("ai")
-
-  self.sword = core.Sprite("assets/sword.png")
-  self.sword.offsetx = 8
-  self.sword.offsety = 13
-  self.sword:play("idle")
-  self.sword:setAnimOverCallback(self, self.onSwordAnimationFinish)
 end
 
 function Enemy:added()
   local w, h = self.sprite:getDimensions()
   local cx, cy, cw, ch = 0, -h/2, w, h
 
-  self.hitbox = physicsWorld:newRectangleBody {
-    type = "static",
-    anchor = self,
-    followAnchor = true,
+  local swordHitbox = physicsWorld:newRectangleBody {
+    type = "dynamic",
+    x = self.x,
+    y = self.y,
+    rotationFixed = true,
     sensor = true,
-    shape = {cx, cy, cw, ch},
-    category = {"hitbox"},
-    mask = {"hurtbox"},
+    shape = {16, 24},
+    category = {L_HITBOX},
+    mask = {L_ENEMY},
   }
+  self.sword = Sword(self, swordHitbox)
+  self.sword.x = self.x
+  self.sword.y = self.y
+  self.sword.damage = 150
+  world:add(self.sword)
 
   self.hurtbox = physicsWorld:newRectangleBody {
-    type = "static",
+    type = "dynamic",
     anchor = self,
+    rotationFixed = true,
     followAnchor = true,
     sensor = true,
     shape = {cx, cy, cw, ch},
-    category = {"enemy", "hurtbox"},
+    category = {L_ENEMY, L_HURTBOX},
     mask = {},
   }
 
   self.collision = physicsWorld:newCircleBody {
     type = "dynamic",
-    anchor = self,
     x = self.x,
     y = self.y,
-    shape = {4},
-    category = {"entity"},
+    rotationFixed = true,
+    shape = {0, -4, 4},
+    category = {L_ENTITY},
     mask = {},
   }
 
@@ -98,7 +102,6 @@ function Enemy:added()
 end
 
 function Enemy:removed()
-  self.hitbox:destroy()
   self.hurtbox:destroy()
   self.collision:destroy()
 end
@@ -116,6 +119,9 @@ function Enemy:takeDamage(kbDir, amount)
 
   if self.health <= 0 then
     world:remove(self)
+    world:remove(self.sword)
+
+    Enemy.died:call()
 
     self.isDead = true
 
@@ -150,7 +156,7 @@ function Enemy:attackUpdate()
 end
 
 function Enemy:attackStop()
-  self.sword:play("swing")
+  self.sword:attack()
 end
 
 function Enemy:attackChargeDraw()
@@ -174,6 +180,11 @@ function Enemy:updateAi(_)
   self.collision:setVelocity(self.velx, self.vely)
   self.x, self.y = self.collision:getPosition()
 
+  local player = Player.instance
+
+  self.sword.targetx = player.x
+  self.sword.targety = player.y
+
   if self.ai:shouldDoAction("attack") then
     self.stateMachine:setCurrent("attack")
   end
@@ -192,16 +203,6 @@ function Enemy:draw()
   self.whitenShader:stop()
   love.graphics.setColor(0, 0, 0, 0.5)
   self.sprite:draw(self.x, self.y, 0, scalex, -0.5)
-
-  love.graphics.setColor(1, 1, 1)
-  local player = Player.instance
-  local angle = core.math.angleBetween(self.x, self.y, player.x, player.y)
-  local scaley = player.x < self.x and -1 or 1
-  local holdOffset = 8
-  self.sword:draw(
-    self.x + math.cos(angle) * holdOffset,
-    self.y + math.sin(angle) * holdOffset - 6,
-    angle, 1, scaley)
 end
 
 return Enemy

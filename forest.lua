@@ -46,8 +46,7 @@ worldGen.addIsland("grassland", {
       x = x * 16,
       y = y * 16,
       type = "static",
-      category = {"env"},
-      mask = {},
+      category = {L_ENV},
       shape = {16, 16}
     })
   end,
