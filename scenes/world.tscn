@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://mw0jc7cfch2f"]
+[gd_scene load_steps=13 format=3 uid="uid://mw0jc7cfch2f"]
 
 [ext_resource type="Script" path="res://scripts/world/world.gd" id="1_b5711"]
 [ext_resource type="Texture2D" uid="uid://bsr7mwt6jwgf2" path="res://assets/grass.png" id="2_657x3"]
@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://divwy2nfalis4" path="res://scenes/player.tscn" id="6_j1mjp"]
 [ext_resource type="Script" path="res://scripts/world/world_gen.gd" id="7_lsscq"]
 [ext_resource type="Resource" uid="uid://dawrlvsnu4ivr" path="res://scripts/world/forest.tres" id="8_var7i"]
-[ext_resource type="PackedScene" uid="uid://dhbdrharmkkv2" path="res://scenes/portal.tscn" id="10_wooqu"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0f0la"]
 texture = ExtResource("2_657x3")
@@ -375,6 +374,7 @@ y_sort_enabled = true
 script = ExtResource("1_b5711")
 
 [node name="TileMap" type="TileMap" parent="."]
+z_index = -2
 tile_set = SubResource("TileSet_hemqx")
 format = 2
 layer_0/name = "Sand"
@@ -383,14 +383,13 @@ layer_1/tile_data = PackedInt32Array()
 layer_2/name = "DeepGrass"
 layer_2/tile_data = PackedInt32Array()
 
-[node name="TileMap2" type="TileMap" parent="."]
-tile_set = SubResource("TileSet_hemqx")
-format = 2
-layer_0/name = "Sand"
-layer_1/name = "Grass"
-layer_1/tile_data = PackedInt32Array()
-layer_2/name = "DeepGrass"
-layer_2/tile_data = PackedInt32Array()
+[node name="ColorRect" type="ColorRect" parent="TileMap"]
+show_behind_parent = true
+offset_left = -722.0
+offset_top = -602.0
+offset_right = 1528.0
+offset_bottom = 1036.0
+color = Color(0.388235, 0.607843, 1, 1)
 
 [node name="ShadowGroup" type="CanvasGroup" parent="."]
 self_modulate = Color(0, 0, 0, 0.501961)
@@ -398,18 +397,8 @@ script = ExtResource("5_y1ogo")
 
 [node name="Player" parent="." instance=ExtResource("6_j1mjp")]
 
-[node name="ColorRect" type="ColorRect" parent="."]
-offset_left = -722.0
-offset_top = -602.0
-offset_right = 1528.0
-offset_bottom = 1036.0
-color = Color(0.388235, 0.607843, 1, 1)
-
 [node name="WorldGenerator" type="Node" parent="." node_paths=PackedStringArray("tile_map", "player")]
 script = ExtResource("7_lsscq")
 tile_map = NodePath("../TileMap")
 player = NodePath("../Player")
 area = ExtResource("8_var7i")
-
-[node name="Portal" parent="." instance=ExtResource("10_wooqu")]
-position = Vector2(172, 134)

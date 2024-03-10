@@ -15,6 +15,10 @@ run/main_scene="res://scenes/world.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://assets/icon.svg"
 
+[autoload]
+
+LevelManager="*res://scripts/level_manager.gd"
+
 [display]
 
 window/size/viewport_width=320

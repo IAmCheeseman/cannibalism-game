@@ -9,6 +9,7 @@ class_name Area
 @export_range(0, 1) var inner_threshold := 0.3
 @export_range(0, 1) var alt_inner_threshold := 0.33
 @export var props: Array[Prop]
+@export var enemy_pool: Array[PackedScene]
 
 @export_category("Tiles")
 @export var sand_layer := 0
