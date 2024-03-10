@@ -19,6 +19,7 @@ func add_rect(list: Dictionary, rect: Rect2i) -> void:
   for x in rect.size.x:
     for y in rect.size.y:
       list[Vector2i(rect.position.x + x, rect.position.y + y)] = true
+  print(rect.size)
 
 func normalized_noise(noise: FastNoiseLite, x: float, y: float) -> float:
   return (noise.get_noise_2d(x, y) + NOISE_RANGE) / (NOISE_RANGE * 2)
@@ -59,7 +60,7 @@ func generate() -> void:
 
   var portal = PORTAL.instantiate()
   var cell = sand_tiles.keys().pick_random()
-  add_rect(sand_tiles, Rect2i(cell - Vector2i.ONE * 2, cell + Vector2i.ONE * 2))
+  add_rect(sand_tiles, Rect2i(cell - Vector2i.ONE * 2, Vector2i.ONE * 5))
   portal.position = Vector2(cell) * tile_size
   add_child(portal)
 
