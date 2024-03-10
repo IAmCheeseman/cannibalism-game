@@ -87,6 +87,9 @@ func generate() -> void:
       instance.position = Vector2(possible_tiles.pop_back()) * tile_size
       if not prop.grid_aligned:
         instance.position += Vector2(tile_size.x * randf(), tile_size.y * randf())
+      if instance.global_position.distance_to(portal.global_position) < 32:
+        instance.queue_free()
+        continue
       add_sibling(instance)
 
   for i in LevelManager.level * 3:
