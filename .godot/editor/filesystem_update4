@@ -33,3 +33,5 @@ res://scenes/swing.gd
 res://enemy_swing.tscn
 res://scenes/shaders/whiten.gdshader
 res://scenes/enemy_swing.tscn
+res://scenes/enemy_health_bar.tscn
+res://scenes/enemy_health_bar.gd

@@ -9,6 +9,7 @@ class_name Health
 @onready var health := max_health
 
 signal died
+signal took_damage
 
 func _ready() -> void:
   hurtbox.took_damage.connect(take_damage)
@@ -20,6 +21,8 @@ func take_damage(attack: Attack) -> void:
   health -= attack.damage - total_defense
 
   entity.velocity = attack.knockbackDirection
+
+  took_damage.emit()
 
   if health <= 0:
     died.emit()
