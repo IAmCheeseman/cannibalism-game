@@ -1,7 +1,9 @@
+ColorRect
+AnimationPlayer
+AnimationTree
+Sprite2D
 Node2D
 ProgressBar
-Sprite2D
-AnimationPlayer
 Health
 CollisionShape2D
 AnimatedSprite2D
@@ -11,4 +13,3 @@ Area2D
 RayCast2D
 SpriteShadow
 SoftCollision
-CharacterBody2D

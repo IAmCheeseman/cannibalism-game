@@ -35,3 +35,5 @@ res://scenes/shaders/whiten.gdshader
 res://scenes/enemy_swing.tscn
 res://scenes/enemy_health_bar.tscn
 res://scenes/enemy_health_bar.gd
+res://scenes/portal.tscn
+res://shaders/portal.gdshader

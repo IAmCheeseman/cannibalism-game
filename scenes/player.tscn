@@ -111,7 +111,6 @@ shape = SubResource("CircleShape2D_86ppu")
 
 [node name="Health" type="Node" parent="." node_paths=PackedStringArray("hurtbox", "entity")]
 script = ExtResource("5_3rbl5")
-max_health = 1.0
 hurtbox = NodePath("../Hurtbox")
 entity = NodePath("..")
 
