@@ -51,7 +51,10 @@ func _attack_enter() -> void:
   attack_charge.start()
   attack_timer.start()
 
-func _attack_process(_delta: float) -> void:
+func _attack_process(delta: float) -> void:
+  target = global_position
+  _move_to_target(delta)
+
   if not attack_charge.is_stopped():
     var percentage = 1 - attack_charge.time_left / attack_charge.wait_time
     sprite.material.set_shader_parameter("strength", percentage)

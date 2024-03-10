@@ -1,9 +1,12 @@
-RayCast2D
-Timer
-AnimationPlayer
 Sprite2D
-SpriteShadow
+AnimationPlayer
+Health
 CollisionShape2D
-SoftCollision
 AnimatedSprite2D
+Hurtbox
+Timer
+Area2D
+RayCast2D
+SpriteShadow
+SoftCollision
 CharacterBody2D

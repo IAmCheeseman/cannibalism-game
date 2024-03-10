@@ -20,3 +20,6 @@ func _process(_delta: float) -> void:
   shadow.flip_h = shadow_sprite.flip_h
   shadow.flip_v = shadow_sprite.flip_v
   shadow.frame = shadow_sprite.frame
+
+func _exit_tree() -> void:
+  shadow.queue_free()

@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://tt7f2q5f8lgw"]
+
+[ext_resource type="PackedScene" uid="uid://cktbvsy7lh8jo" path="res://scenes/swing.tscn" id="1_bfhsx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uyx4n"]
+size = Vector2(16, 24)
+
+[node name="Swing" instance=ExtResource("1_bfhsx")]
+
+[node name="Hitbox" parent="." index="1"]
+collision_mask = 2
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+position = Vector2(-4, 0)
+shape = SubResource("RectangleShape2D_uyx4n")

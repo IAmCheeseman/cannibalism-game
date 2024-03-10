@@ -3,7 +3,8 @@ class_name Sword
 
 @onready var cooldown: Timer = $Cooldown
 @onready var sprite: Sprite2D = $Sprite
-@onready var swing_sprite: AnimatedSprite2D = $Swing
+
+@export var swing_scene: PackedScene
 
 var swing_dir := 1.
 var hold_angle: float
@@ -27,11 +28,8 @@ func attack() -> void:
 
   cooldown.start()
   swing_dir = -swing_dir
-  swing_sprite.show()
-  swing_sprite.play("swing")
 
-
-func _on_swing_animation_looped() -> void:
-  swing_sprite.stop()
-  swing_sprite.hide()
-
+  var swing = swing_scene.instantiate()
+  swing.global_position = global_position
+  swing.rotation = rotation
+  $"/root/World".add_child(swing)

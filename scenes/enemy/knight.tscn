@@ -1,14 +1,17 @@
-[gd_scene load_steps=14 format=3 uid="uid://dehpycbhc7bli"]
+[gd_scene load_steps=18 format=3 uid="uid://dehpycbhc7bli"]
 
 [ext_resource type="Script" path="res://scenes/enemy/knight.gd" id="1_2btnr"]
 [ext_resource type="Texture2D" uid="uid://bvue8de6jom6e" path="res://assets/knight.png" id="1_a0qep"]
-[ext_resource type="Shader" path="res://shaders/whiten.gdshader" id="2_i4t4t"]
+[ext_resource type="Shader" path="res://scenes/shaders/whiten.gdshader" id="2_30fqu"]
 [ext_resource type="Script" path="res://scripts/shadow/shadow.gd" id="2_ifjfv"]
 [ext_resource type="Script" path="res://scripts/soft_collision.gd" id="3_dwko6"]
 [ext_resource type="PackedScene" uid="uid://bnybsfvdttobu" path="res://scenes/sword.tscn" id="4_xpis5"]
+[ext_resource type="Script" path="res://scenes/damage/health.gd" id="6_1gut4"]
+[ext_resource type="PackedScene" uid="uid://tt7f2q5f8lgw" path="res://scenes/enemy_swing.tscn" id="6_6ga5i"]
+[ext_resource type="PackedScene" uid="uid://pxcaybrgnse4" path="res://scenes/damage/hurtbox.tscn" id="6_wov6b"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_22f3t"]
-shader = ExtResource("2_i4t4t")
+shader = ExtResource("2_30fqu")
 shader_parameter/strength = 0.0
 
 [sub_resource type="Animation" id="Animation_4fp6x"]
@@ -70,16 +73,16 @@ _data = {
 [sub_resource type="CircleShape2D" id="CircleShape2D_5x82i"]
 radius = 4.0
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_x0e6l"]
+radius = 4.0
+height = 12.0
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_1vl0i"]
 radius = 5.0
 
 [node name="Knight" type="CharacterBody2D"]
 collision_layer = 0
 script = ExtResource("1_2btnr")
-speed = null
-accel = null
-flee_distance = null
-attack_distance = null
 
 [node name="Sprite" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_22f3t")
@@ -99,11 +102,20 @@ shadow_sprite = NodePath("../Sprite")
 
 [node name="Sword" parent="." instance=ExtResource("4_xpis5")]
 position = Vector2(0, -4)
+swing_scene = ExtResource("6_6ga5i")
 
 [node name="Collision" type="CollisionShape2D" parent="."]
 visible = false
 position = Vector2(0, -4)
 shape = SubResource("CircleShape2D_5x82i")
+
+[node name="Hurtbox" parent="." instance=ExtResource("6_wov6b")]
+collision_layer = 20
+monitoring = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -6)
+shape = SubResource("CapsuleShape2D_x0e6l")
 
 [node name="SoftCollision" type="Area2D" parent="."]
 collision_layer = 32
@@ -115,6 +127,11 @@ visible = false
 shape = SubResource("CircleShape2D_1vl0i")
 
 [node name="FleeCheck" type="RayCast2D" parent="."]
+
+[node name="Health" type="Node" parent="." node_paths=PackedStringArray("hurtbox", "entity")]
+script = ExtResource("6_1gut4")
+hurtbox = NodePath("../Hurtbox")
+entity = NodePath("..")
 
 [node name="Attack" type="Timer" parent="."]
 one_shot = true
