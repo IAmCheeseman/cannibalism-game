@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://dao74k501xqfq"]
+
+[ext_resource type="FontVariation" uid="uid://bl6r3ua4rlbrb" path="res://assets/font.tres" id="1_7ct3j"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xbvx6"]
+
+[sub_resource type="Theme" id="Theme_sk5lx"]
+Button/colors/font_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_color = Color(0.94902, 0.94902, 0.627451, 1)
+Button/colors/font_hover_pressed_color = Color(1, 1, 0, 1)
+Button/colors/font_pressed_color = Color(1, 1, 0, 1)
+Button/fonts/font = ExtResource("1_7ct3j")
+Button/styles/disabled = SubResource("StyleBoxEmpty_xbvx6")
+Button/styles/focus = SubResource("StyleBoxEmpty_xbvx6")
+Button/styles/hover = SubResource("StyleBoxEmpty_xbvx6")
+Button/styles/normal = SubResource("StyleBoxEmpty_xbvx6")
+Button/styles/pressed = SubResource("StyleBoxEmpty_xbvx6")
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_sk5lx")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Play" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "ui.mainmenu.play"
+
+[node name="Quit" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "ui.mainmenu.quit"

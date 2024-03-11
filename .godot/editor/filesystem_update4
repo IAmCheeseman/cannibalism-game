@@ -3,3 +3,6 @@ res://shaders/portal.gdshader
 res://scenes/props/tree.tres
 res://scenes/shaders/whiten.gdshader
 res://scripts/world/forest.tres
+res://scenes/main_menu.tscn
+res://translations/translations.en.translation
+res://assets/font.tres

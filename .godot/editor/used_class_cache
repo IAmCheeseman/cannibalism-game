@@ -17,7 +17,7 @@ res://scenes/enemy_swing.tscn::1710103379::8e73b4712f774ef134fa3915399c8cc3::Pac
 res://scenes/player.gd::1710075701::4e4b51dbcfe71115dc9d6df5945637d3::GDScript
 res://scenes/player.tscn::1710118192::b73281f20fe3a3fe47a20bb16af73f28::PackedScene,CircleShape2D,Animation,AnimationLibrary,CharacterBody2D,CollisionShape2D,Sprite2D,Node2D
 res://scenes/portal.gd::1710116698::0e231d096a5bace7ad7e18c1cef65c0b::GDScript
-res://scenes/portal.tscn::1710118192::e182f7e488d91ad4e454b19d14083a9a::PackedScene,ShaderMaterial,Animation,AnimationLibrary,RectangleShape2D,Node2D,ColorRect,Sprite2D,AnimationPlayer,Area2D,CollisionShape2D
+res://scenes/portal.tscn::1710118858::ba0958f1308a7c74a3035ee152de638f::PackedScene,ShaderMaterial,Animation,AnimationLibrary,RectangleShape2D,Node2D,ColorRect,Sprite2D,AnimationPlayer,Area2D,CollisionShape2D
 res://scenes/soft_collision.tscn::1710101797::9bcf12b134a8469b1af3161de2615663::PackedScene,Node2D
 res://scenes/swing.tscn::1710118192::88ac481df9c68858c0959b0a665ab1b8::PackedScene,Resource,RectangleShape2D,Animation,AnimationLibrary,Node2D,Sprite2D
 res://scenes/sword.gd::1710100414::a3296b4a387413b4057507840699433f::GDScript
