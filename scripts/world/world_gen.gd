@@ -25,13 +25,6 @@ func add_rect(list: Dictionary, rect: Rect2i) -> void:
 func normalized_noise(noise: FastNoiseLite, x: float, y: float) -> float:
   return (noise.get_noise_2d(x, y) + NOISE_RANGE) / (NOISE_RANGE * 2)
 
-func can_spawn_enemy_at(x: int, y: int) -> bool:
-  return tile_map.get_cell_source_id(0, Vector2i(x,     y))     != -1 \
-    and  tile_map.get_cell_source_id(0, Vector2i(x + 1, y))     != -1 \
-    and  tile_map.get_cell_source_id(0, Vector2i(x,     y + 1)) != -1 \
-    and  tile_map.get_cell_source_id(0, Vector2i(x - x, y))     != -1 \
-    and  tile_map.get_cell_source_id(0, Vector2i(x,     y - 1)) != -1
-
 func generate() -> void:
   randomize()
 
@@ -41,6 +34,7 @@ func generate() -> void:
   var sand_tiles := {}
   var inner_tiles := {} 
   var alt_inner_tiles := {}
+  var enemy_spawns: Array[Vector2] = []
 
   var tile_size: Vector2 = tile_map.tile_set.tile_size
 
@@ -48,11 +42,13 @@ func generate() -> void:
     for y in area.island_size.y:
       var n = normalized_noise(area.island_noise, x, y)
       var p = Vector2(x / float(area.island_size.x), y / float(area.island_size.y))
-      n *= sin(PI * p.x) * sin(PI * p.y)
+      n *= sin(PI * p.x) * sin(PI * p.y) * 2
 
-      if n > 0.2:
+      if n > 0.4:
         add_tiles(sand_tiles, Vector2i(x, y))
-      if n > 0.3:
+      if n > 0.5:
+        enemy_spawns.append(Vector2(x, y))
+      if n > 0.6:
         var alt_n = normalized_noise(area.alt_noise, x, y)
         if alt_n > 0.4:
           add_tiles(inner_tiles, Vector2i(x, y))
@@ -65,8 +61,6 @@ func generate() -> void:
   add_rect(sand_tiles, Rect2i(cell - Vector2i.ONE * 2, Vector2i.ONE * 5))
   portal.position = Vector2(cell) * tile_size
   add_child(portal)
-
-  LevelManager.level += 1
 
   tile_map.set_cells_terrain_connect(
     area.sand_layer, sand_tiles.keys(), 0, area.sand_terrain)
@@ -97,9 +91,11 @@ func generate() -> void:
 
   for i in LevelManager.level * 3:
     var enemy = area.enemy_pool.pick_random().instantiate()
-    var tile = sand_tiles.keys().pick_random()
+    var tile = enemy_spawns.pick_random()
     enemy.position = Vector2(tile) * tile_size + tile_size / 2
     enemy_spawned.emit(enemy)
     add_sibling(enemy)
 
   player.position = tile_map.get_used_rect().get_center() * Vector2i(tile_size)
+
+  LevelManager.level += 1
