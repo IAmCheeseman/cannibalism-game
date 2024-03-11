@@ -29,7 +29,7 @@ func _process(delta: float) -> void:
 func _move_to_target(delta: float) -> void:
   var direction = position.direction_to(target)
   velocity = Utils.delta_lerp(velocity, direction * speed, accel, delta)
-  velocity += soft_collision.get_push_vector()
+  velocity += soft_collision.get_push_vector() * delta
   move_and_slide()
 
 func _pursue_process(delta: float) -> void:

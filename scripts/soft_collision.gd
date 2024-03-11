@@ -1,7 +1,7 @@
 extends Area2D
 class_name SoftCollision
 
-@export var push_strength := 5.0
+@export var push_strength := 100.0
 
 func get_push_vector() -> Vector2:
   var vector = Vector2.ZERO
