@@ -20,6 +20,7 @@ var state_machine = StateMachine.new()
 var target: Vector2
 
 func _ready() -> void:
+  sprite.material = sprite.material.duplicate()
   state_machine.set_current(s_pursue)
 
 func _process(delta: float) -> void:
@@ -85,5 +86,3 @@ func _flee_process(delta: float) -> void:
 
   sword.target = global_position + velocity
   queue_redraw()
-
-

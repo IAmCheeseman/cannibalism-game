@@ -9,7 +9,3 @@ void vertex() {
 		cos(TIME * wobble_speed + float(VERTEX_ID)) * wobble_strength,
 		sin(TIME * wobble_speed + float(VERTEX_ID)) * wobble_strength);
 }
-
-void fragment() {
-
-}

@@ -6,8 +6,9 @@ class_name WorldGenerator
 @export var area: Area
 
 const NOISE_RANGE = 0.57
-
 const PORTAL = preload("res://scenes/portal.tscn")
+
+signal enemy_spawned(enemy)
 
 func add_tiles(list: Dictionary, pos: Vector2i) -> void:
   list[pos] = true
@@ -59,6 +60,7 @@ func generate() -> void:
           add_tiles(alt_inner_tiles, Vector2i(x, y))
 
   var portal = PORTAL.instantiate()
+  portal.world_generator = self
   var cell = sand_tiles.keys().pick_random()
   add_rect(sand_tiles, Rect2i(cell - Vector2i.ONE * 2, Vector2i.ONE * 5))
   portal.position = Vector2(cell) * tile_size
@@ -97,6 +99,7 @@ func generate() -> void:
     var enemy = area.enemy_pool.pick_random().instantiate()
     var tile = sand_tiles.keys().pick_random()
     enemy.position = Vector2(tile) * tile_size + tile_size / 2
+    enemy_spawned.emit(enemy)
     add_sibling(enemy)
 
   player.position = tile_map.get_used_rect().get_center() * Vector2i(tile_size)

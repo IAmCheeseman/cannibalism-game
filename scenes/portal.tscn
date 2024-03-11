@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://dhbdrharmkkv2"]
+[gd_scene load_steps=11 format=3 uid="uid://dhbdrharmkkv2"]
 
 [ext_resource type="Texture2D" uid="uid://fgtcunhii54p" path="res://assets/portal.png" id="1_8obm7"]
 [ext_resource type="Texture2D" uid="uid://uapr7sjjiyht" path="res://assets/portal_stand.png" id="1_fej8i"]
+[ext_resource type="Script" path="res://scenes/portal.gd" id="1_kr52w"]
 [ext_resource type="Shader" path="res://shaders/portal.gdshader" id="1_n8vcj"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hhao0"]
@@ -24,6 +25,22 @@ tracks/0/keys = {
 "values": [0.0]
 }
 
+[sub_resource type="Animation" id="Animation_ooasd"]
+resource_name = "open"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("VortexFront:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.5),
+"transitions": PackedFloat32Array(0.450625, 2.14355, 1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05), Vector2(1.1, 1.1), Vector2(1, 1)]
+}
+
 [sub_resource type="Animation" id="Animation_1iij2"]
 resource_name = "rotate"
 length = 5.0
@@ -44,11 +61,16 @@ tracks/0/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_u31kk"]
 _data = {
 "RESET": SubResource("Animation_c4p2d"),
+"open": SubResource("Animation_ooasd"),
 "rotate": SubResource("Animation_1iij2")
 }
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_84t0n"]
+size = Vector2(16, 16)
+
 [node name="Portal" type="Node2D"]
 z_index = -1
+script = ExtResource("1_kr52w")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_left = -12.0
@@ -58,6 +80,7 @@ offset_bottom = 29.0
 color = Color(0, 0, 0, 1)
 
 [node name="VortexFront" type="Sprite2D" parent="."]
+visible = false
 modulate = Color(0, 0.431373, 1, 1)
 material = SubResource("ShaderMaterial_hhao0")
 position = Vector2(8.314, 8.314)
@@ -78,3 +101,15 @@ libraries = {
 "": SubResource("AnimationLibrary_u31kk")
 }
 autoplay = "rotate"
+
+[node name="LoadingZone" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+monitoring = false
+monitorable = false
+
+[node name="Collision" type="CollisionShape2D" parent="LoadingZone"]
+position = Vector2(8, 6)
+shape = SubResource("RectangleShape2D_84t0n")
+
+[connection signal="area_entered" from="LoadingZone" to="." method="_on_loading_zone_entered"]
