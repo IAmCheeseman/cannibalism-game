@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://fgtcunhii54p" path="res://assets/portal.png" id="1_8obm7"]
 [ext_resource type="Texture2D" uid="uid://uapr7sjjiyht" path="res://assets/portal_stand.png" id="1_fej8i"]
-[ext_resource type="Script" path="res://scenes/portal.gd" id="1_kr52w"]
+[ext_resource type="Script" path="res://scenes/portal.gd" id="1_ingep"]
 [ext_resource type="Shader" path="res://shaders/portal.gdshader" id="1_n8vcj"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hhao0"]
@@ -70,7 +70,7 @@ size = Vector2(16, 16)
 
 [node name="Portal" type="Node2D"]
 z_index = -1
-script = ExtResource("1_kr52w")
+script = ExtResource("1_ingep")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_left = -12.0

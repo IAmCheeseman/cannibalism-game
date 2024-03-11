@@ -1,0 +1,14 @@
+res://scenes/damage/hitbox.tscn::d4634cc58f00b86a3574e97b9871c21f::1710101797::res://.godot/exported/133200997/export-c23403165a7307b93c5b72dd7865f2ac-hitbox.scn
+res://scenes/damage/hurtbox.tscn::3ab60d7d6eaf359b8b03c455d667e1bd::1710101797::res://.godot/exported/133200997/export-76df9782af67939030022d034c99e9d5-hurtbox.scn
+res://scenes/enemy/knight.tscn::4dc676a4a08e109db353efb42a1189de::1710103379::res://.godot/exported/133200997/export-ae4f6bbf6c4ea2092e0f01a224650373-knight.scn
+res://scenes/props/tree.tres::116f5ae324f095a33d0b38484c14c1d2::1710119119::res://.godot/exported/133200997/export-417175e0cafe720e22ca7d6628188c34-tree.res
+res://scenes/props/tree.tscn::034a3216f24f1c61e2d8a05f4b4f61b0::1710090461::res://.godot/exported/133200997/export-5e5a565da5cf550578fb0938331f264e-tree.scn
+res://scenes/enemy_health_bar.tscn::e9b52d0faf9a3d07287ca5de7c763639::1710103379::res://.godot/exported/133200997/export-add6968013331fe85733c0d0aafa07de-enemy_health_bar.scn
+res://scenes/enemy_swing.tscn::8e73b4712f774ef134fa3915399c8cc3::1710103379::res://.godot/exported/133200997/export-67211051580f911522e3938acb99bfbd-enemy_swing.scn
+res://scenes/player.tscn::b73281f20fe3a3fe47a20bb16af73f28::1710118857::res://.godot/exported/133200997/export-234fb6894ec6226e856ab7f825500d3d-player.scn
+res://scenes/portal.tscn::ba0958f1308a7c74a3035ee152de638f::1710118858::res://.godot/exported/133200997/export-f074f8226365829507402181bf60e300-portal.scn
+res://scenes/soft_collision.tscn::9bcf12b134a8469b1af3161de2615663::1710101797::res://.godot/exported/133200997/export-5d6014b135b60aec9379fece98b2919b-soft_collision.scn
+res://scenes/swing.tscn::88ac481df9c68858c0959b0a665ab1b8::1710118960::res://.godot/exported/133200997/export-d98f9a7142c66e1c4d96f3901d11e0a5-swing.scn
+res://scenes/sword.tscn::cc6e2e9a26563797eb65d426d9e1d193::1710101797::res://.godot/exported/133200997/export-3d6342570798a21ee00820915b18a6ff-sword.scn
+res://scenes/world.tscn::e0a46d6fa1fc05be28e412f355b12ba2::1710119546::res://.godot/exported/133200997/export-6b9c1b1fd6ae6f795188dfdc89e222b0-world.scn
+res://scripts/world/forest.tres::f602fc2fb9f982fb59127a9845acb691::1710119119::res://.godot/exported/133200997/export-c8910dbd2e0e38d18df44d387216612d-forest.res

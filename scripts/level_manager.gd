@@ -1,3 +1,3 @@
 extends Node
 
-var level := 100
+var level := 1
