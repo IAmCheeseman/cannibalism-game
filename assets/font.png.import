@@ -12,6 +12,6 @@ dest_files=["res://.godot/imported/font.png-062c3597b68463316da4bb296970215a.fon
 
 [params]
 
-ranges=PackedStringArray(" ", "0-9", ".", "!", "?", "\'", "\"", ",", ":", "/", "\\", "(", ")", "A-Z", "a-z")
+ranges=PackedStringArray(" ", "0-9", ".", "!", "?", "\'", "\"", ",", ":", "/", "\\", "(", ")", "#", "-", "A-Z", "a-z")
 letter_spacing=0
 mipmaps=false

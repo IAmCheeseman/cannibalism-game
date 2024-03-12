@@ -79,3 +79,8 @@ size_flags_vertical = 1
 theme_override_styles/fill = SubResource("StyleBoxFlat_ojx64")
 value = 53.7
 show_percentage = false
+
+[node name="LevelLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Level #4"
