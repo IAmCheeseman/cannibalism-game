@@ -25,7 +25,7 @@ var stamina := max_stamina
 var s_default := State.new("default", null, _default_process, null)
 var s_eating := State.new("eat", null, _eat_process, _eat_exit)
 var s_eat_wait := State.new("eat_wait", _eat_wait_start, _eat_wait_process, null)
-var s_dead := State.new("dead", null, null, null)
+var s_dead := State.new("dead", null, _dead_process, null)
 var state_machine := StateMachine.new()
 
 var eat_speed_modifier := 1.0
@@ -120,6 +120,11 @@ func _on_died() -> void:
 
   shadow.queue_free()
   sword.queue_free()
+
+func _dead_process(delta: float) -> void:
+  if Input.is_action_just_pressed("restart"):
+    LevelManager.level = 1
+    get_tree().reload_current_scene()
 
 func take_stamina(amount: float) -> void:
   stamina -= amount
