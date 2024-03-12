@@ -74,6 +74,9 @@ func _default_process(delta: float) -> void:
     state_machine.set_current(s_eating)
 
 func _eat_process(_delta: float) -> void:
+  if not is_instance_valid(eat_target):
+    state_machine.set_current(s_default)
+    return
   var direction = global_position.direction_to(eat_target.global_position)
   velocity = direction * 400
 
@@ -83,6 +86,10 @@ func _eat_process(_delta: float) -> void:
   move_and_slide()
 
 func _eat_exit() -> void:
+  if not is_instance_valid(eat_target):
+    eat_target = null
+    return
+
   var blood = BLOOD_SPLATTER.instantiate()
   blood.position = eat_target.position
   add_sibling(blood)

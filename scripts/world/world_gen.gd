@@ -25,6 +25,17 @@ func add_rect(list: Dictionary, rect: Rect2i) -> void:
 func normalized_noise(noise: FastNoiseLite, x: float, y: float) -> float:
   return (noise.get_noise_2d(x, y) + NOISE_RANGE) / (NOISE_RANGE * 2)
 
+func flood_fill(tiles: Dictionary, cell: Vector2i, level: int = 1) -> void:
+  if level > 5 or tiles[cell]:
+    return
+
+  tiles[cell] = true
+
+  flood_fill(tiles, cell + Vector2i.RIGHT, level + 1)
+  flood_fill(tiles, cell + Vector2i.LEFT, level + 1)
+  flood_fill(tiles, cell + Vector2i.UP, level + 1)
+  flood_fill(tiles, cell + Vector2i.DOWN, level + 1)
+
 func generate() -> void:
   randomize()
 
@@ -61,6 +72,17 @@ func generate() -> void:
   add_rect(sand_tiles, Rect2i(cell - Vector2i.ONE * 2, Vector2i.ONE * 5))
   portal.position = Vector2(cell) * tile_size
   add_child(portal)
+
+  var player_position = floor(area.island_size / 2)
+  flood_fill(sand_tiles, player_position)
+  flood_fill(sand_tiles, player_position + Vector2i.RIGHT)
+  flood_fill(sand_tiles, player_position + Vector2i.DOWN)
+  flood_fill(sand_tiles, player_position + Vector2i.LEFT)
+  flood_fill(sand_tiles, player_position + Vector2i.UP)
+  flood_fill(sand_tiles, player_position + Vector2i.UP + Vector2i.LEFT)
+  flood_fill(sand_tiles, player_position + Vector2i.UP + Vector2i.RIGHT)
+  flood_fill(sand_tiles, player_position + Vector2i.RIGHT + Vector2i.DOWN)
+  flood_fill(sand_tiles, player_position + Vector2i.LEFT + Vector2i.DOWN)
 
   tile_map.set_cells_terrain_connect(
     area.sand_layer, sand_tiles.keys(), 0, area.sand_terrain)

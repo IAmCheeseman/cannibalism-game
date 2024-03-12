@@ -397,8 +397,6 @@ self_modulate = Color(0, 0, 0, 0.501961)
 script = ExtResource("5_y1ogo")
 
 [node name="Player" parent="." instance=ExtResource("6_j1mjp")]
-speed = null
-accel = null
 
 [node name="WorldGenerator" type="Node" parent="." node_paths=PackedStringArray("tile_map", "player")]
 script = ExtResource("7_lsscq")
