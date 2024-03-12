@@ -118,6 +118,6 @@ func generate() -> void:
     enemy_spawned.emit(enemy)
     add_sibling(enemy)
 
-  player.position = tile_map.get_used_rect().get_center() * Vector2i(tile_size)
+  player.position = Vector2(player_position) * tile_size
 
   LevelManager.level += 1
