@@ -23,10 +23,13 @@ var stamina := max_stamina
 
 var s_default := State.new("default", null, _default_process, null)
 var s_eating := State.new("eat", null, _eat_process, _eat_exit)
+var s_eat_wait := State.new("eat_wait", _eat_wait_start, _eat_wait_process, null)
 var s_dead := State.new("dead", null, null, null)
 var state_machine := StateMachine.new()
 
 var eat_speed_modifier := 1.0
+
+signal stamina_changed(stamina: float)
 
 func _init() -> void:
   instance = self
@@ -91,6 +94,12 @@ func _eat_exit() -> void:
   eat_speed_modifier = 0
   eat_target = null
 
+func _eat_wait_start() -> void:
+  pass
+
+func _eat_wait_process() -> void:
+  pass
+
 func _on_died() -> void:
   state_machine.set_current(s_dead)
   sprite.hide()
@@ -107,6 +116,7 @@ func _on_died() -> void:
 
 func take_stamina(amount: float) -> void:
   stamina -= amount
+  stamina_changed.emit(stamina)
   if stamina <= 0:
     health.kill()
 

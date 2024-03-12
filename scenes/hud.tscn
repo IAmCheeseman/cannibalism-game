@@ -45,8 +45,10 @@ layout_mode = 2
 
 [node name="HealthLabel" type="Label" parent="MarginContainer/VBoxContainer/Health"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 text = "15/15"
+horizontal_alignment = 2
 
 [node name="HealthBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/Health"]
 unique_name_in_owner = true
@@ -60,6 +62,13 @@ show_percentage = false
 
 [node name="Stamina" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="StaminaLabel" type="Label" parent="MarginContainer/VBoxContainer/Stamina"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+text = "100/100"
+horizontal_alignment = 2
 
 [node name="StaminaBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/Stamina"]
 unique_name_in_owner = true
