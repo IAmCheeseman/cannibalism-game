@@ -1,6 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dao74k501xqfq"]
+[gd_scene load_steps=5 format=3 uid="uid://dao74k501xqfq"]
 
-[ext_resource type="FontVariation" uid="uid://bl6r3ua4rlbrb" path="res://assets/font.tres" id="1_7ct3j"]
+[ext_resource type="FontFile" uid="uid://eso1jehxw2yt" path="res://assets/font.png" id="1_tp3wc"]
+
+[sub_resource type="FontVariation" id="FontVariation_3gbra"]
+base_font = ExtResource("1_tp3wc")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xbvx6"]
 
@@ -9,7 +12,7 @@ Button/colors/font_color = Color(1, 1, 1, 1)
 Button/colors/font_hover_color = Color(0.94902, 0.94902, 0.627451, 1)
 Button/colors/font_hover_pressed_color = Color(1, 1, 0, 1)
 Button/colors/font_pressed_color = Color(1, 1, 0, 1)
-Button/fonts/font = ExtResource("1_7ct3j")
+Button/fonts/font = SubResource("FontVariation_3gbra")
 Button/styles/disabled = SubResource("StyleBoxEmpty_xbvx6")
 Button/styles/focus = SubResource("StyleBoxEmpty_xbvx6")
 Button/styles/hover = SubResource("StyleBoxEmpty_xbvx6")

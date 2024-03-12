@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://mw0jc7cfch2f"]
+[gd_scene load_steps=14 format=3 uid="uid://mw0jc7cfch2f"]
 
 [ext_resource type="Script" path="res://scripts/world/world.gd" id="1_b5711"]
 [ext_resource type="Texture2D" uid="uid://bsr7mwt6jwgf2" path="res://assets/grass.png" id="2_657x3"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://divwy2nfalis4" path="res://scenes/player.tscn" id="6_j1mjp"]
 [ext_resource type="Script" path="res://scripts/world/world_gen.gd" id="7_lsscq"]
 [ext_resource type="Resource" uid="uid://dawrlvsnu4ivr" path="res://scripts/world/forest.tres" id="8_var7i"]
+[ext_resource type="PackedScene" uid="uid://dd3ny7httqaot" path="res://scenes/pause_screen.tscn" id="9_xjw5t"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0f0la"]
 texture = ExtResource("2_657x3")
@@ -396,9 +397,16 @@ self_modulate = Color(0, 0, 0, 0.501961)
 script = ExtResource("5_y1ogo")
 
 [node name="Player" parent="." instance=ExtResource("6_j1mjp")]
+speed = null
+accel = null
 
 [node name="WorldGenerator" type="Node" parent="." node_paths=PackedStringArray("tile_map", "player")]
 script = ExtResource("7_lsscq")
 tile_map = NodePath("../TileMap")
 player = NodePath("../Player")
 area = ExtResource("8_var7i")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PauseScreen" parent="CanvasLayer" instance=ExtResource("9_xjw5t")]
+visible = false

@@ -1,3 +1,5 @@
 keys,en
-ui.mainmenu.play,play
-ui.mainmenu.quit,quit
+ui.mainmenu.play,Play
+ui.mainmenu.quit,Quit
+ui.paused,Paused
+ui.paused.escape,Press 'ESC' to continue.

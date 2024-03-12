@@ -1,4 +1,5 @@
-extends CharacterBody2D
+extends Enemy
+class_name Knight
 
 @onready var sprite: Sprite2D = $Sprite
 @onready var animation: AnimationPlayer = $Sprite/AnimationPlayer
@@ -13,10 +14,13 @@ extends CharacterBody2D
 @export var flee_distance: float = 5 * 16
 @export var attack_distance := 24.0
 
-var s_pursue = State.new("pursue", null, _pursue_process, null)
-var s_attack = State.new("attack", _attack_enter, _attack_process, null)
-var s_flee = State.new("flee", _flee_enter, _flee_process, null)
-var state_machine = StateMachine.new()
+const CORPSE_SPRITE := preload("res://assets/knight_corpse.png")
+const CORPSE := preload("res://scenes/corpse.tscn")
+
+var s_pursue := State.new("pursue", null, _pursue_process, null)
+var s_attack := State.new("attack", _attack_enter, _attack_process, null)
+var s_flee := State.new("flee", _flee_enter, _flee_process, null)
+var state_machine := StateMachine.new()
 var target: Vector2
 
 func _ready() -> void:
@@ -86,3 +90,13 @@ func _flee_process(delta: float) -> void:
 
   sword.target = global_position + velocity
   queue_redraw()
+
+func _on_died() -> void:
+  var corpse := CORPSE.instantiate()
+  corpse.global_position = global_position
+  corpse.direction = velocity.normalized()
+  corpse.speed = velocity.length()
+  corpse.texture = CORPSE_SPRITE
+  call_deferred("add_sibling", corpse)
+  queue_free()
+

@@ -1,0 +1,138 @@
+[gd_scene load_steps=17 format=3 uid="uid://cspev3cladaor"]
+
+[ext_resource type="Texture2D" uid="uid://o8ixidfeywi2" path="res://assets/weaselneck.png" id="1_7h2yg"]
+[ext_resource type="Script" path="res://scenes/enemy/weaselneck.gd" id="1_ia517"]
+[ext_resource type="Script" path="res://scripts/shadow/shadow.gd" id="2_k8mab"]
+[ext_resource type="Script" path="res://scenes/damage/health.gd" id="3_4hxo2"]
+[ext_resource type="PackedScene" uid="uid://pxcaybrgnse4" path="res://scenes/damage/hurtbox.tscn" id="4_lv2mm"]
+[ext_resource type="PackedScene" uid="uid://cyhu371310mxh" path="res://scenes/enemy_health_bar.tscn" id="5_7lqqk"]
+[ext_resource type="Script" path="res://scripts/soft_collision.gd" id="5_g1o5s"]
+[ext_resource type="Shader" path="res://scenes/shaders/whiten.gdshader" id="8_43au0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_li6uo"]
+shader = ExtResource("8_43au0")
+shader_parameter/strength = 0.0
+
+[sub_resource type="Animation" id="Animation_py4ot"]
+resource_name = "walk"
+length = 0.3
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="Animation" id="Animation_mw8sj"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_jqlcm"]
+resource_name = "attack"
+length = 0.8
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.55, 0.6, 0.65),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [7, 9, 10, 11, 12, 13]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hqvmt"]
+_data = {
+"RESET": SubResource("Animation_mw8sj"),
+"attack": SubResource("Animation_jqlcm"),
+"walk": SubResource("Animation_py4ot")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_rvmy2"]
+radius = 4.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nyh5a"]
+size = Vector2(12, 16)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_d1ktl"]
+radius = 5.0
+
+[node name="Weaselneck" type="CharacterBody2D"]
+script = ExtResource("1_ia517")
+flee_distance = 48.0
+
+[node name="Sprite" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_li6uo")
+texture = ExtResource("1_7h2yg")
+offset = Vector2(-3, -7)
+hframes = 7
+vframes = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite"]
+libraries = {
+"": SubResource("AnimationLibrary_hqvmt")
+}
+autoplay = "walk"
+
+[node name="SpriteShadow" type="Node2D" parent="." node_paths=PackedStringArray("shadow_sprite")]
+script = ExtResource("2_k8mab")
+shadow_sprite = NodePath("../Sprite")
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(0, -4)
+shape = SubResource("CircleShape2D_rvmy2")
+
+[node name="Hurtbox" parent="." instance=ExtResource("4_lv2mm")]
+collision_layer = 20
+
+[node name="Collision" type="CollisionShape2D" parent="Hurtbox"]
+visible = false
+position = Vector2(0, -8)
+shape = SubResource("RectangleShape2D_nyh5a")
+
+[node name="SoftCollision" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 32
+script = ExtResource("5_g1o5s")
+
+[node name="Collision" type="CollisionShape2D" parent="SoftCollision"]
+visible = false
+shape = SubResource("CircleShape2D_d1ktl")
+
+[node name="FleeCheck" type="RayCast2D" parent="."]
+
+[node name="Health" type="Node" parent="." node_paths=PackedStringArray("hurtbox", "entity")]
+script = ExtResource("3_4hxo2")
+max_health = 20.0
+hurtbox = NodePath("../Hurtbox")
+entity = NodePath("..")
+
+[node name="EnemyHealthBar" parent="." node_paths=PackedStringArray("health") instance=ExtResource("5_7lqqk")]
+offset_top = 1.0
+offset_bottom = 3.0
+health = NodePath("../Health")
+
+[connection signal="animation_finished" from="Sprite/AnimationPlayer" to="." method="_on_animation_finished"]
+[connection signal="died" from="Health" to="." method="_on_died"]

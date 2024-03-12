@@ -89,7 +89,7 @@ func generate() -> void:
         continue
       add_sibling(instance)
 
-  for i in LevelManager.level * 3:
+  for i in 2 + LevelManager.level:
     var enemy = area.enemy_pool.pick_random().instantiate()
     var tile = enemy_spawns.pick_random()
     enemy.position = Vector2(tile) * tile_size + tile_size / 2

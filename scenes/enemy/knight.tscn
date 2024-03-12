@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dehpycbhc7bli"]
+[gd_scene load_steps=20 format=3 uid="uid://dehpycbhc7bli"]
 
 [ext_resource type="Script" path="res://scenes/enemy/knight.gd" id="1_2btnr"]
 [ext_resource type="Texture2D" uid="uid://bvue8de6jom6e" path="res://assets/knight.png" id="1_a0qep"]
@@ -10,10 +10,26 @@
 [ext_resource type="PackedScene" uid="uid://tt7f2q5f8lgw" path="res://scenes/enemy_swing.tscn" id="6_6ga5i"]
 [ext_resource type="PackedScene" uid="uid://pxcaybrgnse4" path="res://scenes/damage/hurtbox.tscn" id="6_wov6b"]
 [ext_resource type="PackedScene" uid="uid://cyhu371310mxh" path="res://scenes/enemy_health_bar.tscn" id="10_wag2k"]
+[ext_resource type="PackedScene" uid="uid://ca70bcj5xuj0w" path="res://scenes/enemy/cannibalism.tscn" id="11_6rurn"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_22f3t"]
 shader = ExtResource("2_30fqu")
 shader_parameter/strength = 0.0
+
+[sub_resource type="Animation" id="Animation_epql5"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
 
 [sub_resource type="Animation" id="Animation_4fp6x"]
 resource_name = "idle"
@@ -30,21 +46,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
 "values": [0, 1, 2, 3]
-}
-
-[sub_resource type="Animation" id="Animation_epql5"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
 }
 
 [sub_resource type="Animation" id="Animation_5f8cd"]
@@ -84,13 +85,17 @@ radius = 5.0
 [node name="Knight" type="CharacterBody2D"]
 collision_layer = 0
 script = ExtResource("1_2btnr")
+speed = null
+accel = null
+flee_distance = null
+attack_distance = null
 
 [node name="Sprite" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_22f3t")
 texture = ExtResource("1_a0qep")
 offset = Vector2(0, -6)
 hframes = 4
-vframes = 3
+vframes = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite"]
 libraries = {
@@ -127,6 +132,9 @@ script = ExtResource("3_dwko6")
 visible = false
 shape = SubResource("CircleShape2D_1vl0i")
 
+[node name="Cannibalism" parent="." node_paths=PackedStringArray("entity") instance=ExtResource("11_6rurn")]
+entity = NodePath("..")
+
 [node name="FleeCheck" type="RayCast2D" parent="."]
 
 [node name="Health" type="Node" parent="." node_paths=PackedStringArray("hurtbox", "entity")]
@@ -152,5 +160,6 @@ offset_right = 16.0
 offset_bottom = 2.0
 health = NodePath("../../Health")
 
+[connection signal="died" from="Health" to="." method="_on_died"]
 [connection signal="timeout" from="Attack" to="." method="_on_attack_timeout"]
 [connection signal="timeout" from="AttackCharge" to="." method="_on_attack_charge_timeout"]

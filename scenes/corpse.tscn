@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=3 uid="uid://cte8l5jfbjmo4"]
+
+[ext_resource type="Script" path="res://scenes/corpse.gd" id="1_83lcw"]
+[ext_resource type="Texture2D" uid="uid://0awa1i03h8nf" path="res://assets/knight_corpse.png" id="1_v0xug"]
+[ext_resource type="Script" path="res://scripts/shadow/shadow.gd" id="3_hkh1y"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_r01m6"]
+bounce = 0.5
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_slcc1"]
+radius = 3.0
+
+[node name="Corpse" type="RigidBody2D"]
+collision_layer = 0
+physics_material_override = SubResource("PhysicsMaterial_r01m6")
+gravity_scale = 0.0
+lock_rotation = true
+linear_damp = 2.0
+script = ExtResource("1_83lcw")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_v0xug")
+offset = Vector2(0, -3)
+
+[node name="SpriteShadow" type="Node2D" parent="." node_paths=PackedStringArray("shadow_sprite")]
+position = Vector2(0, -3)
+script = ExtResource("3_hkh1y")
+shadow_sprite = NodePath("../Sprite")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -3)
+shape = SubResource("CircleShape2D_slcc1")

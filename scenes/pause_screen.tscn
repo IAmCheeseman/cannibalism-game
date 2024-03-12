@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3 uid="uid://dd3ny7httqaot"]
+
+[ext_resource type="Script" path="res://scenes/pause_screen.gd" id="1_wiylq"]
+[ext_resource type="FontFile" uid="uid://eso1jehxw2yt" path="res://assets/font.png" id="1_wu3h8"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_y5oqh"]
+font = ExtResource("1_wu3h8")
+
+[node name="PauseScreen" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_wiylq")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.705882)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="Paused" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "ui.paused"
+label_settings = SubResource("LabelSettings_y5oqh")
+horizontal_alignment = 1
+
+[node name="Escape" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+text = "ui.paused.escape"
+label_settings = SubResource("LabelSettings_y5oqh")
+horizontal_alignment = 1
