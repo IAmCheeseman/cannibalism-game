@@ -46,7 +46,7 @@ func _default_process(delta: float) -> void:
 
   if input.length() > 0:
     anim.play("walk")
-    take_stamina(1 * delta)
+    take_stamina(5 * delta * eat_speed_modifier)
   else:
     anim.play("idle")
 
