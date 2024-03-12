@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cey5aj6ky2o2w"]
+[gd_scene load_steps=7 format=3 uid="uid://cey5aj6ky2o2w"]
 
 [ext_resource type="FontFile" uid="uid://eso1jehxw2yt" path="res://assets/font.png" id="1_iklsf"]
 [ext_resource type="Script" path="res://scenes/hud.gd" id="2_15qi6"]
@@ -13,6 +13,9 @@ bg_color = Color(1, 0.129412, 0.172549, 1)
 Label/fonts/font = ExtResource("1_iklsf")
 ProgressBar/styles/background = SubResource("StyleBoxFlat_p4hrj")
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_5nao6")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ojx64"]
+bg_color = Color(0.145098, 1, 0.188235, 1)
 
 [node name="Hud" type="Control"]
 layout_mode = 3
@@ -37,15 +40,15 @@ theme_override_constants/margin_top = 3
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="Health" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="HealthLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="HealthLabel" type="Label" parent="MarginContainer/VBoxContainer/Health"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "15/15"
 
-[node name="HealthBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="HealthBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/Health"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
@@ -53,4 +56,17 @@ size_flags_horizontal = 0
 size_flags_vertical = 1
 max_value = 15.0
 value = 5.96
+show_percentage = false
+
+[node name="Stamina" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="StaminaBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/Stamina"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 7)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 1
+theme_override_styles/fill = SubResource("StyleBoxFlat_ojx64")
+value = 53.7
 show_percentage = false

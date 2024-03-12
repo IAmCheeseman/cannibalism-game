@@ -4,6 +4,7 @@ class_name Sword
 @onready var cooldown: Timer = $Cooldown
 @onready var sprite: Sprite2D = $Sprite
 
+@export var stamina_cost := 10.0
 @export var swing_scene: PackedScene
 
 var swing_dir := 1.

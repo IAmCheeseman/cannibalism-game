@@ -5,6 +5,7 @@ class_name Player
 @onready var shadow: SpriteShadow = $Shadow
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var sword: Sword = $Sword
+@onready var health: Health = $Health
 
 @export var speed: float = 150
 @export var accel: float = 15
@@ -16,6 +17,9 @@ const CORPSE := preload("res://scenes/corpse.tscn")
 static var instance: Player
 
 var eat_target: Enemy
+
+var max_stamina := 100.0
+var stamina := max_stamina
 
 var s_default := State.new("default", null, _default_process, null)
 var s_eating := State.new("eat", null, _eat_process, _eat_exit)
@@ -34,11 +38,15 @@ func _process(delta: float) -> void:
   state_machine.process(delta)
 
 func _default_process(delta: float) -> void:
+  if health.is_dead:
+    return
+
   var input := Input.get_vector("left", "right", "up", "down")
   input = input.normalized()
 
   if input.length() > 0:
     anim.play("walk")
+    take_stamina(1 * delta)
   else:
     anim.play("idle")
 
@@ -52,11 +60,12 @@ func _default_process(delta: float) -> void:
 
   sword.target = get_global_mouse_position()
   if Input.is_action_just_pressed("attack"):
+    take_stamina(sword.stamina_cost)
     sword.attack()
 
 func _input(event: InputEvent) -> void:
   if event.is_action_pressed("eat") and eat_target:
-    if not eat_target.is_inside_tree():
+    if not is_instance_valid(eat_target):
       eat_target = null
       return
     state_machine.set_current(s_eating)
@@ -74,6 +83,8 @@ func _eat_exit() -> void:
   var blood = BLOOD_SPLATTER.instantiate()
   blood.position = eat_target.position
   add_sibling(blood)
+
+  stamina = min(stamina + max_stamina / 4, max_stamina)
 
   eat_target.health.kill()
   eat_target.queue_free()
@@ -93,6 +104,11 @@ func _on_died() -> void:
 
   shadow.queue_free()
   sword.queue_free()
+
+func take_stamina(amount: float) -> void:
+  stamina -= amount
+  if stamina <= 0:
+    health.kill()
 
 func can_eat() -> bool:
   return eat_target == null or not eat_target.is_inside_tree()

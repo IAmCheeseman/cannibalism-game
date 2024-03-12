@@ -13,3 +13,6 @@ res://scenes/effects/blood.tscn
 res://scenes/enemy/knight.gd
 res://scenes/enemy/enemy.gd
 res://scenes/damage/health.gd
+res://scenes/sword.gd
+res://scenes/hud.gd
+res://scenes/hud.tscn
