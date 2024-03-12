@@ -88,6 +88,7 @@ func _eat_exit() -> void:
   add_sibling(blood)
 
   stamina = min(stamina + max_stamina / 4, max_stamina)
+  stamina_changed.emit(stamina)
 
   eat_target.health.kill()
   eat_target.queue_free()
