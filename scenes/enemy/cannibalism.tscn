@@ -15,7 +15,7 @@ script = ExtResource("1_w1x88")
 [node name="Collision" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_1imxr")
 
-[node name="EatIndicator" type="Sprite2D" parent="."]
+[node name="EatIndicator" type="Sprite2D" parent="." groups=["cannibalism"]]
 z_index = 4096
 position = Vector2(0, 13)
 texture = ExtResource("2_xohai")

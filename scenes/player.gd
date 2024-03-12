@@ -141,3 +141,6 @@ func take_stamina(amount: float) -> void:
 
 func can_eat() -> bool:
   return eat_target == null or not eat_target.is_inside_tree()
+
+func can_override_eat_target() -> bool:
+  return state_machine.get_current_name() != "eat"

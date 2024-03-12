@@ -26,7 +26,7 @@ func normalized_noise(noise: FastNoiseLite, x: float, y: float) -> float:
   return (noise.get_noise_2d(x, y) + NOISE_RANGE) / (NOISE_RANGE * 2)
 
 func flood_fill(tiles: Dictionary, cell: Vector2i, level: int = 1) -> void:
-  if level > 5 or tiles[cell]:
+  if level > 5 or tiles.has(cell):
     return
 
   tiles[cell] = true

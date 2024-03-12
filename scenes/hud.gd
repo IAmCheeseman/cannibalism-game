@@ -11,7 +11,8 @@ extends Control
 func _ready() -> void:
   Player.instance.stamina_changed.connect(_update_stamina)
   health.took_damage.connect(_update_health)
-  level_label.text = "Level #%d" % [LevelManager.level]
+  print(tr("ui.hud.level"))
+  level_label.text = "%s #%d" % [tr("ui.hud.level"), LevelManager.level]
   _update_health()
 
 func _update_stamina(stamina) -> void:

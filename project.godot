@@ -87,9 +87,10 @@ restart={
 [internationalization]
 
 locale/translation_remaps={
-"res://translations/translations.en.translation": PackedStringArray()
+"res://translations/translations.en.translation": PackedStringArray(),
+"res://translations/translations.hr.translation": PackedStringArray()
 }
-locale/translations=PackedStringArray("res://translations/translations.en.translation")
+locale/translations=PackedStringArray("res://translations/translations.en.translation", "res://translations/translations.hr.translation")
 
 [layer_names]
 

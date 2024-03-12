@@ -1,5 +1,7 @@
-keys,en
-ui.mainmenu.play,Play
-ui.mainmenu.quit,Quit
-ui.paused,Paused
-ui.paused.escape,Press 'ESC' to continue.
+keys,en,hr
+ui.mainmenu.play,Play,Zaigraj
+ui.mainmenu.settings,Options,Postavke
+ui.mainmenu.quit,Quit,Izlaz
+ui.paused,Paused,Pauzirano
+ui.paused.escape,Press 'ESC' to continue.,Stisni *escape* da nastaviš.
+ui.hud.level,Level,Razina

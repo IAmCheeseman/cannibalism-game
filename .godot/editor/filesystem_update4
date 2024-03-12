@@ -17,3 +17,5 @@ res://scenes/sword.gd
 res://scenes/hud.gd
 res://scenes/hud.tscn
 res://scripts/world/world_gen.gd
+res://translations/translations.en.translation
+res://scripts/world/world.gd
