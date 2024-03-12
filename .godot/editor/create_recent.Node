@@ -1,3 +1,4 @@
+Timer
 ProgressBar
 HBoxContainer
 AnimationPlayer
@@ -12,4 +13,3 @@ CharacterBody2D
 RigidBody2D
 RayCast2D
 MarginContainer
-CanvasLayer

@@ -126,4 +126,8 @@ autoplay = "idle"
 [node name="Hud" parent="CanvasLayer" node_paths=PackedStringArray("health") instance=ExtResource("7_pr008")]
 health = NodePath("../../Health")
 
+[node name="EatWait" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
 [connection signal="died" from="Health" to="." method="_on_died"]

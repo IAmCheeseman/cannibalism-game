@@ -6,6 +6,7 @@ class_name Player
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var sword: Sword = $Sword
 @onready var health: Health = $Health
+@onready var eat_wait: Timer = $EatWait
 
 @export var speed: float = 150
 @export var accel: float = 15
@@ -48,7 +49,7 @@ func _default_process(delta: float) -> void:
   input = input.normalized()
 
   if input.length() > 0:
-    anim.play("walk")
+    anim.play("walk", -1, 0.2 + velocity.length() / speed)
     take_stamina(5 * delta * eat_speed_modifier)
   else:
     anim.play("idle")
@@ -66,8 +67,7 @@ func _default_process(delta: float) -> void:
     take_stamina(sword.stamina_cost)
     sword.attack()
 
-func _input(event: InputEvent) -> void:
-  if event.is_action_pressed("eat") and eat_target:
+  if Input.is_action_just_pressed("eat") and eat_target and eat_speed_modifier > 0.75:
     if not is_instance_valid(eat_target):
       eat_target = null
       return
@@ -78,7 +78,7 @@ func _eat_process(_delta: float) -> void:
   velocity = direction * 400
 
   if global_position.distance_to(eat_target.global_position) < 5:
-    state_machine.set_current(s_default)
+    state_machine.set_current(s_eat_wait)
 
   move_and_slide()
 
@@ -95,10 +95,16 @@ func _eat_exit() -> void:
   eat_target = null
 
 func _eat_wait_start() -> void:
-  pass
+  eat_wait.start()
 
-func _eat_wait_process() -> void:
-  pass
+func _eat_wait_process(delta: float) -> void:
+  anim.play("idle")
+
+  velocity = Utils.delta_lerp(velocity, Vector2.ZERO, accel, delta)
+  move_and_slide()
+
+  if eat_wait.is_stopped():
+    state_machine.set_current(s_default)
 
 func _on_died() -> void:
   state_machine.set_current(s_dead)
