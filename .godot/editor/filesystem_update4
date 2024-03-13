@@ -22,3 +22,6 @@ res://scripts/world/world.gd
 res://scenes/effects/blood_splatter.tscn
 res://scenes/effects/blood_splatter.gd
 res://scenes/effects/blood.gd
+res://scenes/stamina_low_vignette.tscn
+res://scenes/shaders/vignette.gdshader
+res://scenes/stamina_low_vignette.gd
