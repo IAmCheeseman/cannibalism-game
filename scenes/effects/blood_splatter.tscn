@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://cac7wm003057h"]
+
+[ext_resource type="Texture2D" uid="uid://bcvwef6axv33h" path="res://assets/blood_splatter.png" id="1_3yoil"]
+[ext_resource type="Script" path="res://scenes/effects/blood_splatter.gd" id="2_0ec48"]
+
+[node name="BloodSplatter" type="Sprite2D"]
+z_index = -1
+texture = ExtResource("1_3yoil")
+hframes = 3
+script = ExtResource("2_0ec48")

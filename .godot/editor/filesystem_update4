@@ -19,3 +19,6 @@ res://scenes/hud.tscn
 res://scripts/world/world_gen.gd
 res://translations/translations.en.translation
 res://scripts/world/world.gd
+res://scenes/effects/blood_splatter.tscn
+res://scenes/effects/blood_splatter.gd
+res://scenes/effects/blood.gd

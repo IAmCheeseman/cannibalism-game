@@ -1,3 +1,4 @@
+Sprite2D
 Node2D
 AnimationPlayer
 Label
@@ -10,6 +11,4 @@ Area2D
 Health
 SpriteShadow
 AnimationTree
-Sprite2D
 CharacterBody2D
-RigidBody2D

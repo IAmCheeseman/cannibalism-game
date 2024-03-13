@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://doqmx8cev11nh"]
+[gd_scene load_steps=7 format=3 uid="uid://doqmx8cev11nh"]
 
 [ext_resource type="Texture2D" uid="uid://bw1y0t81qukj3" path="res://assets/blood.png" id="1_ak1fs"]
+[ext_resource type="Script" path="res://scenes/effects/blood.gd" id="1_hh4tx"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3wtx6"]
 lifetime_randomness = 1.0
@@ -67,6 +68,7 @@ _data = {
 }
 
 [node name="Blood" type="Node2D"]
+script = ExtResource("1_hh4tx")
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="."]
 amount = 64
