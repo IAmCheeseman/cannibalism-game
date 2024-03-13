@@ -22,7 +22,7 @@ func _process(_delta: float) -> void:
     var closer = false
     if player.eat_target != null:
       closer = player.global_position.distance_to(player.eat_target.global_position) < this_dist
-    if player.can_override_eat_target() and closer or player.eat_target == null:
+    if player.can_override_eat_target() and (closer or player.eat_target == null):
       get_tree().call_group("cannibalism", "priority_taken")
       teeth.show()
       Player.instance.eat_target = entity
