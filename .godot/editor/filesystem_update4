@@ -25,3 +25,6 @@ res://scenes/effects/blood.gd
 res://scenes/stamina_low_vignette.tscn
 res://scenes/shaders/vignette.gdshader
 res://scenes/stamina_low_vignette.gd
+res://scenes/pause_screen.tscn
+res://scenes/enemy/Teeth.gd
+res://scenes/effects/teeth.tscn

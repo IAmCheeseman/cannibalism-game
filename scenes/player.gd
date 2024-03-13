@@ -68,13 +68,13 @@ func _default_process(delta: float) -> void:
     take_stamina(sword.stamina_cost)
     sword.attack()
 
+  if not is_instance_valid(eat_target):
+    eat_target = null
   if Input.is_action_just_pressed("eat") and eat_target and eat_speed_modifier > 0.75:
-    if not is_instance_valid(eat_target):
-      eat_target = null
-      return
     state_machine.set_current(s_eating)
 
 func _eat_start() -> void:
+  eat_target.health.invincible = true
   enemy_eaten.emit(eat_target)
 
 func _eat_process(_delta: float) -> void:
@@ -103,7 +103,6 @@ func _eat_exit() -> void:
 
   eat_target.health.kill()
 
-  eat_target.queue_free()
   eat_speed_modifier = 0
   eat_target = null
 
@@ -143,9 +142,6 @@ func take_stamina(amount: float) -> void:
   stamina_changed.emit(stamina)
   if stamina <= 0:
     health.kill()
-
-func can_eat() -> bool:
-  return eat_target == null or not eat_target.is_inside_tree()
 
 func can_override_eat_target() -> bool:
   return state_machine.get_current_name() != "eat"

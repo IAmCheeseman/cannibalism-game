@@ -1,3 +1,4 @@
+res://
 res://scenes/shaders
 /home/xswan/projects/gd/cannibalism_game/exports/win
 res://translations
@@ -8,7 +9,6 @@ res://assets/
 /home/xswan/projects/gd/cannibalism_game/exports
 res://scripts
 res://shaders
-res://
 res://assets
 res://scenes/props/
 res://scripts/world/

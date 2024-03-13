@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://dehpycbhc7bli"]
+[gd_scene load_steps=19 format=3 uid="uid://dehpycbhc7bli"]
 
 [ext_resource type="Script" path="res://scenes/enemy/knight.gd" id="1_2btnr"]
 [ext_resource type="Texture2D" uid="uid://bvue8de6jom6e" path="res://assets/knight.png" id="1_a0qep"]
@@ -9,7 +9,6 @@
 [ext_resource type="Script" path="res://scenes/damage/health.gd" id="6_1gut4"]
 [ext_resource type="PackedScene" uid="uid://tt7f2q5f8lgw" path="res://scenes/enemy_swing.tscn" id="6_6ga5i"]
 [ext_resource type="PackedScene" uid="uid://pxcaybrgnse4" path="res://scenes/damage/hurtbox.tscn" id="6_wov6b"]
-[ext_resource type="PackedScene" uid="uid://cyhu371310mxh" path="res://scenes/enemy_health_bar.tscn" id="10_wag2k"]
 [ext_resource type="PackedScene" uid="uid://ca70bcj5xuj0w" path="res://scenes/enemy/cannibalism.tscn" id="11_6rurn"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_22f3t"]
@@ -148,18 +147,6 @@ one_shot = true
 [node name="AttackCharge" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
-
-[node name="HealthBarContainer" type="Node2D" parent="."]
-visible = false
-z_index = 4096
-position = Vector2(-8, 1)
-
-[node name="EnemyHealthBar" parent="HealthBarContainer" node_paths=PackedStringArray("health") instance=ExtResource("10_wag2k")]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 16.0
-offset_bottom = 2.0
-health = NodePath("../../Health")
 
 [connection signal="died" from="Health" to="." method="_on_died"]
 [connection signal="timeout" from="Attack" to="." method="_on_attack_timeout"]

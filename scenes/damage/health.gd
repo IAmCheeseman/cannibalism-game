@@ -7,6 +7,7 @@ const BLOOD_SPLATTER = preload("res://scenes/effects/blood_splatter.tscn")
 @export var defense := 0.0
 @export var hurtbox: Hurtbox
 @export var entity: CharacterBody2D
+@export var invincible := false
 
 @onready var health := max_health
 
@@ -23,7 +24,7 @@ func kill() -> void:
   died.emit()
 
 func take_damage(attack: Attack) -> void:
-  if is_dead:
+  if is_dead or invincible:
     return
 
   var total_defense := 0.
