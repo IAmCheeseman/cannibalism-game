@@ -77,8 +77,6 @@ slide_on_ceiling = false
 floor_stop_on_slope = false
 floor_block_on_wall = false
 script = ExtResource("1_rgy3p")
-speed = null
-accel = null
 
 [node name="Collision" type="CollisionShape2D" parent="."]
 position = Vector2(0, -4)

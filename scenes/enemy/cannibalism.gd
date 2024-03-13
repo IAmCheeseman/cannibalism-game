@@ -1,18 +1,20 @@
 extends Area2D
 
-@onready var eat_indicator := $EatIndicator
+@onready var teeth := $Teeth
+@onready var animation := $Teeth/AnimationPlayer
 
 @export var entity: Enemy
 
 func _ready() -> void:
   add_to_group("cannibalism")
-  eat_indicator.hide()
+  Player.instance.enemy_eaten.connect(_on_enemy_eaten)
+  teeth.hide()
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
   var areas = get_overlapping_areas()
   var player = Player.instance
   if areas.size() == 0:
-    eat_indicator.hide()
+    teeth.hide()
     if player.eat_target == entity:
       player.eat_target = null
   for area in areas:
@@ -22,8 +24,15 @@ func _process(delta: float) -> void:
       closer = player.global_position.distance_to(player.eat_target.global_position) < this_dist
     if player.can_override_eat_target() and closer or player.eat_target == null:
       get_tree().call_group("cannibalism", "priority_taken")
-      eat_indicator.show()
+      teeth.show()
       Player.instance.eat_target = entity
 
+func _on_enemy_eaten(enemy: Enemy) -> void:
+  if enemy == entity:
+    remove_child(teeth)
+    enemy.add_sibling(teeth)
+    teeth.global_position = enemy.global_position
+    animation.play("eat")
+
 func priority_taken() -> void:
-  eat_indicator.hide()
+  teeth.hide()

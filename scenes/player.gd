@@ -23,7 +23,7 @@ var max_stamina := 100.0
 var stamina := max_stamina
 
 var s_default := State.new("default", null, _default_process, null)
-var s_eating := State.new("eat", null, _eat_process, _eat_exit)
+var s_eating := State.new("eat", _eat_start, _eat_process, _eat_exit)
 var s_eat_wait := State.new("eat_wait", _eat_wait_start, _eat_wait_process, null)
 var s_dead := State.new("dead", null, _dead_process, null)
 var state_machine := StateMachine.new()
@@ -31,6 +31,7 @@ var state_machine := StateMachine.new()
 var eat_speed_modifier := 1.0
 
 signal stamina_changed(stamina: float)
+signal enemy_eaten(enemy: Enemy)
 
 func _init() -> void:
   instance = self
@@ -73,6 +74,9 @@ func _default_process(delta: float) -> void:
       return
     state_machine.set_current(s_eating)
 
+func _eat_start() -> void:
+  enemy_eaten.emit(eat_target)
+
 func _eat_process(_delta: float) -> void:
   if not is_instance_valid(eat_target):
     state_machine.set_current(s_default)
@@ -98,6 +102,7 @@ func _eat_exit() -> void:
   stamina_changed.emit(stamina)
 
   eat_target.health.kill()
+
   eat_target.queue_free()
   eat_speed_modifier = 0
   eat_target = null
@@ -128,7 +133,7 @@ func _on_died() -> void:
   shadow.queue_free()
   sword.queue_free()
 
-func _dead_process(delta: float) -> void:
+func _dead_process(_delta: float) -> void:
   if Input.is_action_just_pressed("restart"):
     LevelManager.level = 1
     get_tree().reload_current_scene()

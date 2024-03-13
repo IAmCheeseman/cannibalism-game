@@ -150,6 +150,7 @@ wait_time = 0.5
 one_shot = true
 
 [node name="HealthBarContainer" type="Node2D" parent="."]
+visible = false
 z_index = 4096
 position = Vector2(-8, 1)
 

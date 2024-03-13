@@ -1,8 +1,9 @@
+Node2D
+AnimationPlayer
 Label
 Timer
 ProgressBar
 HBoxContainer
-AnimationPlayer
 GPUParticles2D
 CollisionShape2D
 Area2D
@@ -12,4 +13,3 @@ AnimationTree
 Sprite2D
 CharacterBody2D
 RigidBody2D
-RayCast2D

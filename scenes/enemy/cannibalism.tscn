@@ -1,10 +1,61 @@
-[gd_scene load_steps=4 format=3 uid="uid://ca70bcj5xuj0w"]
+[gd_scene load_steps=7 format=3 uid="uid://ca70bcj5xuj0w"]
 
 [ext_resource type="Script" path="res://scenes/enemy/cannibalism.gd" id="1_w1x88"]
-[ext_resource type="Texture2D" uid="uid://h3ggatq7pvgt" path="res://assets/eat_indicator.png" id="2_xohai"]
+[ext_resource type="Texture2D" uid="uid://nk2xiceirnwc" path="res://assets/teeth.png" id="2_6m2tn"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1imxr"]
 radius = 48.0
+
+[sub_resource type="Animation" id="Animation_wgc67"]
+resource_name = "eat"
+length = 0.8
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Teeth")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.8),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Teeth/Sprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6]
+}
+
+[sub_resource type="Animation" id="Animation_raiam"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Teeth/Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_23f47"]
+_data = {
+"RESET": SubResource("Animation_raiam"),
+"eat": SubResource("Animation_wgc67")
+}
 
 [node name="Cannibalism" type="Area2D"]
 collision_layer = 0
@@ -13,9 +64,20 @@ monitorable = false
 script = ExtResource("1_w1x88")
 
 [node name="Collision" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CircleShape2D_1imxr")
 
-[node name="EatIndicator" type="Sprite2D" parent="." groups=["cannibalism"]]
+[node name="Teeth" type="Node2D" parent="."]
 z_index = 4096
-position = Vector2(0, 13)
-texture = ExtResource("2_xohai")
+
+[node name="Sprite" type="Sprite2D" parent="Teeth" groups=["cannibalism"]]
+z_index = 4096
+position = Vector2(0, -5)
+texture = ExtResource("2_6m2tn")
+hframes = 7
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Teeth"]
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_23f47")
+}
