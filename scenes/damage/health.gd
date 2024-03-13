@@ -19,6 +19,9 @@ var is_dead := false
 func _ready() -> void:
   hurtbox.took_damage.connect(take_damage)
 
+func is_below_percentage(percentage: float) -> bool:
+  return health / max_health < percentage
+
 func kill() -> void:
   is_dead = true
   died.emit()

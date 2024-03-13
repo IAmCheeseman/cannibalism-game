@@ -131,8 +131,9 @@ script = ExtResource("3_dwko6")
 visible = false
 shape = SubResource("CircleShape2D_1vl0i")
 
-[node name="Cannibalism" parent="." node_paths=PackedStringArray("entity") instance=ExtResource("11_6rurn")]
+[node name="Cannibalism" parent="." node_paths=PackedStringArray("entity", "health") instance=ExtResource("11_6rurn")]
 entity = NodePath("..")
+health = NodePath("../Health")
 
 [node name="FleeCheck" type="RayCast2D" parent="."]
 

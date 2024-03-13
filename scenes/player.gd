@@ -59,7 +59,7 @@ func _default_process(delta: float) -> void:
   sprite.flip_h = mouse_pos.x > 0
   
   velocity = Utils.delta_lerp(velocity, input * speed * eat_speed_modifier, accel, delta)
-  eat_speed_modifier = min(eat_speed_modifier + delta * 0.5, 1)
+  eat_speed_modifier = min(eat_speed_modifier + delta, 1)
 
   move_and_slide()
 
@@ -93,6 +93,8 @@ func _eat_exit() -> void:
   if not is_instance_valid(eat_target):
     eat_target = null
     return
+
+  velocity = Vector2.ZERO
 
   var blood = BLOOD_SPLATTER.instantiate()
   blood.position = eat_target.position
@@ -144,4 +146,4 @@ func take_stamina(amount: float) -> void:
     health.kill()
 
 func can_override_eat_target() -> bool:
-  return state_machine.get_current_name() != "eat"
+  return not state_machine.get_current_name() in ["eat", "eat_wait"]
