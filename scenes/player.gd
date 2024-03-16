@@ -85,7 +85,7 @@ func _eat_process(_delta: float) -> void:
   velocity = direction * 400
 
   if global_position.distance_to(eat_target.global_position) < 5:
-    state_machine.set_current(s_eat_wait)
+    state_machine.set_current(s_default)
 
   move_and_slide()
 

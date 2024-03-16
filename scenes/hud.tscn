@@ -41,6 +41,7 @@ theme_override_constants/margin_top = 3
 layout_mode = 2
 
 [node name="Health" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="HealthLabel" type="Label" parent="MarginContainer/VBoxContainer/Health"]

@@ -9,3 +9,5 @@ res://scenes/pause_screen.tscn
 res://scenes/enemy/cannibalism.tscn
 res://scenes/enemy/knight.tscn
 res://scenes/effects/teeth.tscn
+res://scenes/player.gd
+res://scenes/hud.tscn
