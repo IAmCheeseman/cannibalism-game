@@ -12,9 +12,6 @@ func _ready() -> void:
   teeth.hide()
 
 func _process(_delta: float) -> void:
-  if not health.is_below_percentage(0.5):
-    return
-
   var areas = get_overlapping_areas()
   var player = Player.instance
   if areas.size() == 0:
