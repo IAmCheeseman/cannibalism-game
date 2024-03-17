@@ -11,3 +11,8 @@ res://scenes/enemy/knight.tscn
 res://scenes/effects/teeth.tscn
 res://scenes/player.gd
 res://scenes/hud.tscn
+res://scenes/enemy/archer.tscn
+res://scenes/enemy/archer.gd
+res://scenes/enemy/knight.gd
+res://shaders/whiten.gdshader
+res://shaders/vignette.gdshader

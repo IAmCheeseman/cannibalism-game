@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://pxcaybrgnse4" path="res://scenes/damage/hurtbox.tscn" id="4_lv2mm"]
 [ext_resource type="PackedScene" uid="uid://cyhu371310mxh" path="res://scenes/enemy_health_bar.tscn" id="5_7lqqk"]
 [ext_resource type="Script" path="res://scripts/soft_collision.gd" id="5_g1o5s"]
-[ext_resource type="Shader" path="res://scenes/shaders/whiten.gdshader" id="8_43au0"]
+[ext_resource type="Shader" path="res://shaders/whiten.gdshader" id="8_43au0"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_li6uo"]
 shader = ExtResource("8_43au0")

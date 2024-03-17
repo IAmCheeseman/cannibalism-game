@@ -1,0 +1,139 @@
+[gd_scene load_steps=17 format=3 uid="uid://c5kdd8cvrpmb6"]
+
+[ext_resource type="Texture2D" uid="uid://ksqma6mrcmht" path="res://assets/archer.png" id="1_jbu2y"]
+[ext_resource type="Script" path="res://scenes/enemy/archer.gd" id="1_qrpuu"]
+[ext_resource type="Shader" path="res://shaders/whiten.gdshader" id="2_638g5"]
+[ext_resource type="Script" path="res://scenes/damage/health.gd" id="2_ouxde"]
+[ext_resource type="PackedScene" uid="uid://pxcaybrgnse4" path="res://scenes/damage/hurtbox.tscn" id="3_kdrjx"]
+[ext_resource type="Script" path="res://scripts/shadow/shadow.gd" id="3_vfdld"]
+[ext_resource type="PackedScene" uid="uid://ca70bcj5xuj0w" path="res://scenes/enemy/cannibalism.tscn" id="6_g6e7c"]
+[ext_resource type="Script" path="res://scripts/soft_collision.gd" id="7_7t6tq"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i8p0x"]
+shader = ExtResource("2_638g5")
+shader_parameter/strength = 0.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ru7dk"]
+radius = 3.0
+height = 12.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1yofn"]
+radius = 4.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_w7kd7"]
+radius = 5.0
+
+[sub_resource type="Animation" id="Animation_dqbhp"]
+resource_name = "idle"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0, 1, 2, 3, 4]
+}
+
+[sub_resource type="Animation" id="Animation_1q6jy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_vvk7r"]
+resource_name = "walk"
+length = 0.3
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [5, 6, 7]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_h7m3v"]
+_data = {
+"RESET": SubResource("Animation_1q6jy"),
+"idle": SubResource("Animation_dqbhp"),
+"walk": SubResource("Animation_vvk7r")
+}
+
+[node name="Archer" type="CharacterBody2D"]
+collision_layer = 0
+script = ExtResource("1_qrpuu")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_i8p0x")
+texture = ExtResource("1_jbu2y")
+offset = Vector2(-1, -9)
+hframes = 5
+vframes = 2
+
+[node name="SpriteShadow" type="Node2D" parent="." node_paths=PackedStringArray("shadow_sprite")]
+script = ExtResource("3_vfdld")
+shadow_sprite = NodePath("../Sprite")
+
+[node name="Hurtbox" parent="." instance=ExtResource("3_kdrjx")]
+collision_layer = 20
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+visible = false
+position = Vector2(0, -6)
+shape = SubResource("CapsuleShape2D_ru7dk")
+
+[node name="Health" type="Node" parent="." node_paths=PackedStringArray("hurtbox", "entity")]
+script = ExtResource("2_ouxde")
+max_health = 10.0
+hurtbox = NodePath("../Hurtbox")
+entity = NodePath("..")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(0, -4)
+shape = SubResource("CircleShape2D_1yofn")
+
+[node name="Cannibalism" parent="." node_paths=PackedStringArray("entity", "health") instance=ExtResource("6_g6e7c")]
+position = Vector2(0, -2)
+entity = NodePath("..")
+health = NodePath("../Health")
+
+[node name="SoftCollision" type="Area2D" parent="."]
+script = ExtResource("7_7t6tq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SoftCollision"]
+visible = false
+shape = SubResource("CircleShape2D_w7kd7")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_h7m3v")
+}
+autoplay = "idle"
+
+[node name="ChargeUp" type="Timer" parent="."]
+wait_time = 0.75
+one_shot = true
+
+[connection signal="died" from="Health" to="." method="_on_died"]
+[connection signal="timeout" from="ChargeUp" to="." method="_on_charge_up_timeout"]

@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="Area" load_steps=6 format=3 uid="uid://dawrlvsnu4ivr"]
+[gd_resource type="Resource" script_class="Area" load_steps=7 format=3 uid="uid://dawrlvsnu4ivr"]
 
 [ext_resource type="Script" path="res://scripts/world/area.gd" id="1_cllb2"]
 [ext_resource type="Resource" uid="uid://c5pc30vxlwx8e" path="res://scenes/props/tree.tres" id="1_nn2wl"]
 [ext_resource type="PackedScene" uid="uid://dehpycbhc7bli" path="res://scenes/enemy/knight.tscn" id="1_qsu82"]
+[ext_resource type="PackedScene" uid="uid://c5kdd8cvrpmb6" path="res://scenes/enemy/archer.tscn" id="2_0f080"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_3hedv"]
 frequency = 0.0205
@@ -20,7 +21,7 @@ sand_threshold = 0.2
 inner_threshold = 0.3
 alt_inner_threshold = 0.33
 props = Array[Resource("res://scripts/world/prop.gd")]([ExtResource("1_nn2wl")])
-enemy_pool = Array[PackedScene]([ExtResource("1_qsu82")])
+enemy_pool = Array[PackedScene]([ExtResource("1_qsu82"), ExtResource("2_0f080")])
 sand_layer = 0
 inner_layer = 1
 alt_inner_layer = 2

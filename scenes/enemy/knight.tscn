@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://scenes/enemy/knight.gd" id="1_2btnr"]
 [ext_resource type="Texture2D" uid="uid://bvue8de6jom6e" path="res://assets/knight.png" id="1_a0qep"]
-[ext_resource type="Shader" path="res://scenes/shaders/whiten.gdshader" id="2_30fqu"]
 [ext_resource type="Script" path="res://scripts/shadow/shadow.gd" id="2_ifjfv"]
+[ext_resource type="Shader" path="res://shaders/whiten.gdshader" id="2_q0atr"]
 [ext_resource type="Script" path="res://scripts/soft_collision.gd" id="3_dwko6"]
 [ext_resource type="PackedScene" uid="uid://bnybsfvdttobu" path="res://scenes/sword.tscn" id="4_xpis5"]
 [ext_resource type="Script" path="res://scenes/damage/health.gd" id="6_1gut4"]
@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://ca70bcj5xuj0w" path="res://scenes/enemy/cannibalism.tscn" id="11_6rurn"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_22f3t"]
-shader = ExtResource("2_30fqu")
+shader = ExtResource("2_q0atr")
 shader_parameter/strength = 0.0
 
 [sub_resource type="Animation" id="Animation_epql5"]
@@ -132,6 +132,7 @@ visible = false
 shape = SubResource("CircleShape2D_1vl0i")
 
 [node name="Cannibalism" parent="." node_paths=PackedStringArray("entity", "health") instance=ExtResource("11_6rurn")]
+position = Vector2(0, -2)
 entity = NodePath("..")
 health = NodePath("../Health")
 
