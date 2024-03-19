@@ -1,0 +1,30 @@
+[gd_scene load_steps=7 format=3 uid="uid://bkcjjxruh6l0t"]
+
+[ext_resource type="Texture2D" uid="uid://dn55t0b2ykphm" path="res://assets/bullet.png" id="1_7ulqp"]
+[ext_resource type="Script" path="res://scenes/enemy/bullet.gd" id="1_jryfw"]
+[ext_resource type="PackedScene" uid="uid://bh0mgstt3w7bo" path="res://scenes/damage/hitbox.tscn" id="2_sbkf2"]
+[ext_resource type="Script" path="res://scripts/attack.gd" id="4_un8bt"]
+
+[sub_resource type="Resource" id="Resource_loebp"]
+script = ExtResource("4_un8bt")
+damage = 5.0
+knockbackDirection = Vector2(0, 0)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4ukjh"]
+size = Vector2(7, 3)
+
+[node name="Bullet" type="Node2D"]
+script = ExtResource("1_jryfw")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_7ulqp")
+
+[node name="Hitbox" parent="." instance=ExtResource("2_sbkf2")]
+collision_mask = 2
+attack = SubResource("Resource_loebp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_4ukjh")
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_body_entered"]
+[connection signal="hit" from="Hitbox" to="." method="_on_hitbox_hit"]

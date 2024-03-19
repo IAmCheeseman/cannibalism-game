@@ -1,5 +1,6 @@
-Timer
 CollisionShape2D
+Sprite2D
+Timer
 SoftCollision
 AnimationPlayer
 SpriteShadow
@@ -7,7 +8,6 @@ Health
 CharacterBody2D
 RichTextLabel
 ColorRect
-Sprite2D
 Node2D
 Label
 ProgressBar

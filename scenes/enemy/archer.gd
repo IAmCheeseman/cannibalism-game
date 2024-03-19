@@ -5,10 +5,13 @@ class_name Archer
 @onready var sprite: Sprite2D = $Sprite
 @onready var animation: AnimationPlayer = $AnimationPlayer
 @onready var soft_collision: SoftCollision = $SoftCollision
+@onready var gun_sprite: Sprite2D = $GunSprite
 
 @export var speed := 80.0
 @export var accel := 15.0
 @export var attack_distance := 16.0 * 5.0
+
+const BULLET := preload("res://scenes/enemy/bullet.tscn")
 
 var s_pursue := State.new("pursue", null, _pursue_process, null)
 var s_attack := State.new("attack", _attack_enter, _attack_process, _attack_exit)
@@ -42,6 +45,8 @@ func _pursue_process(delta: float) -> void:
   animation.play("walk")
   sprite.scale.x = 1 if velocity.x < 0 else -1
 
+  gun_sprite.look_at(target)
+
 func _attack_enter() -> void:
   charge_up_timer.start()
 
@@ -53,10 +58,26 @@ func _attack_process(delta: float) -> void:
     var percentage = 1 - charge_up_timer.time_left / charge_up_timer.wait_time
     sprite.material.set_shader_parameter("strength", percentage)
 
-  animation.play("walk")
+  gun_sprite.look_at(Player.instance.global_position)
+
+  animation.play("idle")
 
 func _attack_exit() -> void:
   sprite.material.set_shader_parameter("strength", 0)
+
+  var bullet_count := 8
+  var spread := deg_to_rad(2)
+  var spread_start := -spread * (bullet_count / 2.)
+  var shoot_target := Player.instance.global_position
+  for i in 8:
+    var angle = spread_start + (i * spread)
+    var direction = global_position.direction_to(shoot_target).rotated(angle)
+    var bullet = BULLET.instantiate()
+    bullet.velocity = direction * 150
+    bullet.global_position = global_position
+    add_sibling(bullet)
+
+  velocity = -global_position.direction_to(shoot_target) * 100
 
 func _on_died() -> void:
   queue_free()
