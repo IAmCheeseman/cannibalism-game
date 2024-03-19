@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cey5aj6ky2o2w"]
+[gd_scene load_steps=7 format=3 uid="uid://iw2fgfkd4jvl"]
 
 [ext_resource type="FontFile" uid="uid://eso1jehxw2yt" path="res://assets/font.png" id="1_iklsf"]
 [ext_resource type="Script" path="res://scenes/hud.gd" id="2_15qi6"]

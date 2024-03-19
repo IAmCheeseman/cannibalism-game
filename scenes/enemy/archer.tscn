@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://c5kdd8cvrpmb6"]
+[gd_scene load_steps=18 format=3 uid="uid://y5beuwrg2gfy"]
 
 [ext_resource type="Texture2D" uid="uid://ksqma6mrcmht" path="res://assets/archer.png" id="1_jbu2y"]
 [ext_resource type="Script" path="res://scenes/enemy/archer.gd" id="1_qrpuu"]
@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://scenes/damage/health.gd" id="2_ouxde"]
 [ext_resource type="PackedScene" uid="uid://pxcaybrgnse4" path="res://scenes/damage/hurtbox.tscn" id="3_kdrjx"]
 [ext_resource type="Script" path="res://scripts/shadow/shadow.gd" id="3_vfdld"]
-[ext_resource type="PackedScene" uid="uid://ca70bcj5xuj0w" path="res://scenes/enemy/cannibalism.tscn" id="6_g6e7c"]
+[ext_resource type="PackedScene" path="res://scenes/enemy/cannibalism.tscn" id="6_g6e7c"]
 [ext_resource type="Script" path="res://scripts/soft_collision.gd" id="7_7t6tq"]
 [ext_resource type="Texture2D" uid="uid://bkvqekuwyjkqr" path="res://assets/archer_gun.png" id="9_00ecs"]
 
@@ -141,5 +141,10 @@ autoplay = "idle"
 wait_time = 1.2
 one_shot = true
 
+[node name="FleeTimer" type="Timer" parent="."]
+wait_time = 0.75
+one_shot = true
+
 [connection signal="died" from="Health" to="." method="_on_died"]
 [connection signal="timeout" from="ChargeUp" to="." method="_on_charge_up_timeout"]
+[connection signal="timeout" from="FleeTimer" to="." method="_on_flee_timeout"]

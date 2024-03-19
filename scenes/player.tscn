@@ -6,8 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://bnybsfvdttobu" path="res://scenes/sword.tscn" id="4_ai78g"]
 [ext_resource type="Script" path="res://scenes/damage/health.gd" id="5_3rbl5"]
 [ext_resource type="Script" path="res://scenes/damage/hurtbox.gd" id="6_8rj64"]
-[ext_resource type="PackedScene" uid="uid://cey5aj6ky2o2w" path="res://scenes/hud.tscn" id="7_pr008"]
-[ext_resource type="PackedScene" uid="uid://4dpg832l3moo" path="res://scenes/stamina_low_vignette.tscn" id="8_0bj8r"]
+[ext_resource type="PackedScene" uid="uid://iw2fgfkd4jvl" path="res://scenes/hud.tscn" id="7_pr008"]
+[ext_resource type="PackedScene" uid="uid://ct1givdvgrgfi" path="res://scenes/stamina_low_vignette.tscn" id="8_0bj8r"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_m83ue"]
 radius = 4.0

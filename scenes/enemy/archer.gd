@@ -2,6 +2,7 @@ extends Enemy
 class_name Archer
 
 @onready var charge_up_timer: Timer = $ChargeUp
+@onready var flee_timer: Timer = $FleeTimer
 @onready var sprite: Sprite2D = $Sprite
 @onready var animation: AnimationPlayer = $AnimationPlayer
 @onready var soft_collision: SoftCollision = $SoftCollision
@@ -15,6 +16,7 @@ const BULLET := preload("res://scenes/enemy/bullet.tscn")
 
 var s_pursue := State.new("pursue", null, _pursue_process, null)
 var s_attack := State.new("attack", _attack_enter, _attack_process, _attack_exit)
+var s_flee := State.new("flee", _flee_enter, _flee_process, null)
 var state_machine := StateMachine.new()
 
 var target: Vector2
@@ -73,15 +75,26 @@ func _attack_exit() -> void:
     var angle = spread_start + (i * spread)
     var direction = global_position.direction_to(shoot_target).rotated(angle)
     var bullet = BULLET.instantiate()
-    bullet.velocity = direction * 150
+    bullet.velocity = direction * randf_range(150, 175)
     bullet.global_position = global_position
     add_sibling(bullet)
 
   velocity = -global_position.direction_to(shoot_target) * 100
 
+func _flee_enter() -> void:
+  flee_timer.start()
+
+func _flee_process(delta: float) -> void:
+  var direction = -global_position.direction_to(Player.instance.global_position)
+  velocity = Utils.delta_lerp(velocity, direction * speed, accel, delta)
+  velocity += soft_collision.get_push_vector() * delta
+  move_and_slide()
+
 func _on_died() -> void:
   queue_free()
 
 func _on_charge_up_timeout() -> void:
-  state_machine.set_current(s_pursue)
+  state_machine.set_current(s_flee)
 
+func _on_flee_timeout() -> void:
+  state_machine.set_current(s_pursue)
