@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/world/area.gd" id="1_cllb2"]
 [ext_resource type="Resource" uid="uid://c5pc30vxlwx8e" path="res://scenes/props/tree.tres" id="1_nn2wl"]
 [ext_resource type="PackedScene" uid="uid://dehpycbhc7bli" path="res://scenes/enemy/knight.tscn" id="1_qsu82"]
-[ext_resource type="PackedScene" path="res://scenes/enemy/archer.tscn" id="2_0f080"]
+[ext_resource type="PackedScene" uid="uid://c5kdd8cvrpmb6" path="res://scenes/enemy/archer.tscn" id="2_0f080"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_3hedv"]
 frequency = 0.0205

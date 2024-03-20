@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://ct1givdvgrgfi"]
 
-[ext_resource type="Shader" path="res://scenes/shaders/vignette.gdshader" id="1_ga84o"]
+[ext_resource type="Shader" path="res://shaders/vignette.gdshader" id="1_ga84o"]
 [ext_resource type="Script" path="res://scenes/stamina_low_vignette.gd" id="2_5jccu"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_ph8eb"]

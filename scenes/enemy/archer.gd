@@ -13,6 +13,8 @@ class_name Archer
 @export var attack_distance := 16.0 * 5.0
 
 const BULLET := preload("res://scenes/enemy/bullet.tscn")
+const CORPSE_SPRITE := preload("res://assets/archer_corpse.png")
+const CORPSE := preload("res://scenes/corpse.tscn")
 
 var s_pursue := State.new("pursue", null, _pursue_process, null)
 var s_attack := State.new("attack", _attack_enter, _attack_process, _attack_exit)
@@ -91,6 +93,12 @@ func _flee_process(delta: float) -> void:
   move_and_slide()
 
 func _on_died() -> void:
+  var corpse := CORPSE.instantiate()
+  corpse.global_position = global_position
+  corpse.direction = velocity.normalized()
+  corpse.speed = velocity.length()
+  corpse.texture = CORPSE_SPRITE
+  call_deferred("add_sibling", corpse)
   queue_free()
 
 func _on_charge_up_timeout() -> void:
